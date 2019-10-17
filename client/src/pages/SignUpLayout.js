@@ -3,9 +3,9 @@ import SignUpForm from '../components/SignUpForm'
 
 const SignUpLayout = () => {
     return (
-        <div>
+        <>
             <SignUpForm />
-        </div>
+        </>
     )
     
 }

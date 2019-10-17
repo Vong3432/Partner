@@ -24,12 +24,13 @@ const LoginForm = () => {
 
     useEffect(() => {
         console.log('effect after render')
-        console.log(userInfo)        
+        console.log(userInfo)         
     }, [userInfo])
 
     return (        
             
         <form onSubmit={onSubmit}>
+            <h3>Partner.</h3>
             <div>
                 
                 <label htmlFor="email">Email</label>
