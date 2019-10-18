@@ -60,7 +60,7 @@ router.get('/createTable', (req, res) => {
             name VARCHAR(70),
             email VARCHAR(70),
             category VARCHAR(20),
-            password
+            password VARCHAR(50)
         );
         
         CREATE TABLE IF NOT EXISTS job(
