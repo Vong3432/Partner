@@ -62,11 +62,11 @@ router.post('/updatejob/:jobid', (req, res) => {
     const id = req.params.jobid
 
     // destrucutre all submitted data from body
-    const { upload_date, category, content, description, duration, requirement, salary } = req.body    
+    const { upload_date, title, category, content, description, duration, requirement, salary } = req.body    
 
     // define sql query
     const sql = `UPDATE job 
-                SET upload_date = ${upload_date}, category = ${category}, description = ${description}, duration = ${duration}, requirement = ${requirement}, salary = ${salary}
+                SET upload_date = ${upload_date}, title = ${title}, category = ${category}, description = ${description}, duration = ${duration}, requirement = ${requirement}, salary = ${salary}
                 WHERE job_id = ${id}`;
 
     // run sql
