@@ -65,8 +65,10 @@ router.get('/createTable', (req, res) => {
         
         CREATE TABLE IF NOT EXISTS job(
             job_id VARCHAR(36) PRIMARY KEY UNIQUE,            
+            title TEXT,
             joblist_id VARCHAR(36),
             upload_date DATE,
+            category VARCHAR(60),
             content TEXT,
             description TEXT,
             duration TIME,
