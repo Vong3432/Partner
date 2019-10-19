@@ -2,6 +2,9 @@ const express = require('express')
 const mysql = require('mysql')
 const router = express.Router()
 
+// @route   GET api/init
+// @desc    Insert default value for education level
+// @access  Private
 router.get('/initEduLevel', (req, res) => {
 
     // Create table
@@ -20,12 +23,16 @@ router.get('/initEduLevel', (req, res) => {
         INSERT INTO education VALUES(3,"Master"); 
         `
 
-        conn.query(sql, () => {                          
+        conn.query(sql, (err, results) => {                          
+            if(err) throw err;
             res.send('Education level is initialized...')    
         })
     })    
 })
 
+// @route   GET api/init
+// @desc    Create table for database
+// @access  Private
 router.get('/createTable', (req, res) => {
 
     // Create table
@@ -136,13 +143,17 @@ router.get('/createTable', (req, res) => {
         
         
         `
-        conn.query(sql, () => {                          
+        conn.query(sql, (err, result) => {                          
+            if(err) throw err;
             res.send('Table is working fine...')    
         })
     })
 
 })
 
+// @route   GET api/init
+// @desc    Create database
+// @access  Private
 router.get('/createDB', (req, res) => {    
 
     const conn = mysql.createConnection({
@@ -155,7 +166,8 @@ router.get('/createDB', (req, res) => {
     const CREATE_DATABASE_QUERY = "CREATE DATABASE IF NOT EXISTS partner;"
 
     conn.connect(() => {                        
-        conn.query(CREATE_DATABASE_QUERY, () => {                                                    
+        conn.query(CREATE_DATABASE_QUERY, (err, results) => {                                                    
+            if(err) throw err;
             res.send('Database is working fine...')    
         })
     })                
