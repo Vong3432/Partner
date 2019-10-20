@@ -37,7 +37,7 @@ router.get('/displayjobs/:input', (req, res) => {
 // @route   DELETE api/job
 // @desc    Delete a job
 // @access  Private
-router.get('/deletejob/:jobid', (req, res) => {
+router.delete('/deletejob/:jobid', (req, res) => {
 
     // get id from url parameter
     const id = req.params.jobid
