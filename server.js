@@ -5,7 +5,7 @@ const app = express()
 app.use(express.json())
 
 // configuring port
-const port = 5000
+const port = process.env.PORT || 5000
 
 // use routes
 app.use('/api/config', require('./routes/api/init'))
