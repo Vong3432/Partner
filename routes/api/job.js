@@ -11,8 +11,65 @@ const conn = mysql.createConnection({
     multipleStatements: true
 })
 
+// @route   POST api/job
+// @desc    Post a new job
+// @access  Public
+router.post('/', (req, res) => {
+
+    // destrucutre all submitted data from body
+    const 
+    { 
+        job_id, 
+        title,
+        upload_date, 
+        category,
+        content, 
+        description, 
+        duration,
+        requirement,
+        salary 
+    } = req.body;
+
+    // ### fixed data for testing purpose only
+    // const newJob = [[13, "Senior Developer","2019-10-19", "Software","test", "description", "24:00:00", "requirement", 2000]]
+    
+    // insert all received data to array
+    const newJob = [[job_id, title, upload_date, category, content, description, duration, requirement, salary]]
+
+    // prepare statement
+    const sql = 'INSERT INTO job(job_id, title, upload_date, category, content, description, duration, requirement, salary) VALUES ?';
+
+    // run sql(sql, [values], (err, results))
+    conn.query(sql, [newJob], (err, results) => {    
+        // if err, send err 
+        // else send results to front-end 
+        err ? res.send(err) : res.send('number of records inserted' + results.affectedRows)        
+    })        
+
+})
+
 // @route   GET api/job
-// @desc    Display the jobs
+// @desc    Display all jobs
+// @access  Public
+router.get('/displayjobs', (req, res) => {    
+
+    // define sql query
+    const sql = `SELECT * FROM job`;
+    
+    // run sql
+    conn.query(sql, (err, results) => {   
+        
+        // for each result, display the title of it (debug purpose)
+        results.map(result => console.log(result.title)) 
+        
+        // if err, send err 
+        // else send results to front-end
+        err ? res.send(err) : res.send(results)        
+    }) 
+})
+
+// @route   GET api/job
+// @desc    Display some searched jobs
 // @access  Public
 router.get('/displayjobs/:input', (req, res) => {
     
@@ -76,43 +133,6 @@ router.post('/updatejob/:jobid', (req, res) => {
         err ? res.send(err) : res.send("Update job successfully")        
     }) 
     
-})
-
-// @route   POST api/job
-// @desc    Post a new job
-// @access  Public
-router.post('/', (req, res) => {
-
-    // destrucutre all submitted data from body
-    const 
-    { 
-        job_id, 
-        title,
-        upload_date, 
-        category,
-        content, 
-        description, 
-        duration,
-        requirement,
-        salary 
-    } = req.body;
-
-    // ### fixed data for testing purpose only
-    // const newJob = [[13, "Senior Developer","2019-10-19", "Software","test", "description", "24:00:00", "requirement", 2000]]
-    
-    // insert all received data to array
-    const newJob = [[job_id, title, upload_date, category, content, description, duration, requirement, salary]]
-
-    // prepare statement
-    const sql = 'INSERT INTO job(job_id, title, upload_date, category, content, description, duration, requirement, salary) VALUES ?';
-
-    // run sql(sql, [values], (err, results))
-    conn.query(sql, [newJob], (err, results) => {    
-        // if err, send err 
-        // else send results to front-end 
-        err ? res.send(err) : res.send('number of records inserted' + results.affectedRows)        
-    })        
-
 })
 
 module.exports = router;
