@@ -44,8 +44,7 @@ const SignUpForm = () => {
             {/* <div className="text-center" style={{margin:"4em auto"}}>
                 <h3 className="title">Welcome to Partner.</h3>
                 <p className="paragraph light-grey-text">Partner provides opportunities for everyone to fullfill needs</p>
-            </div> */}
-
+            </div> */}            
             <div style={{margin:"4em 0 0em 0", height:"inherit"}}  className="d-flex flex-lg-row flex-lg-nowrap flex-column align-items-center">
             <img src={require('../images/form.jpg')} alt="form.jpg" className="form-image mr-lg-auto my-4 my-md-0"/>
             { isFirstForm && (

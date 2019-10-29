@@ -11,6 +11,8 @@ const port = process.env.PORT || 5000
 app.use('/api/config', require('./routes/api/init'))
 app.use('/api/job', require('./routes/api/job'))
 
+// /api/job/displayjobs
+
 app.listen(port, () => console.log(`Listen on port ${port}`))
 
 

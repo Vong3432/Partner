@@ -67,41 +67,55 @@ router.get('/createTable', (req, res) => {
             name VARCHAR(70),
             email VARCHAR(70),
             category VARCHAR(20),
-            password VARCHAR(50)
+            password VARCHAR(50)            
         );
         
         CREATE TABLE IF NOT EXISTS job(
             job_id VARCHAR(36) PRIMARY KEY UNIQUE,            
-            title TEXT,
-            joblist_id VARCHAR(36),
-            upload_date DATE,
-            category VARCHAR(60),
+            employer_id VARCHAR(36),            
+            title TEXT,            
+            upload_date DATE,            
             content TEXT,
             description TEXT,
             duration TIME,
             requirement TEXT,
-            salary VARCHAR(70)
+            salary VARCHAR(70),
+            status VARCHAR(30)
+        );
+
+        CREATE TABLE IF NOT EXISTS pendinglist(
+            pendinglist_id INT(36) PRIMARY KEY UNIQUE AUTO_INCREMENT,            
+            job_id VARCHAR(36),
+            joblist_id VARCHAR(36)          
+        );
+
+        CREATE TABLE IF NOT EXISTS joblist(
+            joblist_id VARCHAR(36) PRIMARY KEY UNIQUE,            
+            employee_id VARCHAR(36),
+            pendinglist_id INT(36)         
         );
 
         CREATE TABLE IF NOT EXISTS employee(
             employee_id VARCHAR(36) PRIMARY KEY UNIQUE,
             user_id VARCHAR(36),
-            resume_id VARCHAR(36),            
-            education_level INT(36)                        
+            resume_id VARCHAR(36),     
+            joblist_id VARCHAR(36),       
+            education_level INT(36),
+            expectSalary VARCHAR(70)              
         );
         
         CREATE TABLE IF NOT EXISTS resume(
             resume_id VARCHAR(36) PRIMARY KEY UNIQUE,            
             employee_id VARCHAR(36),
+            educationlvl_id VARCHAR(36),
             upload_date Date,
-            contact VARCHAR(20)
+            contact VARCHAR(20)            
         );
 
         CREATE TABLE IF NOT EXISTS employer(
-            employee_id VARCHAR(36) PRIMARY KEY UNIQUE,
-            user_id VARCHAR(36),
-            personalbg_id VARCHAR(36),                        
-            company_requirement TEXT
+            employer_id VARCHAR(36) PRIMARY KEY UNIQUE,
+            user_id VARCHAR(36),            
+            personalbg_id VARCHAR(36)                      
         );        
 
         CREATE TABLE IF NOT EXISTS personal_background(
@@ -139,8 +153,22 @@ router.get('/createTable', (req, res) => {
             type INT(36),
             date DATE,
             content TEXT
-        );     
+        );   
         
+        CREATE TABLE IF NOT EXISTS admin(
+            admin_id VARCHAR(36) PRIMARY KEY UNIQUE,
+            feedback_id VARCHAR(36),
+            adminrecord_id VARCHAR(36),
+            content_id VARCHAR(36),
+            date DATE
+        );
+        
+        CREATE TABLE IF NOT EXISTS content(
+            content_id VARCHAR(36) PRIMARY KEY UNIQUE,            
+            adminrecord_id VARCHAR(36),            
+            record_date DATE,
+            content TEXT
+        );
         
         `
         conn.query(sql, (err, result) => {                          

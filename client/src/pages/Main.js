@@ -4,24 +4,24 @@ import axios from 'axios'
 class Main extends Component {
 
     state = {
-        data: []
+        data: []        
     }
 
     componentDidMount()
     {
         axios
-            .get('/api/job/displayjobs/"Software"',{headers: {"Content-type": "application/json"}})                     
+            .get('/api/job/displayjobs',{headers: {"Content-type": "application/json"}})                     
             .then( res => this.setState({
-                data: res.data 
+                data: res.data                
             }))
             .catch(err => console.log(err))
     }
 
     render() {
         return (
-            <>
-                {this.state.data ? console.log(this.state.data) : console.log('nothing')}
+            <>                
                 <p>Main layout</p>
+                {this.state.data ? console.log(this.state.data) : console.log('nothing')}
             </>
         )
     }
