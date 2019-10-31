@@ -9,14 +9,19 @@ export const JobProvider = (props) => {
     const [ jobs, setJobs ] = useState([])
 
     useEffect(()=>{
+        console.log('JobCOntext mounted')
         fetchData();
+
+        return(()=>{
+            console.log('JobContenxt unmounted')
+        })
     },[])
 
     const fetchData = () =>
     {
         axios
             .get('/api/job/displayjobs',{headers: {"Content-type": "application/json"}})                     
-            .then(res => setJobs(res.data))            
+            .then(res => setJobs(res.data))                        
             .catch(err => console.log(err))
     }
 

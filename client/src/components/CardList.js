@@ -1,10 +1,20 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Card from './Card'
+import {JobContext} from '../JobContext'
 
-const CardList = ({cards}) => {           
+const CardList = () => {       
+
+    const [jobs, setJobs] = useContext(JobContext)
+
+    useEffect(()=>{
+        console.log('rerender cardlist')
+
+        return(()=>console.log('cardlist unmounted'))
+    },[jobs])    
+
     return (       
         <> 
-        {cards.map(card => <Card key={card.jobID} jobID={card.jobID} company={card.company} title={card.title} logo={card.logo} description={card.description} />)}        
+        {jobs.map(job => <Card key={job.job_id} jobID={job.job_id} company={job.company} title={job.title} logo={job.logo} description={job.description} />)}        
         </>
     )
 }

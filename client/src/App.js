@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import './App.css';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 
@@ -27,9 +27,8 @@ function App() {
     return(()=> document.removeEventListener('scroll', handleScroll))
   },[])
 
-  const handleScroll = e => {
-    e.preventDefault()    
-    
+  const handleScroll = useCallback(()=>{
+
     let newFlag = (window.scrollY > 50);
     if(flag !== newFlag)
     {      
@@ -42,10 +41,8 @@ function App() {
       flag = newFlag;      
     }
     
-  }
-
-
-
+  }, [isScrollingDown]) 
+    
   return (
     <div className="App">
       <JobProvider>

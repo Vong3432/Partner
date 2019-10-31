@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import {PreviewContext} from '../PreviewContext'
 
 const Card = ({jobID, company, title, logo, description}) => {
+
+    const [selectedJob, setSelectedJob] = useContext(PreviewContext)
+
     return (
         <>
-        <div className="card my-3 card-shadow">
+        <div className="card my-3 card-shadow" 
+            onClick={ ()=> setSelectedJob((prevState) => ({...prevState, jobID, title, description})) }
+        >
             {/* <img src="..." className="card-img-top" alt="..." /> */}
             <div className="card-body">
                 <div className="media">
