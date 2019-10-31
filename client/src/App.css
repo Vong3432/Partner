@@ -477,6 +477,8 @@ input[type="text"], input[type="email"], input[type="password"]
   gap: 30px 15px;
   grid-auto-columns: minmax(30%,1fr) minmax(50%, 1fr);
   grid-auto-rows: minmax(50vh, 1fr);
+
+  margin-bottom: 2em;
 }
 
 .posts-grid-left
