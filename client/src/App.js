@@ -29,7 +29,7 @@ function App() {
 
   const handleScroll = useCallback(()=>{
 
-    let newFlag = (window.scrollY > 50);
+    let newFlag = (window.scrollY > 30);
     if(flag !== newFlag)
     {      
       setIsScrollDown(newFlag)

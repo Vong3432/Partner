@@ -115,13 +115,14 @@ p
   z-index: 99;
 
   padding: 0 !important;  
-  background: #5B41FF;   
-  /* background: var(--white-color); */  
+  /* background: #5B41FF;    */
+  background: var(--white-color);  
 }
 
 .navbar-brand
 {
-  color: var(--white-color) !important;
+  /* color: var(--white-color) !important; */
+  color: var(--dark-color) !important;
   padding-top: 0 !important;
 
   font-size: 1.5rem !important;
@@ -130,7 +131,8 @@ p
 
 .nav-link
 {
-  color: var(--white-color) !important;
+  /* color: var(--white-color) !important; */
+  color: var(--dark-color);
   font-family: helveticaMedium;
   font-size: .9rem;
   letter-spacing: .25px;
@@ -143,8 +145,8 @@ p
 
 .nav-link:hover, .navbar-brand:hover
 {  
-  /* color: var(--primary-color) !important; */
-  transition: opacity 200ms ease-in;
+  color: var(--primary-color);
+  transition: color, opacity 200ms ease-in;
   opacity: 1;
 }
 
@@ -163,7 +165,7 @@ p
 
 .card-shadow
 {
-  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.1);  
+  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.1); 
   border-radius: 15px;
 }
 
@@ -177,7 +179,7 @@ p
 
 .card-shadow:hover
 {
-  box-shadow: 0px 15px 30px rgba(51, 93, 192, 0.125) !important;  
+  box-shadow: 0px 10px 25px rgba(44, 64, 110, 0.1);  
 }
 
 .card-title
@@ -271,7 +273,8 @@ p
 /* 4. Own component settings */
 .active
 {
-  color: var(--white-color) !important;
+  /* color: var(--white-color) !important; */
+  color: var(--primary-color);
   font-weight: 500;
   opacity: 1;
 }
@@ -308,9 +311,9 @@ p
 
   font-family: helveticaMedium;
   /* text-align: center; */
-  color: var(--white-color) !important;
+  color: var(--primary-color) !important;
 
-  border: 1px solid var(--white-color);
+  border: 1px solid var(--primary-color);
   border-radius: 7px;
 }
 
@@ -336,7 +339,7 @@ p
 {
   width: auto;
   font-family: helveticaMedium;
-  color: var(--white-color) !important;
+  color: var(--dark-color) !important;
   padding: .35em .75em !important;  
 }
 
@@ -506,7 +509,7 @@ input[type="text"], input[type="email"], input[type="password"]
   left: 0;
 
   padding: 1em;
-  border: 1px solid rgba(51, 93, 192, 0.125);
+  border: .5px solid rgba(51, 93, 192, 0.125);
 }
 
 .posts-grid-right-content

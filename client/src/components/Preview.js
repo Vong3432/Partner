@@ -4,6 +4,7 @@ import {PreviewContext} from '../PreviewContext'
 const Preview = () => {    
 
     const [selectedJob, setSelectedJob] = useContext(PreviewContext)
+    const msg = "Please select a job";
 
     useEffect(()=>{
         console.log('Preview is rerender.')        
@@ -11,9 +12,9 @@ const Preview = () => {
     },[selectedJob])
 
     return (
-        <div>
-            <h3>Job Title: {selectedJob? selectedJob.title : console.log('nothing selected')}</h3>
-        </div>
+        <>
+            <h2>{selectedJob.title ? selectedJob.title : msg }</h2>
+        </>
     )
 }
 

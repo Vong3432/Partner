@@ -10,7 +10,7 @@ export const PreviewProvider = (props) => {
     const [ selectedJob, setSelectedJob ] = useState([
         {
             jobID:"",
-            title:"",
+            title:"Select a job",
             description:"",
             logo:""
         }

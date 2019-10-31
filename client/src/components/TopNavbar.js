@@ -18,9 +18,8 @@ class TopNavbar extends Component {
             color: "#333333"
         }      
         
-        const onScrollingStyle = {            
-            background: "linear-gradient(180deg, #5B41FF 0%, #5135FB 100%)",            
-            boxShadow: "0px 7px 15px rgba(0, 0, 0, 0.35)"
+        const onScrollingStyle = {                        
+            boxShadow: "0px 7px 15px rgba(0, 0, 0, 0.05)"
         }
         
         return (            
