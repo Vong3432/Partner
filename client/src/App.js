@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 
@@ -15,25 +15,55 @@ import SignInLayout from './pages/SignInLayout'
 import About from './pages/About';
 import Job from './pages/Job';
 
+import {JobProvider} from './JobContext'
 
 function App() {  
 
+  const [isScrollingDown, setIsScrollDown] = useState(false);
+  
+  let flag;
+  useEffect(() => {      
+    document.addEventListener('scroll', handleScroll)    
+    return(()=> document.removeEventListener('scroll', handleScroll))
+  },[])
+
+  const handleScroll = e => {
+    e.preventDefault()    
+    
+    let newFlag = (window.scrollY > 50);
+    if(flag !== newFlag)
+    {      
+      setIsScrollDown(newFlag)
+      flag = newFlag;      
+    }
+    else
+    {
+      setIsScrollDown(newFlag)     
+      flag = newFlag;      
+    }
+    
+  }
+
+
+
   return (
-    <div className="App">      
-      <Router>
-        <TopNavbar />
-        <Switch>
-          <>
-          <Container className="my-3">
-            <Route path="/" exact component={Main} />
-            <Route path="/about" exact component={About} />
-            <Route path="/job" exact component={Job} />
-            <Route path="/register" exact component={SignUpLayout} />
-            <Route path="/login" exact component={SignInLayout} />  
-          </Container>          
-          </>
-        </Switch>        
-      </Router>      
+    <div className="App">
+      <JobProvider>
+        <Router>
+          <TopNavbar scrolling={isScrollingDown} />
+          <Switch>
+            <>
+            <Container className="my-3">
+              <Route path="/" exact component={Main} />
+              <Route path="/about" exact component={About} />
+              <Route path="/employee" exact component={Job} />
+              <Route path="/register" exact component={SignUpLayout} />
+              <Route path="/login" exact component={SignInLayout} />  
+            </Container>          
+            </>
+          </Switch>        
+        </Router> 
+      </JobProvider>           
     </div>
   );
 }
