@@ -13,10 +13,6 @@ class TopNavbar extends Component {
         this.setState({ isOpen: !this.state.isOpen })
     }     
     render() {        
-
-        const activeStyle = {
-            color: "#333333"
-        }      
         
         const onScrollingStyle = {                        
             boxShadow: "0px 7px 15px rgba(0, 0, 0, 0.05)"

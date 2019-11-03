@@ -1,23 +1,37 @@
-import React, { Component, useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState, useCallback } from 'react'
 import SearchField from '../components/SearchField'
 import JobsGrid from '../components/JobsGrid'
 import {PreviewProvider} from '../PreviewContext'
 
-const Job = () => {    
+const Job = () => { 
+
+    const [searchField, setSearchField] = useState({
+        jobTitle: "",
+        description:""
+    })
+    
+    const handleChange = e => {          
+        setSearchField( prevState => ({
+            ...prevState, 
+            [e.target.name]: e.target.value
+        }))                     
+    }
+
+    const searchCallback = useCallback(()=>{        
+        return searchField
+    }, [searchField])
 
     return (
         <>
             <PreviewProvider>
                 <section className="hero-section">
-                    <div className="text-white container d-flex flex-column justify-content-center text-center">
-                        <p className="blockquote">It is never too late to be what you might have been. <span className="blockquote-footer">George Eliot</span></p>
-                        <SearchField />
+                    <div className="text-white container d-flex flex-column justify-content-center text-center">                        
+                        <SearchField handleChange={handleChange} />
                     </div>
                 </section>
 
                 <section className="posts-section">
-                    <JobsGrid />           
+                    <JobsGrid callbackFunction={searchCallback}/>           
                 </section>
                 {/* <section style={{ minHeight: "70vh" }}></section> */}
             </PreviewProvider>

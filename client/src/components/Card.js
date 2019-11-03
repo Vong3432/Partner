@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
 import {PreviewContext} from '../PreviewContext'
 
-const Card = ({jobID, company, title, logo, description}) => {
+const Card = ({index, jobID, company, title, logo, description, content}) => {
 
     const [selectedJob, setSelectedJob] = useContext(PreviewContext)
-
+    // {console.log("index" + index)}
+    
     return (
         <>
         <div className="card my-3 card-shadow" 
@@ -20,6 +21,8 @@ const Card = ({jobID, company, title, logo, description}) => {
                 </div>
                 <h5 className="card-title">{title}</h5>
                 <p className="card-text">{description}</p>
+                <p className="card-text">{content}</p>
+                
             </div>
         </div>
         </>

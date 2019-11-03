@@ -1,5 +1,4 @@
 import React, { useState, createContext, useEffect } from 'react'
-import axios from 'axios'
 
 export const PreviewContext = createContext();
 
@@ -17,8 +16,7 @@ export const PreviewProvider = (props) => {
     ])
 
     useEffect(()=>{
-        console.log('Preview mounted')        
-        console.log(selectedJob.jobID)
+        console.log('Preview mounted')                
         return(()=>{console.log('Preview unmounted')})
     },[])    
 

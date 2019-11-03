@@ -1,15 +1,15 @@
-import React, {useContext, useState} from 'react'
+import React from 'react'
 import CardList from '../components/CardList'
 import Preview from '../components/Preview'
 
 
-const JobsGrid = () => {    
+const JobsGrid = ({callbackFunction}) => {         
 
     return (
         <div className="posts-grid">
 
             <article className="posts-grid-left d-flex flex-column">
-                <CardList />
+                <CardList jobCallbackFunction={callbackFunction} />
             </article>
 
             <div className="posts-grid-right">
@@ -17,6 +17,19 @@ const JobsGrid = () => {
                     <Preview />
                 </div>
             </div>
+
+            <a onClick={e => 
+                {
+                    window.scrollTo({
+                        'behavior': 'smooth',
+                        'left':0,
+                        'top': 0
+                    })
+                }}  
+                id="scrollTopBtn"
+            >
+                Top
+            </a>
 
         </div>
     )

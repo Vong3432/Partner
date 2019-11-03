@@ -64,6 +64,11 @@
   opacity: .5;  
 }
 
+.mw-70
+{
+  max-width: 70% !important;
+}
+
 html
 {
   height: 100%;    
@@ -271,6 +276,27 @@ p
 }
 
 /* 4. Own component settings */
+.transition-show
+{
+  animation: transitionShow 600ms ease-in forwards;
+}
+
+.transition-hide
+{
+  animation: transitionHide 600ms ease-in forwards;
+}
+
+@keyframes transitionHide
+{
+  0%{opacity: 1;}  
+  100%{opacity: 0;}  
+}
+
+@keyframes transitionShow
+{
+  0%{opacity: 0.25;}  
+  100%{opacity: 1;}  
+}
 .active
 {
   /* color: var(--white-color) !important; */
@@ -451,7 +477,7 @@ input[type="text"], input[type="email"], input[type="password"]
   padding: .25em .5em;
 }
 
-#searchField
+#jobTitle
 {  
   padding: .5em .75em;  
   max-width: 50%;  
@@ -465,6 +491,26 @@ input[type="text"], input[type="email"], input[type="password"]
   color: var(--dark-color);
   font-family: helveticaMedium;
   font-size: 1.25rem;  
+
+  transition: max-width 600ms ease-in-out 200ms;
+}
+
+.advanceSearchContent
+{
+  position: relative;
+  width: 100%;
+  
+  margin-top: 1.5em;
+  padding: 1em;
+
+  border-top: .5px solid rgba(255,255,255,.5);
+
+  background-color: transparent;  
+}
+
+.advanceSearchContent label
+{
+  color: var(--white-color);
 }
 
 .posts-grid
@@ -519,6 +565,14 @@ input[type="text"], input[type="email"], input[type="password"]
   
 }
 
+#scrollTopBtn
+{
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  margin: 0 1em 1em 0;
+}
+
 
 @media screen and ( max-width: 780px )
 {
@@ -539,6 +593,13 @@ input[type="text"], input[type="email"], input[type="password"]
 
   .posts-grid
   {
-    grid-template-areas: 'c';
+    grid-template-areas: 'left';
+    grid-auto-columns: 1fr;
+    grid-auto-rows: minmax(10vh, 1fr);
+  }
+
+  .posts-grid-right
+  {
+    display: none;
   }
 }
