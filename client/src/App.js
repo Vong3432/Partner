@@ -18,6 +18,7 @@ import Job from './pages/Job';
 import {JobProvider} from './JobContext'
 import AddJobPage from './pages/AddJobPage';
 import Profile from './pages/Profile';
+import Resume from './pages/Resume';
 
 function App() {  
 
@@ -60,6 +61,7 @@ function App() {
               <Route path="/login" exact component={SignInLayout} />  
               <Route path="/addJob" exact component={AddJobPage} />  
               <Route path="/profile" exact component={Profile} />  
+              <Route path="/resume" exact component={Resume} />
             </Container>          
             </>
           </Switch>        

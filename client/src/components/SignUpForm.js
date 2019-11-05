@@ -55,33 +55,7 @@ const SignUpForm = () => {
                 <p className="paragraph">Partner provides opportunities for everyone to fullfill needs</p>
             </div>
 
-            <div id="divider" className="mt-0 mb-4" style={{width:"20%"}}></div>
-
-            <div className="d-flex flex-row flex-sm-nowrap mt-2">                
-
-                <div className="d-flex flex-column w-50 mr-2">
-                    <label htmlFor="firstName">First Name</label>
-                    <input 
-                        type="text" 
-                        name="firstName" 
-                        id="firstName"
-                        value={ userInfo.firstName }
-                        onChange={handleChange}
-                    />
-                </div>
-
-                <div className="d-flex flex-column w-50 ml-2">
-                    <label htmlFor="lastName">Last Name</label>
-                    <input 
-                        type="text" 
-                        name="lastName" 
-                        id="lastName"
-                        value={ userInfo.lastName }
-                        onChange={handleChange}
-                    />
-                </div>
-
-            </div>            
+            <div id="divider" className="mt-0 mb-4" style={{width:"20%"}}></div>            
 
             <div className="d-flex flex-column mt-4">
                 <label htmlFor="email">Email</label>

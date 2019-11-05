@@ -8,7 +8,7 @@ const Card = ({job: {index, jobID, company, title, logo, description, content}})
     
     return (
         <>
-        <div className="card my-3 card-shadow" 
+        <div className="card mb-3 card-shadow" 
             onClick={ ()=> setSelectedJob((prevState) => ({...prevState, jobID, title, description})) }
         >
             {/* <img src="..." className="card-img-top" alt="..." /> */}

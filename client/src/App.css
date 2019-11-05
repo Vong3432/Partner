@@ -56,6 +56,8 @@
   --white-color: #fff;
   --light-grey: #8F8F90;  
   --lighter-grey: rgba(0, 0, 0, 0.2);
+  --green-color:rgb(6, 179, 127);
+  --lighter-green:rgb(31, 199, 185);
 }
 
 ::placeholder
@@ -81,6 +83,14 @@ body
   background:#FBFBFB !important;    
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
+
+/* remove google chrome autocomplete's styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
 #root
@@ -208,6 +218,33 @@ h1,h2,h3,h4,h5,h6{
   font-size: .9rem;
   color: var(--light-grey);
   /* padding-bottom: 2em;   */
+}
+
+.breadcrumb
+{
+  /* background: rgb(243, 245, 245) !important;   */
+  background: transparent !important;
+  color: var(--light-grey);  
+  margin-left: auto !important;
+}
+
+.breadcrumb-item
+{
+  font-family: helveticaLight !important;
+}
+
+
+.breadcrumb-item+.breadcrumb-item::before 
+{
+  content: '>' !important;
+  color: var(--light-grey) !important;
+}
+
+.breadcrumb-item.active
+{
+  color: var(--white-color) !important;  
+  font-family: "Poppins", sans-serif !important;  
+  font-weight: bold;
 }
 
 /* 3. Layout settings */
@@ -341,7 +378,7 @@ h1,h2,h3,h4,h5,h6{
 {    
   
   width: auto;
-  padding: .35em .75em !important;
+  padding: .5em .75em !important;
 
   font-family: helveticaMedium;
   /* text-align: center; */
@@ -357,7 +394,7 @@ h1,h2,h3,h4,h5,h6{
   width: 100%;
 
   margin: 0 .5em;
-  padding: .35em .75em !important;
+  padding: .5em .75em !important;
 
   font-family: helveticaMedium;  
   text-align: center;
@@ -372,9 +409,11 @@ h1,h2,h3,h4,h5,h6{
 .no-styling-button
 {
   width: auto;
+  background: var(--white-color);
+  border: none;
   font-family: helveticaMedium;
   color: var(--dark-color) !important;
-  padding: .35em .75em !important;  
+  padding: .5em .75em !important;  
 }
 
 .primary-bg-button,.primary-button,.no-styling-button
@@ -448,13 +487,6 @@ label
   color: var(--light-grey);
 }
 
-/* remove google chrome autocomplete's styling */
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active  {
-    -webkit-box-shadow: 0 0 0 30px white inset !important;
-}
 
 /* 
 old form styling
@@ -472,7 +504,7 @@ input[type="text"], input[type="email"], input[type="password"]
   padding: .25em 0;
 } */
 
-input[type="text"], input[type="email"], input[type="password"]
+input[type="text"], input[type="email"], input[type="password"], select
 {
   border: none;
   border: .5px solid rgba(0, 0, 0, 0.2);
@@ -723,6 +755,70 @@ input[type="text"], input[type="email"], input[type="password"]
   padding: 1.5em 2em;
 }
 
+.resume-bg
+{
+  position: absolute;;
+  top: 0;
+  left:0;
+  right:0;  
+  
+  height: 300px;  
+  background: url(./images/resume-bg.jpg); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgba(0,0,0,0.85);
+  background-blend-mode: overlay;
+  background-position: center;
+}
+
+
+.resume-container
+{  
+  position: relative;
+  max-width: 800px;
+  margin: 7em auto 3em auto;
+}
+
+.resume-header
+{
+  max-width: 100%;
+  width: 100%;  
+
+  color: var(--white-color);
+}
+
+.resume-form
+{
+  background: var(--white-color);
+  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.1); 
+  
+  padding: 2em 2.5em;
+  display: flex;
+  flex-flow: column;
+}
+
+.resume-form label
+{
+  font-size: 1.1rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: var(--dark-color);
+  
+}
+
+.resume-form input, .resume-form select
+{
+  font-size: 1rem;  
+  padding: .75em 1em;
+  color: #313131 !important;    
+}
+
+.resume-form--header
+{
+  color: var(--primary-color);  
+  font-size: 2rem;  
+}
+
 
 @media screen and ( max-width: 1080px )
 {  
@@ -743,6 +839,11 @@ input[type="text"], input[type="email"], input[type="password"]
   .container
   {
     padding: 0 2em !important;
+  }
+
+  .breadcrumb
+  {
+    padding: .25em 0 !important;
   }
 
   #searchField
