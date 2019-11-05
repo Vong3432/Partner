@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import {PreviewContext} from '../PreviewContext'
 
-const Card = ({index, jobID, company, title, logo, description, content}) => {
+const Card = ({job: {index, jobID, company, title, logo, description, content}}) => {
 
     const [selectedJob, setSelectedJob] = useContext(PreviewContext)
     // {console.log("index" + index)}

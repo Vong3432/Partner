@@ -54,8 +54,8 @@ const SearchField = ({ handleChange }) => {
                 <div className="w-30 text-left">
 
                     <label htmlFor="description">Description</label>
-                    <select name="description" onChange={handleChange} class="custom-select">
-                        <option selected value="">Open this select menu</option>
+                    <select name="description" onChange={handleChange} className="custom-select">
+                        <option value="">Open this select menu</option>
                         <option value="software">Software</option>
                         <option value="senior">Senior</option>
                         <option value="3">Three</option>
@@ -65,8 +65,8 @@ const SearchField = ({ handleChange }) => {
                 <div className="w-30 text-left mx-2">
 
                     <label htmlFor="bb">Description</label>
-                    <select name="bb" class="custom-select">
-                        <option selected>Open this select menu</option>
+                    <select name="bb" className="custom-select">
+                        <option value="">Open this select menu</option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
                         <option value="3">Three</option>

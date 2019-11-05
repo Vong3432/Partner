@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins:300, 500, 700');
+@import url('https://fonts.googleapis.com/css?family=Poppins:300, 500, 700, 900');
 @font-face
 {
   font-family: helveticaThin;
@@ -41,7 +41,7 @@
   padding: 0;
   box-sizing: border-box;
   
-  font-size: 15px;       
+  font-size: 16px;       
   /* font-family: 'Roboto', sans-serif;   */  
   font-family: helveticaLight;  
   -webkit-font-smoothing: subpixel-antialiased;
@@ -71,12 +71,14 @@
 
 html
 {
-  height: 100%;    
+  height: 100%;
+  background:#FBFBFB !important;    
 }
 
 body
 {
-  height: 100%;  
+  height: 100%;    
+  background:#FBFBFB !important;    
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -102,6 +104,11 @@ a
 p
 {
   font-size: 1.1rem;
+}
+
+h1,h2,h3,h4,h5,h6{  
+  font-family: "Poppins", sans-serif !important;   
+  font-weight: 700 !important;
 }
 
 /* 2. Bootstrap component settings */
@@ -223,7 +230,7 @@ p
 {
   content: '';  
   /* opacity: .05;   */
-  background-image: url(./images/jobbg.jpg);
+  background-image: url(./images/jobbg.jpg);  
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -234,12 +241,12 @@ p
   bottom: 0;
   z-index: -2;
   
-  max-width: 100%;  
-  width: 100%;
-  height: 100%;
+  max-width: 100% !important;  
+  width: 100% !important;
+  height: 100% !important;
 }
 
-.hero-section
+.hero-section, section
 {  
   min-height: 80vh;  
   position: absolute;  
@@ -247,7 +254,8 @@ p
   left: 0;
   right: 0;
 
-  margin-top: 2rem;
+  z-index: 1;
+  margin-top: 2rem;  
 }
 
 .hero-section .blockquote
@@ -410,7 +418,7 @@ p
 
 .paragraph
 {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .form-image
@@ -532,7 +540,7 @@ input[type="text"], input[type="email"], input[type="password"]
   grid-area: left;
   max-height: 100vh;
   
-  background: var(--white-color);
+  background: #FBFBFB;
   overflow-y: scroll;
   padding: 0 1em;
 }
@@ -573,6 +581,157 @@ input[type="text"], input[type="email"], input[type="password"]
   margin: 0 1em 1em 0;
 }
 
+#avatar
+{
+  max-width: 200px;
+  max-height: 200px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 200px;
+}
+
+#avatar--small
+{
+  max-width: 50px;
+  max-height: 50px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50px;
+}
+
+.profile-username
+{
+  color: var(--white-color);
+}
+
+.profile-section
+{
+  position: relative;
+  margin-top: 80vh;
+}
+
+.profile-grid
+{
+  
+  height: 50vh;
+
+  display: grid;
+  gap: 15px 20px;
+  grid-template-areas: 'about about right'
+                       'article article right'
+                       'article article right';
+  grid-auto-columns: minmax(25%,1fr) minmax(25%,1fr) minmax(30%, 1fr);  
+}
+
+.profile-grid > div
+{
+  background: var(--white-color);
+  padding: 1.5em 2em;
+  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.1); 
+}
+
+.profile-grid .header
+{
+  font-size: 1rem;  
+  line-height: 29.25px;
+  text-transform: uppercase;
+  /* letter-spacing: -.5px; */
+}
+
+.profile-grid .small-header
+{
+  font-size: .8rem;
+  line-height: initial;
+  margin: .25em 0;
+}
+
+.small-icon
+{
+  max-width: 1.2rem;
+  max-height: 1.2rem;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .5;
+}
+
+.profile-grid .paragraph
+{  
+  font-size: .9rem;
+  line-height: 24.375px;
+}
+
+.profile--about-container
+{  
+  grid-area: about;  
+}
+
+.profile-grid-right
+{
+  grid-area: right;
+  display: flex;
+  flex-flow: column;
+}
+
+.profile-grid-right > div
+{
+  background: var(--white-color);  
+  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.1); 
+
+  padding: 1.5em 2em;
+  margin: 0 0 15px 0;
+}
+
+.profile--contact-container
+{
+  grid-area: contact;  
+}
+
+.profile--contact-container small
+{
+  color: var(--primary-color);
+  font-size: .9rem;
+}
+
+.profile--skills-container
+{
+  grid-area: skills;
+}
+
+.profile--gallery-container
+{
+  grid-area: gallery;
+}
+
+.profile--article-container
+{  
+  background-color: transparent !important;
+  grid-area: article;
+  box-shadow: none !important;
+  padding: 0 0 !important;
+}
+
+.profile-article
+{
+  background-color:#fff;
+  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.1); 
+  
+  min-height: 10vh;
+  margin: 20px 0 10px 0;
+  padding: 1.5em 2em;
+}
+
+
+@media screen and ( max-width: 1080px )
+{  
+
+  .profile-grid .header
+  {
+    font-size: .9rem;
+  }
+}
 
 @media screen and ( max-width: 780px )
 {
@@ -602,4 +761,12 @@ input[type="text"], input[type="email"], input[type="password"]
   {
     display: none;
   }
+
+  .profile-grid
+  {
+    grid-template-areas: 'about about about'
+                        'right right right'
+                        'article article article';
+  }
+  
 }

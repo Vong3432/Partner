@@ -16,6 +16,8 @@ import About from './pages/About';
 import Job from './pages/Job';
 
 import {JobProvider} from './JobContext'
+import AddJobPage from './pages/AddJobPage';
+import Profile from './pages/Profile';
 
 function App() {  
 
@@ -56,6 +58,8 @@ function App() {
               <Route path="/employee" exact component={Job} />
               <Route path="/register" exact component={SignUpLayout} />
               <Route path="/login" exact component={SignInLayout} />  
+              <Route path="/addJob" exact component={AddJobPage} />  
+              <Route path="/profile" exact component={Profile} />  
             </Container>          
             </>
           </Switch>        

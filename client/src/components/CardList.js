@@ -16,14 +16,14 @@ const CardList = ({ jobCallbackFunction }) => {
 
     useEffect(() => {
         setFilterSearch(jobCallbackFunction)
-    }, [jobCallbackFunction])
+    }, [jobCallbackFunction])    
 
     return (
         <>
             {
                 jobs
-                    .filter(job => filterSearch ? filterFunction(filterSearch, job) : job)
-                    .map((job, index) => <Card index={index} key={job.job_id} jobID={job.job_id} company={job.company} title={job.title} logo={job.logo} description={job.description} content={job.content} />)
+                    .filter(job => filterSearch ? filterFunction(filterSearch, job) : job)                    
+                    .map((job, index) => <Card index={index} job={job} />)
             }
 
         </>

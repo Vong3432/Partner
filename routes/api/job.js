@@ -19,19 +19,11 @@ const conn = mysql.createConnection({
 router.post('/', (req, res) => {
 
     // destrucutre all submitted data from body
-    const 
-    { 
-        job_id, 
-        employer_id,        
-        title,
-        upload_date, 
-        category,
-        content, 
-        description, 
-        duration,
-        requirement,
-        salary 
-    } = req.body;
+    const { title, description } = req.body;
+
+    console.log(title, description)
+
+    /*
 
     const currentUUID = uuid()
     // ### fixed data for testing purpose only
@@ -57,6 +49,8 @@ router.post('/', (req, res) => {
             })
         }
     })        
+
+    */
 
 })
 
