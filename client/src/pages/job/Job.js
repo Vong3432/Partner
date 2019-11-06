@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
-import SearchField from '../components/SearchField'
-import JobsGrid from '../components/JobsGrid'
-import {PreviewProvider} from '../PreviewContext'
+import SearchField from '../../components/SearchField'
+import JobsGrid from '../../components/job/JobsGrid'
+import {PreviewProvider} from '../../PreviewContext'
 
 const Job = () => { 
 

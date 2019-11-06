@@ -1,9 +1,9 @@
-import React from 'react'
-import Article from '../components/Article'
+import React, { useEffect, useState } from 'react'
+import Article from '../../components/user/Article'
 
 const Profile = () => {
 
-    const text = "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus."
+    const text = "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus."    
 
     return (
         <>
@@ -11,7 +11,7 @@ const Profile = () => {
 
                 {/* user avatar and name */}
                 <div className="text-center mt-auto">
-                    <img id="avatar" src={require('../images/person.jpg')} alt="avatar" />
+                    <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
                     <h2 className="profile-username mt-2">John Doe</h2>
                 </div>
 
@@ -51,7 +51,7 @@ const Profile = () => {
 
                             {/* Email */}
                             <div className="d-flex flex-row mt-3">
-                                <img className="small-icon" src={require('../images/email.svg')} alt="email" />
+                                <img className="small-icon" src={require('../../images/email.svg')} alt="email" />
                                 <div className="d-flex flex-column ml-2">
                                     <h6 className="small-header">Email</h6>
                                     <small>johndoe@gmail.com</small>
@@ -60,7 +60,7 @@ const Profile = () => {
 
                             {/* Availability */}
                             <div className="d-flex flex-row mt-4">
-                                <img className="small-icon" src={require('../images/availability.svg')} alt="availability" />
+                                <img className="small-icon" src={require('../../images/availability.svg')} alt="availability" />
                                 <div className="d-flex flex-column ml-2">
                                     <h6 className="small-header">Availability</h6>
                                     <small>Full-Time/Part-Time</small>
@@ -69,7 +69,7 @@ const Profile = () => {
 
                             {/* Age */}
                             <div className="d-flex flex-row mt-4">
-                                <img className="small-icon" src={require('../images/age.svg')} alt="age" />
+                                <img className="small-icon" src={require('../../images/age.svg')} alt="age" />
                                 <div className="d-flex flex-column ml-2">
                                     <h6 className="small-header">Age</h6>
                                     <small>30</small>
@@ -78,7 +78,7 @@ const Profile = () => {
 
                             {/* Location */}
                             <div className="d-flex flex-row mt-4">
-                                <img className="small-icon" src={require('../images/location.svg')} alt="location" />
+                                <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
                                 <div className="d-flex flex-column ml-2">
                                     <h6 className="small-header">Location</h6>
                                     <small>Los Angeles</small>

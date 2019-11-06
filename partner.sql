@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2019 at 12:12 PM
--- Server version: 10.3.15-MariaDB
--- PHP Version: 7.3.6
+-- Generation Time: Nov 06, 2019 at 04:58 PM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.3.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -37,6 +37,13 @@ CREATE TABLE `account` (
   `category` varchar(20) DEFAULT NULL,
   `password` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `account`
+--
+
+INSERT INTO `account` (`account_id`, `user_id`, `profile_id`, `name`, `email`, `category`, `password`) VALUES
+('', 'c369a65b-bbe8-418b-ac59-074eef170139', NULL, NULL, 'vongnyuksoon2000@gmail.com', NULL, '1234');
 
 -- --------------------------------------------------------
 

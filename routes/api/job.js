@@ -20,37 +20,7 @@ router.post('/', (req, res) => {
 
     // destrucutre all submitted data from body
     const { title, description } = req.body;
-
     console.log(title, description)
-
-    /*
-
-    const currentUUID = uuid()
-    // ### fixed data for testing purpose only
-    const newJob = [[currentUUID, 2, "Fake developer", "2019-10-24","conent", "description", "24:00:00", "requirement", 2000,"pending"]]
-    
-    // insert all received data to array
-    //const newJob = [[job_id, employer_id, pendinglist_id, title, upload_date, category, content, description, duration, requirement, salary, "pending"]];
-
-    // prepare statement
-    const sql = 'INSERT INTO job(job_id, employer_id, title, upload_date, content, description, duration, requirement, salary, status) VALUES ?';
-
-    // run sql(sql, [values], (err, results))
-    conn.query(sql, [newJob], (err, results) => {    
-        // if err, send err 
-        // else send results to front-end 
-        if(err) res.send(err)
-        else
-        {
-            //res.send('number of records inserted' + results.affectedRows)        
-            const pendingSQL = 'INSERT INTO pendinglist(job_id) VALUES ?'
-            conn.query(pendingSQL, [[[currentUUID]]], (err, results) => {
-                err ? res.send(err) : res.send('number of records inserted' + results.affectedRows)                
-            })
-        }
-    })        
-
-    */
 
 })
 
@@ -92,7 +62,7 @@ router.get('/displayjobs', (req, res) => {
         
         // if err, send err 
         // else send results to front-end
-        err ? res.send(err) : res.send(results)        
+        err ? res.send(err) : res.json(results)        
     }) 
 })
 

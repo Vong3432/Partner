@@ -1,6 +1,6 @@
 import React from 'react'
-import CardList from '../components/CardList'
-import Preview from '../components/Preview'
+import CardList from './CardList'
+import Preview from './Preview'
 
 
 const JobsGrid = ({callbackFunction}) => {         

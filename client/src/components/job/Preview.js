@@ -1,5 +1,5 @@
 import React,{useEffect, useContext} from 'react'
-import {PreviewContext} from '../PreviewContext'
+import {PreviewContext} from '../../PreviewContext'
 
 const Preview = () => {    
 

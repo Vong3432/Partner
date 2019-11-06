@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import {PreviewContext} from '../PreviewContext'
+import {PreviewContext} from '../../PreviewContext'
 
 const Card = ({job: {index, jobID, company, title, logo, description, content}}) => {
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import AddJobForm from '../components/AddJobForm'
+import AddJobForm from '../../components/job/AddJobForm'
 
 const AddJobPage = () => {
     return (

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 // import reactstrap
 import { Container } from 'reactstrap'
@@ -10,25 +10,32 @@ import TopNavbar from './components/TopNavbar'
 
 // import pages
 import Main from './pages/Main';
-import SignUpLayout from './pages/SignUpLayout'
-import SignInLayout from './pages/SignInLayout'
+import SignUpLayout from './pages/auth/SignUpLayout'
+import SignInLayout from './pages/auth/SignInLayout'
 import About from './pages/About';
-import Job from './pages/Job';
+import Job from './pages/job/Job';
 
-import {JobProvider} from './JobContext'
-import AddJobPage from './pages/AddJobPage';
-import Profile from './pages/Profile';
-import Resume from './pages/Resume';
+//import {JobProvider} from './JobContext'
+import AddJobPage from './pages/job/AddJobPage';
+import Profile from './pages/user/Profile';
+import Resume from './pages/user/Resume';
+
+import { Provider } from 'react-redux'
+import store from './store'
+import axios from 'axios'
 
 function App() {  
 
-  const [isScrollingDown, setIsScrollDown] = useState(false);
+  const [isScrollingDown, setIsScrollDown] = useState(false);  
+  
   
   let flag;
   useEffect(() => {      
     document.addEventListener('scroll', handleScroll)    
     return(()=> document.removeEventListener('scroll', handleScroll))
+
   },[])
+
 
   const handleScroll = ()=>{
 
@@ -47,8 +54,8 @@ function App() {
   }
     
   return (
-    <div className="App">
-      <JobProvider>
+    <Provider store={store}>
+      <div className="App">      
         <Router>
           <TopNavbar scrolling={isScrollingDown} />
           <Switch>
@@ -60,14 +67,21 @@ function App() {
               <Route path="/register" exact component={SignUpLayout} />
               <Route path="/login" exact component={SignInLayout} />  
               <Route path="/addJob" exact component={AddJobPage} />  
-              <Route path="/profile" exact component={Profile} />  
+              <Route path="/profile" 
+              exact 
+              // render={() => isLoggedIn ?
+              //   <Profile /> :
+              //   <Redirect to="/login" />
+              // }
+              component={Profile}
+              />  
               <Route path="/resume" exact component={Resume} />
             </Container>          
             </>
           </Switch>        
-        </Router> 
-      </JobProvider>           
-    </div>
+        </Router>       
+      </div>
+    </Provider>
   );
 }
 

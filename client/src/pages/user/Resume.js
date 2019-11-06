@@ -48,7 +48,7 @@ const Resume = () => {
                             </div>
 
                             <div className="d-flex flex-row my-3 w-100">
-                                <img className="small-icon" src={require('../images/location.svg')} alt="location" />
+                                <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
                                 <div className="d-flex flex-column ml-3 w-100">
                                     <label htmlFor="city">City</label>
                                     <input type="text" id="" placeholder="e.g Johor Bahru ..." />
@@ -56,7 +56,7 @@ const Resume = () => {
                             </div>
 
                             <div className="d-flex flex-row my-3 w-100">
-                                <img className="small-icon" src={require('../images/call.svg')} alt="contact" />
+                                <img className="small-icon" src={require('../../images/call.svg')} alt="contact" />
                                 <div className="d-flex flex-column ml-3 w-100">
                                     <label htmlFor="contact">Contact Number</label>
                                     <input type="text" id="" placeholder="012-3456789" />
@@ -64,7 +64,7 @@ const Resume = () => {
                             </div>
 
                             <div className="d-flex flex-row my-3 w-100">
-                                <img className="small-icon" src={require('../images/email.svg')} alt="email" />
+                                <img className="small-icon" src={require('../../images/email.svg')} alt="email" />
                                 <div className="d-flex flex-column ml-3 w-100">
                                     <label htmlFor="email">Email</label>
                                     <input type="email" id="" placeholder="johndoe@gmail.com..." />
@@ -80,7 +80,7 @@ const Resume = () => {
                             <div id="divider"></div>                            
 
                             <div className="d-flex flex-row mt-5 my-3 w-100">
-                                <img className="small-icon" src={require('../images/degree.svg')} alt="degree" />
+                                <img className="small-icon" src={require('../../images/degree.svg')} alt="degree" />
                                 <div className="d-flex flex-column ml-3 w-100">
                                     <label htmlFor="degree">Degree</label>
                                     <select name="degree" id="">
@@ -91,7 +91,7 @@ const Resume = () => {
                             </div>
 
                             <div className="d-flex flex-row my-3 w-100">
-                                <img className="small-icon" src={require('../images/school.svg')} alt="school" />
+                                <img className="small-icon" src={require('../../images/school.svg')} alt="school" />
                                 <div className="d-flex flex-column ml-3 w-100">
                                     <label htmlFor="school">School</label>
                                     <input type="text" id="" placeholder="Southern University College ..." />
@@ -99,7 +99,7 @@ const Resume = () => {
                             </div>
 
                             <div className="d-flex flex-row my-3 w-100">
-                                <img className="small-icon" src={require('../images/fieldOfStudy.svg')} alt="fieldOfStudy" />
+                                <img className="small-icon" src={require('../../images/fieldOfStudy.svg')} alt="fieldOfStudy" />
                                 <div className="d-flex flex-column ml-3 w-100">
                                     <label htmlFor="fos">Field of study</label>
                                     <input type="text" id="" placeholder="Computer Science ..." />
@@ -107,7 +107,7 @@ const Resume = () => {
                             </div>
 
                             <div className="d-flex flex-row my-3 w-100">
-                                <img className="small-icon" src={require('../images/schooladdress.svg')} alt="schooladdress" />
+                                <img className="small-icon" src={require('../../images/schooladdress.svg')} alt="schooladdress" />
                                 <div className="d-flex flex-column ml-3 w-100">
                                     <label htmlFor="schoolAddress">School Address</label>
                                     <input type="text" id="" placeholder="No 100, Jalan 2/1 Johor Bahru ..." />

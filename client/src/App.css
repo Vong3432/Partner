@@ -471,7 +471,7 @@ h1,h2,h3,h4,h5,h6{
 
   display: flex;
   flex-flow: column;
-  justify-content: center;
+  justify-content: center;  
 }
 
 .form, .form-image
@@ -799,7 +799,7 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 .resume-form label
 {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   color: var(--dark-color);
