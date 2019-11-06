@@ -57,3 +57,34 @@ export default function(state = initialState, action)
             return state;
     }
 }
+
+
+/*
+// Example 1
+this.state = {
+    user:{
+        name:"Ali",
+        email:""
+    }
+}
+
+// To update user's email only 
+
+// put prevState to copy previous state of the user,
+this.setState((prevState) => {
+    ...prevState,  // name: "Ali"
+    email:"ali@gmail.com"
+})
+// latest user state
+// user:{ name:"Ali", email:"ali@gmail.com"}
+
+
+// To update name and email 
+this.setState((prevState) => {
+    ...prevState,  // name: "Ali"
+    name:"Abu"  // this line will replace the name of the previous state
+    email:"ali@gmail.com"
+})
+// latest user state
+// user:{ name:"Abu", email:"ali@gmail.com"}
+*/
