@@ -20,7 +20,7 @@ const Card = ({job: {index, jobID, company, title, logo, description, content}})
                     </div>
                 </div>
                 <h5 className="card-title">{title}</h5>
-                <p className="card-text">{description}</p>
+                <p className="card-text" style={{maxWidth: "155ch", whiteSpace:"nowrap",overflow:"hidden", textOverflow:"ellipsis"}}>{description}</p>
                 <p className="card-text">{content}</p>
                 
             </div>

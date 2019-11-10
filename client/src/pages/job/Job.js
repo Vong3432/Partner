@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react'
 import SearchField from '../../components/SearchField'
 import JobsGrid from '../../components/job/JobsGrid'
-import {PreviewProvider} from '../../PreviewContext'
+import { PreviewProvider } from '../../PreviewContext'
+
 
 const Job = () => { 
 
@@ -9,7 +10,8 @@ const Job = () => {
         jobTitle: "",
         description:""
     })
-    
+        
+
     const handleChange = e => {          
         setSearchField( prevState => ({
             ...prevState, 

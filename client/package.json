@@ -13,6 +13,7 @@
     "react-thunk": "^1.0.0",
     "reactstrap": "^8.0.1",
     "redux": "^4.0.4",
+    "redux-localstorage": "^0.4.1",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {

@@ -13,6 +13,7 @@ const CardList = ({ jobCallbackFunction, getJobs, job}) => {
         // isAuthenticated: PropTypes.bool
     }
 
+    const [isLoading, setIsLoading] = useState(true)
     const [filterSearch, setFilterSearch] = useState({
         jobTitle: "",
         description: ""
@@ -23,14 +24,14 @@ const CardList = ({ jobCallbackFunction, getJobs, job}) => {
     }
 
     useEffect(() => {   
-        getJobs()                  
+        getJobs()
+        setIsLoading(false)                  
         setFilterSearch(jobCallbackFunction)
-    }, [jobCallbackFunction])    
-    
+    }, [jobCallbackFunction])        
 
     return (
         <>
-            {                         
+            {          
                 job.jobs
                     .filter(item => filterSearch ? filterFunction(filterSearch, item) : item)                    
                     .map((item, index) => <Card index={index} job={item} />)
@@ -54,4 +55,4 @@ function mapStateToProps(state)
     }
 }
 
-export default connect(mapStateToProps, { getJobs, deleteJob })(CardList);
+export default connect(mapStateToProps, { getJobs })(CardList);

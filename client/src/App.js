@@ -23,6 +23,8 @@ import Resume from './pages/user/Resume';
 import { Provider } from 'react-redux'
 import store from './store'
 import axios from 'axios'
+import EmployerTable from './components/user/EmployerTable';
+import { Messages } from './components/user/Messages';
 
 function App() {  
 
@@ -67,14 +69,9 @@ function App() {
               <Route path="/register" exact component={SignUpLayout} />
               <Route path="/login" exact component={SignInLayout} />  
               <Route path="/addJob" exact component={AddJobPage} />  
-              <Route path="/profile" 
-              exact 
-              // render={() => isLoggedIn ?
-              //   <Profile /> :
-              //   <Redirect to="/login" />
-              // }
-              component={Profile}
-              />  
+              <Route path="/profile" exact component={Profile} />  
+              <Route path="/profile/employertable" exact component={EmployerTable} />  
+              <Route path="/profile/messages" exact component={Messages} />  
               <Route path="/resume" exact component={Resume} />
             </Container>          
             </>

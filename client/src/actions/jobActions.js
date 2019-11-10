@@ -17,7 +17,7 @@ export const getJobs = () => dispatch => {
 
 export const addJob = item => (dispatch, getState) => {
     axios
-        .post('/api/items', item, tokenConfig(getState))
+        .post('/api/job', item, tokenConfig(getState))
         .then(res => 
                 dispatch({
                     type: ADD_JOB,
@@ -27,7 +27,8 @@ export const addJob = item => (dispatch, getState) => {
 }
 
 export const deleteJob = id => (dispatch, getState) => {
-    axios.delete(`/api/items/${id}`, tokenConfig(getState))
+    console.log(id)
+    axios.delete(`/api/job/deletejob/${id}`, tokenConfig(getState))
         .then(res => {
             dispatch({
                 type: DELETE_JOB,

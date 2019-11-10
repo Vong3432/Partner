@@ -58,6 +58,7 @@
   --lighter-grey: rgba(0, 0, 0, 0.2);
   --green-color:rgb(6, 179, 127);
   --lighter-green:rgb(31, 199, 185);
+  --danger:#FE3C3C;
 }
 
 ::placeholder
@@ -406,6 +407,41 @@ h1,h2,h3,h4,h5,h6{
   border-radius: 7px;
 }
 
+.danger-bg-button
+{
+  max-width: 140px !important;
+  width: 100%;
+
+  margin: 0 .5em;
+  padding: .5em .75em !important;
+
+  font-family: helveticaMedium;  
+  text-align: center;
+
+  background: var(--danger);
+  color: var(--white-color) !important;
+  
+  border: none;
+  border-radius: 7px;
+}
+
+.primary-bg-button--small
+{
+  max-width: 100px !important;
+  width: 100%;
+
+  margin: 0 .5em;
+  padding: .5em .5em !important;
+
+  font-family: helveticaMedium;  
+  text-align: center;
+
+  background: var(--primary-color);
+  color: var(--white-color) !important;
+  
+  border: none;  
+}
+
 .no-styling-button
 {
   width: auto;
@@ -416,12 +452,12 @@ h1,h2,h3,h4,h5,h6{
   padding: .5em .75em !important;  
 }
 
-.primary-bg-button,.primary-button,.no-styling-button
+.primary-bg-button,.primary-button,.no-styling-button,.danger-bg-button
 {
   animation: whenLeaveFocus 200ms ease-in forwards;
 }
 
-.primary-button:hover,.primary-bg-button:hover,.no-styling-button:hover
+.primary-button:hover,.primary-bg-button:hover,.no-styling-button:hover,.danger-bg-button:hover
 {  
   animation: whenFocus 200ms ease-in forwards;
 }
@@ -638,6 +674,29 @@ input[type="text"], input[type="email"], input[type="password"], select
   color: var(--white-color);
 }
 
+.employer-navbar
+{
+  max-width: 100%;
+  background: var(--white-color);
+  padding: 1.5em 3em !important;
+}
+
+.employer-navbar .nav-link
+{
+  cursor: pointer;  
+}
+
+.employer-navbar .nav-link:hover
+{
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.employer-navlink-active
+{
+  opacity: 1;
+  border-bottom: 2px solid var(--primary-color);
+}
+
 .profile-section
 {
   position: relative;
@@ -745,6 +804,17 @@ input[type="text"], input[type="email"], input[type="password"], select
   padding: 0 0 !important;
 }
 
+#newPostField
+{
+  max-width: 100%;
+  width: 100%;
+  min-height: 10vh;
+  resize: none;
+  border: .5px solid rgba(0, 0, 0, .125);
+
+  padding: .5em;
+}
+
 .profile-article
 {
   background-color:#fff;
@@ -797,7 +867,7 @@ input[type="text"], input[type="email"], input[type="password"], select
   flex-flow: column;
 }
 
-.resume-form label
+.resume-form label, .addjob-form--part label
 {
   font-size: 1.2rem;
   font-family: "Poppins", sans-serif;
@@ -806,11 +876,17 @@ input[type="text"], input[type="email"], input[type="password"], select
   
 }
 
-.resume-form input, .resume-form select
+.resume-form input, .resume-form select, .resume-form textarea,
+.addjob-form--part input, .addjob-form--part select, .addjob-form--part textarea
 {
   font-size: 1rem;  
   padding: .75em 1em;
   color: #313131 !important;    
+}
+
+.resume-form p
+{
+  font-size: .9rem;
 }
 
 .resume-form--header
@@ -819,6 +895,57 @@ input[type="text"], input[type="email"], input[type="password"], select
   font-size: 2rem;  
 }
 
+.addjob-form--part
+{
+  max-width: 100%;
+  width: 100%;
+  padding: 2em 3em;  
+  background: var(--white-color);  
+  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.05); 
+  display: flex;
+  flex-flow: column;
+}
+
+.addjob-form--part .title
+{
+  font-size: 1.7rem;
+}
+
+.addjob-form--part textarea
+{
+  resize: none;
+  border: .5px solid rgba(0, 0, 0, .25);
+  min-height: 20vh;
+  border-radius: 5px;
+}
+
+.decision--box-container
+{
+  display: grid;
+  grid-template-areas: "title title title title title"
+                       "c c c c c";
+  gap: 10px;
+  grid-auto-columns: minmax(auto, 1fr);
+}
+
+.decision--box
+{
+  cursor: pointer;
+  border: .5px solid rgba(0, 0, 0, .25);
+  padding: 1em;    
+}
+
+.decision--box:hover
+{
+  opacity: .5;
+  transition: opacity 200ms ease-in 100ms;
+}
+
+.decision--box h5
+{
+  font-size: 1rem;
+  margin:0;
+}
 
 @media screen and ( max-width: 1080px )
 {  
@@ -831,6 +958,9 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 @media screen and ( max-width: 780px )
 {
+  *{
+    font-size: 12px;
+  }
   .form, .form-image
   {  
     max-width: 100%;  
@@ -869,5 +999,11 @@ input[type="text"], input[type="email"], input[type="password"], select
                         'right right right'
                         'article article article';
   }
-  
+
+  .decision--box-container
+  {
+    display: grid;
+    grid-template-areas: "title"
+                        "c";    
+  }
 }

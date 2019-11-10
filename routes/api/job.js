@@ -17,10 +17,21 @@ const conn = mysql.createConnection({
 // @desc    Post a new job
 // @access  Private
 router.post('/', (req, res) => {
+    
+    // destrucutre all submitted data from body    
+    const jobID = uuid(),
+          upload_date = new Date(),
+          due_date = new Date();              
 
-    // destrucutre all submitted data from body
-    const { title, description } = req.body;
-    console.log(title, description)
+    const { employer_id, title, description, requirement, type, category, salary, duration } = req.body;
+    due_date.setDate(upload_date.getDate() + 5);
+    
+    const sql = `
+    INSERT INTO job(job_id, employer_id, title, upload_date, due_date, description, requirement, salary, status, type, category) VALUES(?)`    
+
+    conn.query(sql, [[jobID, employer_id, title, upload_date, due_date, description, requirement, salary, "Open", JSON.stringify(type), category]], (err, results) => {
+        (err) ? res.json(err) : res.json(results)
+    })    
 
 })
 
@@ -96,14 +107,15 @@ router.delete('/deletejob/:jobid', (req, res) => {
 
     // get id from url parameter
     const id = req.params.jobid
+    
 
     // define sql query
-    const sql = `DELETE FROM job WHERE job_id = ${id}`; 
-    
+    const sql = `DELETE FROM job WHERE job_id = '${id}'`;     
+
     // run sql
     conn.query(sql, (err, results) => {           
         // if err, send err 
-        // else send results to front-end                        
+        // else send results to front-end                              
         err ? res.send(err) : res.send('Current job has been deleted successfully.')        
     }) 
 })

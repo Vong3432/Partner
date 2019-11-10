@@ -34,6 +34,7 @@ const LoginForm = (props) => {
              // Attempt to login
             props.login(User)
             
+            
         }
         else
             setErrMsg('Please fill in all information.')
@@ -47,9 +48,7 @@ const LoginForm = (props) => {
         setUserInfo({
             ...userInfo,
             [ name ]: value
-        })
-
-        console.log(userInfo)
+        })        
 
     }
 

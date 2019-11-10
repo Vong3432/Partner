@@ -24,34 +24,36 @@ router.post('/login', (req, res) => {
     const currentUUID = uuid()    
 
     if( email && password )
-    {
-        conn.query('SELECT * FROM account WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
-            if (results.length > 0) {
+    {        
+        conn.query('SELECT * FROM account WHERE email = ? AND password = ?', [email, password], (error, results) => {
+            
+            if (results.length > 0) {                
+                console.log(results)
 				jwt.sign(
-                    {id: results.user_id},
+                    {id: results[0].user_id},
                     "myJwtSecret",
                     {expiresIn: 3600},
                     (err, token) => {
-                        if(err) throw err
-
-                        res.json({
+                        if(err) throw err                                       
+                        return res.status(200).json({                            
                             token,
-                            user:{
-                                id: results.user_id,
-                                name: results.name,
-                                email: results.email
+                            user:{                                
+                                id: results[0].user_id,
+                                name: results[0].name,
+                                email: results[0].email,
+                                category: results[0].category
                             }
                         });
                     }
                 )
-			} else {
-				res.send('Incorrect Username and/or Password!');
-			}			
-			res.end();
+                
+			} else {                
+                return res.status(400).json({ msg: 'User not found.' })            	
+			}						
         })
     } 
     else {
-		res.send('Please enter Username and Password!');
+		return res.status(400).json({ msg: 'Please enter email and password' })            	
 		res.end();
 	}   
            

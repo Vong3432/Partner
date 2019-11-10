@@ -1,21 +1,48 @@
-import React, { useState } from 'react'
-import axios from 'axios';
+import React, { useState, useEffect } from 'react'
 
-const AddProduct = () => {
+import { connect } from 'react-redux'
+import { addJob } from '../../actions/jobActions'
+import PropTypes from 'prop-types'
 
+const AddJob = (props) => {
+    AddJob.propTypes = {    
+        job: PropTypes.object.isRequired,
+        user: PropTypes.object.isRequired,
+        addJob: PropTypes.func.isRequired
+    }
+
+    // state
     const [job, setJob] = useState({
-        title:"",
-        description:""
-    })
+        title: "",
+        description: "",
+        category: "",
+        type: {
 
+        },
+        requirement: "",
+        duration: 0,
+        salary: 0
+    })
+    const [step, setStep] = useState(3)
     const [errMsg, setErrMsg] = useState("")
 
-    const handleChange = e => {       
-        const { name, value }  = e.target;        
-        
+    // side-effect
+    useEffect(() => {
+        console.log(props.user.user.category)
+        if(props.user.user.category !== "employer")
+        {
+            alert("You can't access to this page.")
+            window.location.href="/"
+        }
+    }, [job])
+
+    // event handler
+    const handleChange = e => {
+        const { name, value } = e.target;
+
         setJob({
             ...job,
-            [ name ]: value
+            [name]: value
         })
 
         console.log(job)
@@ -25,66 +52,155 @@ const AddProduct = () => {
     const onSubmit = e => {
         e.preventDefault()
         setErrMsg('')
-        
-        if(job.title && job.description)
-        {
-            const newJob = {
-                title: job.title,
-                description: job.description
-            }
 
-            axios
-                .post('/api/job', newJob)
-                .then(res => res.json)
-                .then(result => console.log(result))
-                .catch(err => console.log(err))
+        if (job.title && job.description && job.duration && job.requirement && job.type && job.category && job.salary) {
+            const newJob = {                
+                employer_id: props.user.user.id, 
+                title: job.title,                
+                description: job.description,
+                requirement: job.requirement,
+                type: job.type,
+                category: job.category,
+                salary: job.salary,
+                duration: job.duration
+            }
+            props.addJob(newJob)
+            
         }
         else
             setErrMsg('Please fill in all information.')
     }
-    
-    return (
-        <>            
-            <form className="form ml-lg-auto" onSubmit={onSubmit}>
 
-                <div className="d-flex flex-column w-100">
-                    <h3 className="title">Welcome to Partner.</h3>
-                    <p className="paragraph">Partner provides opportunities for everyone to fullfill needs</p>
+    // components
+    const step1 = (
+        <div className="addjob-form--part mb-3">
+            <div className="d-flex flex-column w-100">
+                <h4 className="title">Job Information</h4>
+                <div id="divider"></div>
+
+                <div className="d-flex flex-row mt-5 my-3 w-100">
+                    <img className="small-icon" src={require('../../images/suitcase.svg')} alt="suitcase" />
+                    <div className="d-flex flex-column ml-3 w-100">
+                        <label htmlFor="title">Job Title</label>
+                        <input name="title" value={job.title} onChange={(e) => handleChange(e)} type="text" id="" placeholder="e.g Programmer ..." />
+                    </div>
                 </div>
 
-                <div id="divider" className="mt-0 mb-4" style={{ width: "20%" }}></div>
-
-                {errMsg && (<h3>Err: {errMsg} </h3>)}
-                <div className="d-flex flex-row flex-sm-nowrap mt-2">
-
-                    <div className="d-flex flex-column w-50 mr-2">
-                        <label htmlFor="title">Job Title</label>
-                        <input
-                            type="text"
-                            name="title"
-                            id="title"
-                            value={job.title}
-                            onChange={handleChange}
-                        />
+                <div className="d-flex flex-row my-3 w-100">
+                    <img className="small-icon" src={require('../../images/funds.svg')} alt="funds" />
+                    <div className="d-flex flex-column ml-3 w-100">
+                        <label htmlFor="salary">Salary</label>
+                        <div className="d-flex flex-row align-items-center w-100">
+                            <h6 className="mr-3" style={{fontSize:".9rem"}}>RM</h6>
+                            <input style={{width:"100%"}} type="text" id="" onChange={e => handleChange(e)} value={job.salary} name="salary" placeholder="3000" />
+                        </div>                    
                     </div>
+                </div>
 
-                    <div className="d-flex flex-column w-50 ml-2">
+                <div className="d-flex flex-row my-3 w-100">
+                    <img className="small-icon" src={require('../../images/conversation.svg')} alt="conversation" />
+                    <div className="d-flex flex-column ml-3 w-100">
                         <label htmlFor="description">Job Description</label>
-                        <input
-                            type="text"
-                            name="description"
-                            id="description"
-                            value={job.description}
-                            onChange={handleChange}
-                        />
+                        <textarea name="description" onChange={(e) => handleChange(e)} id="" placeholder="Some description ...">{job.description}</textarea>
                     </div>
+                </div>
 
-                </div>                
+                <div className="d-flex flex-row my-3 w-100">
+                    <img className="small-icon" src={require('../../images/testing.svg')} alt="testing" />
+                    <div className="d-flex flex-column ml-3 w-100">
+                        <label htmlFor="requirement">Job Requirements</label>
+                        <textarea name="requirement" onChange={(e) => handleChange(e)} id="" placeholder="Some description ...">{job.requirement}</textarea>
+                    </div>
+                </div>
 
-                <input type="submit" value="Continue" className="my-5 ml-0 primary-bg-button" />
+                <div className="d-flex flex-row my-3 w-100">
+                    <img className="small-icon" src={require('../../images/category.svg')} alt="category" />
+                    <div className="d-flex flex-column ml-3 w-100">
+                        <label htmlFor="description">Job Category</label>
+                        <select required onChange={(e) => handleChange(e)} name="category" id="category">
+                            <option value="">Select category:</option>
+                            <option value="IT">IT</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                {(job.title && job.description && job.category && job.requirement) && (
+                    <button onClick={(e) => setStep(step + 1)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
+                )}
+
+            </div>
+        </div>
+    )
+
+    const step2 = (
+        <div className="addjob-form--part mb-3">
+            <div className="decision--box-container">
+                
+                <label className="mb-3" style={{ gridArea: "title" }}>
+                    <h4 className="title">Job Type</h4>
+                    <div id="divider"></div>
+                </label>                
+
+                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, fullTime: "Full Time"} }))}>                    
+                    <h5>Full-Time</h5>
+                </div>
+                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, partTime: "Part Time"} }))}>                
+                    <h5>Part-Time</h5>
+                </div>
+                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, contract: "Contract"} }))}>                    
+                    <h5>Contract</h5>
+                </div>
+                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, commission: "Commission"} }))}>                    
+                    <h5>Commission</h5>
+                </div>
+                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, internship: "Internship"} }))}>                    
+                    <h5>Internship</h5>
+                </div>
+
+            </div>
+            {(job.type) && (
+                <button onClick={(e) => setStep(step + 1)} className="ml-auto mr-0 mt-3 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
+            )}
+        </div>
+    )
+
+    const step3 = (
+        <div className="addjob-form--part mb-3">
+            <div className="d-flex flex-row align-items-center flex-wrap w-100">
+                <h4 className="title mr-1">I want to post this job for:</h4>                
+                <div className="ml-auto d-flex flex-row align-items-center">
+                    <input style={{maxWidth:"80px"}} className="mr-3" type="number" id="" onChange={e => handleChange(e)} value={job.duration} name="duration" placeholder="7" />
+                    <h6>Days</h6>                            
+                </div> 
+
+
+                {(job.duration) && (
+                    <button onClick={(e) => onSubmit(e)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Post</button>
+                )}
+
+            </div>
+        </div>
+    )
+
+    return (
+        <>
+            <form className="form mx-auto" onSubmit={onSubmit} style={{ marginTop: "6em", maxWidth: "80%" }}>
+                {(step >= 1) && step1}
+                {(step >= 2) && step2}
+                {(step >= 3) && step3}
             </form>
         </>
     )
 }
 
-export default AddProduct
+function mapStateToProps(state)
+{    
+    return{
+        job: state.job,
+        user: state.auth
+        // isAuthenticated: state.auth.isAuthenticated
+    }
+}
+
+export default connect(mapStateToProps, { addJob })(AddJob);
