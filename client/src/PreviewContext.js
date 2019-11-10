@@ -11,7 +11,16 @@ export const PreviewProvider = (props) => {
             jobID:"",
             title:"Select a job",
             description:"",
-            logo:""
+            logo:"",
+            employer_id:"",
+            upload_date:"", 
+            due_date:"", 
+            description:"",
+            requirement:"", 
+            status:"", 
+            type:"", 
+            category:"", 
+            salary:""
         }
     ])
 

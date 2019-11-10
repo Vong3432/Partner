@@ -23,21 +23,26 @@ const LoginForm = (props) => {
     const onSubmit = e => {
         e.preventDefault();        
         setErrMsg('')
-        
-        if(userInfo.email && userInfo.password)
-        {
-            const User = {
-                email: userInfo.email,
-                password: userInfo.password
-            }
 
-             // Attempt to login
-            props.login(User)
-            
-            
-        }
+        if(props.isAuthenticated)
+            alert('You are logged in!')
+
         else
-            setErrMsg('Please fill in all information.')
+        {
+            if(userInfo.email && userInfo.password)
+            {
+                const User = {
+                    email: userInfo.email,
+                    password: userInfo.password
+                }
+    
+                 // Attempt to login
+                props.login(User)                                                                
+                
+            }
+            else
+                setErrMsg('Please fill in all information.')
+        }                
 
         
     }
@@ -50,17 +55,13 @@ const LoginForm = (props) => {
             [ name ]: value
         })        
 
-    }
-
-    useEffect(() => {           
-        
-    }, [userInfo])
+    }    
 
     return (        
             
         <form method="POST" onSubmit={onSubmit} className="form m-auto p-5" style={{height:"100%"}}>
             <h3>Partner.</h3>            
-            {errMsg}
+            <p style={{color:"var(--danger)", fontWeight:"bold"}}>{errMsg}</p>
             <div className="d-flex flex-column mt-4">
                 <label htmlFor="email">Email</label>
                 <input 

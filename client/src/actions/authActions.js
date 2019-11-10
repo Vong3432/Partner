@@ -53,6 +53,7 @@ export const register = ({ email, password }) => dispatch => {
             dispatch({
                 type: REGISTER_FAIL
             })
+            throw err
         })
 
 }
@@ -82,6 +83,7 @@ export const login = ({ email, password }) => dispatch => {
             dispatch({
                 type: LOGIN_FAIL
             })
+            throw err
         })
 
 }

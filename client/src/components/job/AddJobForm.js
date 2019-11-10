@@ -23,7 +23,7 @@ const AddJob = (props) => {
         duration: 0,
         salary: 0
     })
-    const [step, setStep] = useState(3)
+    const [step, setStep] = useState(1)
     const [errMsg, setErrMsg] = useState("")
 
     // side-effect
@@ -65,10 +65,32 @@ const AddJob = (props) => {
                 duration: job.duration
             }
             props.addJob(newJob)
-            
+            window.alert('Added successfully.')            
         }
         else
-            setErrMsg('Please fill in all information.')
+            alert('Please fill in all information.')
+    }
+
+    useEffect(() => {
+        if(step > 1)
+        {
+            window.scrollTo({
+                'behavior': 'smooth',
+                'left':0,
+                'top': window.scrollY + 400
+            })
+        }        
+    }, [step])
+
+        // css
+    const activeTab = {
+        backgroundColor:"var(--primary-color)",
+        color:"#fff"
+    }
+
+    const normalTab = {
+        backgroundColor:"transparent",
+        color:"var(--dark-color)"
     }
 
     // components
@@ -100,7 +122,8 @@ const AddJob = (props) => {
                 <div className="d-flex flex-row my-3 w-100">
                     <img className="small-icon" src={require('../../images/conversation.svg')} alt="conversation" />
                     <div className="d-flex flex-column ml-3 w-100">
-                        <label htmlFor="description">Job Description</label>
+                        <label htmlFor="description" className="mb-0">Job Description</label>
+                        <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong>
                         <textarea name="description" onChange={(e) => handleChange(e)} id="" placeholder="Some description ...">{job.description}</textarea>
                     </div>
                 </div>
@@ -108,7 +131,8 @@ const AddJob = (props) => {
                 <div className="d-flex flex-row my-3 w-100">
                     <img className="small-icon" src={require('../../images/testing.svg')} alt="testing" />
                     <div className="d-flex flex-column ml-3 w-100">
-                        <label htmlFor="requirement">Job Requirements</label>
+                        <label htmlFor="requirement" className="mb-0">Job Requirements</label>
+                        <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong>
                         <textarea name="requirement" onChange={(e) => handleChange(e)} id="" placeholder="Some description ...">{job.requirement}</textarea>
                     </div>
                 </div>
@@ -126,7 +150,7 @@ const AddJob = (props) => {
 
 
                 {(job.title && job.description && job.category && job.requirement) && (
-                    <button onClick={(e) => setStep(step + 1)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
+                    <button onClick={(e) => {e.preventDefault(); setStep(step + 1)}} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
                 )}
 
             </div>
@@ -134,7 +158,7 @@ const AddJob = (props) => {
     )
 
     const step2 = (
-        <div className="addjob-form--part mb-3">
+        <div className={step >= 2 ? "addjob-form--part mb-3 transition-show": "transition-hide addjob-form--part mb-3"}>
             <div className="decision--box-container">
                 
                 <label className="mb-3" style={{ gridArea: "title" }}>
@@ -142,42 +166,45 @@ const AddJob = (props) => {
                     <div id="divider"></div>
                 </label>                
 
-                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, fullTime: "Full Time"} }))}>                    
+                <div className="decision--box" style={job.type.fullTime === "Full Time" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, fullTime: "Full Time"} }))}>                    
                     <h5>Full-Time</h5>
                 </div>
-                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, partTime: "Part Time"} }))}>                
+                <div className="decision--box" style={job.type.partTime === "Part Time" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, partTime: "Part Time"} }))}>                
                     <h5>Part-Time</h5>
                 </div>
-                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, contract: "Contract"} }))}>                    
+                <div className="decision--box" style={job.type.contract === "Contract" ? activeTab : normalTab}onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, contract: "Contract"} }))}>                    
                     <h5>Contract</h5>
                 </div>
-                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, commission: "Commission"} }))}>                    
+                <div className="decision--box" style={job.type.commission === "Commission" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, commission: "Commission"} }))}>                    
                     <h5>Commission</h5>
                 </div>
-                <div className="decision--box" onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, internship: "Internship"} }))}>                    
+                <div className="decision--box" style={job.type.internship === "Internship" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, internship: "Internship"} }))}>                    
                     <h5>Internship</h5>
-                </div>
+                </div>                
 
             </div>
             {(job.type) && (
-                <button onClick={(e) => setStep(step + 1)} className="ml-auto mr-0 mt-3 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
+                <div className="d-flex flex-row">
+                    <button onClick={(e) => {e.preventDefault(); setJob((prevJob) => ({ ...prevJob, type: {} }))}} className="ml-auto mr-0 mt-3 no-styling-button" style={{ borderRadius: "0" }}>Reset</button>
+                    <button onClick={(e) => {e.preventDefault(); setStep(step + 1)}} className="ml-3 mr-0 mt-3 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
+                </div>
             )}
         </div>
     )
 
     const step3 = (
-        <div className="addjob-form--part mb-3">
+        <div className={step >= 3 ? "addjob-form--part mb-3 transition-show": "transition-hide addjob-form--part mb-3"}>
             <div className="d-flex flex-row align-items-center flex-wrap w-100">
                 <h4 className="title mr-1">I want to post this job for:</h4>                
                 <div className="ml-auto d-flex flex-row align-items-center">
-                    <input style={{maxWidth:"80px"}} className="mr-3" type="number" id="" onChange={e => handleChange(e)} value={job.duration} name="duration" placeholder="7" />
+                    <input style={{maxWidth:"80px"}} className="mr-3" type="number" id="" onChange={e => handleChange(e)} name="duration" placeholder="7" />
                     <h6>Days</h6>                            
                 </div> 
 
 
-                {(job.duration) && (
+                {(job.duration) ? (
                     <button onClick={(e) => onSubmit(e)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Post</button>
-                )}
+                ): ""}
 
             </div>
         </div>
@@ -185,7 +212,7 @@ const AddJob = (props) => {
 
     return (
         <>
-            <form className="form mx-auto" onSubmit={onSubmit} style={{ marginTop: "6em", maxWidth: "80%" }}>
+            <form className="form mx-auto" onSubmit={onSubmit} style={{ marginTop: "6em", maxWidth: "80%", marginBottom:"3em" }}>
                 {(step >= 1) && step1}
                 {(step >= 2) && step2}
                 {(step >= 3) && step3}

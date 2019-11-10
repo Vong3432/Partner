@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink as RRNavLink} from 'react-router-dom'
+import { NavLink as RRNavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { NavLink } from 'reactstrap';
 
 import Article from '../../components/user/Article'
-import { loadUser } from '../../actions/authActions'
+import { showProfile } from '../../actions/profileActions'
+
 import CreatePost from '../../components/user/CreatePost'
 
 import PropTypes from 'prop-types'
@@ -14,27 +15,44 @@ const Profile = (props) => {
     const text = "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus."
 
     Profile.propTypes = {
-        loadUser: PropTypes.func.isRequired,
-        user: PropTypes.object.isRequired
+        showProfile: PropTypes.func.isRequired,
+        user: PropTypes.object.isRequired,
+        profile: PropTypes.object.isRequired
     }
 
-    const [isOwner, setIsOwner] = useState(true)
-    const [isEmployer, setIsEmployer] = useState(true)
+    const [isOwner, setIsOwner] = useState(false)
+    const [isEmployer, setIsEmployer] = useState(false)
     useEffect(() => {
-        loadUser()
+        const paramID = props.match.params.id
+        const { user } = props
+        console.log(props)
+        props.showProfile(paramID)
+
+        if (props.profile.category === "employer")
+            setIsEmployer(true)
+        else
+            setIsEmployer(false)
+
+        if (user) {
+            if (paramID === user.id)
+                setIsOwner(true)
+            else
+                setIsOwner(false)
+        }
+
+
     }, [])
 
     return (
         <>
-            {console.log(props.user.name + "ss")}
 
-            {!isEmployer && (
+            {(!isEmployer || !isOwner) && (
                 <section style={{ backgroundColor: "black" }} className="d-flex flex-column justify-content-center">
 
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
                         <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                        <h2 className="profile-username mt-2">JJ</h2>
+                        <h2 className="profile-username mt-2">{props.profile.name}</h2>
                     </div>
 
                     {/* social media links */}
@@ -52,15 +70,15 @@ const Profile = (props) => {
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
                         <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                        <h2 className="profile-username mt-2">JJ</h2>
+                        <h2 className="profile-username mt-2">{props.profile.name}</h2>
                     </div>
 
                     {/* social media links */}
-                    <div className="nav employer-navbar mt-auto mb-5" style={{ minHeight: "initial" }}>                        
-                        <NavLink exact={true} to={{pathname: '/profile'}} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
-                        <NavLink exact={true} to={{pathname: '/profile/employertable'}} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
-                        <NavLink exact={true} to={{pathname: '/profile/messages'}} tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>                        
-                        <NavLink exact={true} to={{pathname: '/addJob'}} tag={RRNavLink} activeClassName="employer-navlink-active" className="ml-auto primary-bg-button">Post Job</NavLink>                        
+                    <div className="nav employer-navbar mt-auto mb-5" style={{ minHeight: "initial", position: "sticky !important", top: "0", zIndex: "99", }}>
+                        <NavLink exact={true} to={{ pathname: `/profile/${props.match.params.id}` }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
+                        <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state: { user: props.user, profile: props.profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
+                        <NavLink exact={true} to={{ pathname: '/profile/messages' }} tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>
+                        <NavLink exact={true} to={{ pathname: '/addJob' }} tag={RRNavLink} activeClassName="employer-navlink-active" className="ml-auto primary-bg-button">Post Job</NavLink>
                     </div>
 
                 </section>
@@ -173,7 +191,7 @@ const Profile = (props) => {
                                     <i className="material-icons ml-auto" style={{ color: "var(--primary-color)", lineHeight: "29.25px" }}>&#xe88f;</i>
                                 </div>
                                 <div>
-                                    <span className="mr-1 badge badge-primary">Primary</span>
+                                    <span className="badge badge-primary">Primary</span>
                                     <span className="badge badge-primary">Primary</span>
                                 </div>
                             </div>
@@ -188,12 +206,12 @@ const Profile = (props) => {
 
                     {/* Article */}
                     <div className="profile--article-container">
-                        {(!isEmployer && isOwner) && (
+                        {(isOwner) && (
                             <CreatePost />
                         )}
-                        <Article text={text} />
-                        <Article text={text} />
-                        <Article text={text} />
+                        <Article text={text} author={props.profile.name} />
+                        <Article text={text} author={props.profile.name}  />
+                        <Article text={text} author={props.profile.name}  />
                     </div>
 
                 </div>
@@ -207,9 +225,10 @@ const Profile = (props) => {
 
 function mapStateToProps(state) {
     return {
-        user: state.auth.user
+        user: state.auth.user,
+        profile: state.profile.user
         // isAuthenticated: state.auth.isAuthenticated
     }
 }
 
-export default connect(mapStateToProps, { loadUser })(Profile);
+export default connect(mapStateToProps, { showProfile })(Profile);

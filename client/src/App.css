@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins:300, 500, 700, 900');
+ @import url('https://fonts.googleapis.com/css?family=Poppins:300, 500, 700, 900');
 @font-face
 {
   font-family: helveticaThin;
@@ -173,6 +173,13 @@ h1,h2,h3,h4,h5,h6{
   opacity: 1;
 }
 
+.btn-group
+{
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .shadow
 {
   /* box-shadow: 0px 7px 35px rgba(45, 92, 201, 0.1) !important;     */
@@ -188,7 +195,8 @@ h1,h2,h3,h4,h5,h6{
 
 .card-shadow
 {
-  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.1); 
+  /* box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.1);  */
+  box-shadow: 0px 4px 10px rgba(63, 88, 146, 0.1); 
   border-radius: 15px;
 }
 
@@ -205,13 +213,24 @@ h1,h2,h3,h4,h5,h6{
   box-shadow: 0px 10px 25px rgba(44, 64, 110, 0.1);  
 }
 
+.card-companyName
+{
+  font-size: .9rem;
+}
+
 .card-title
 {
   font-family: helveticaBold;
   text-transform: capitalize;
-  font-size: 1.35rem;
+  font-size: 1.1rem;
 
-  margin-top: 1em;  
+  margin: 1em 0;
+}
+
+.card-sub-title
+{
+  font-weight: bold;
+  color: var(--light-grey);  
 }
 
 .card-text
@@ -318,7 +337,7 @@ h1,h2,h3,h4,h5,h6{
   position: relative;  
   /* margin-top: 75vh; */
   margin-top: 90vh;
-  min-height: 0;
+  min-height: 0;  
 }
 
 /* 4. Own component settings */
@@ -592,7 +611,7 @@ input[type="text"], input[type="email"], input[type="password"], select
 .posts-grid
 {
   position: relative;
-  overflow: hidden;
+  overflow-y: hidden;
 
   display: grid;
   grid-template-areas: 'left right';
@@ -601,16 +620,27 @@ input[type="text"], input[type="email"], input[type="password"], select
   grid-auto-rows: minmax(50vh, 1fr);
 
   margin-bottom: 2em;
+  /* min-height: 100vh; */
+  height: auto;
 }
 
 .posts-grid-left
 {
   grid-area: left;
-  max-height: 100vh;
+  max-height: 80vh;
   
   background: #FBFBFB;
   overflow-y: scroll;
   padding: 0 1em;
+}
+
+.tag
+{  
+  color: gray;
+  background-color: rgb(240, 240, 240);  
+  padding: .75em !important; 
+  margin: 1em 0 .25em 0 !important;
+  font-size: .7rem !important;
 }
 
 .posts-grid-left::-webkit-scrollbar
@@ -625,20 +655,35 @@ input[type="text"], input[type="email"], input[type="password"], select
   background: var(--white-color);
   /* min-height: 100vh;   */
   max-height: 100vh;
-  height: 100%;
+  height: auto;
   position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
   left: 0;
+  
+  overflow-y: scroll;
+  padding: 2em 1.5em;
+  border: 1px solid rgba(51, 93, 192, 0.15);
+  /* box-shadow: 0px 4px 10px rgba(63, 88, 146, 0.1);  */
+}
 
-  padding: 1em;
-  border: .5px solid rgba(51, 93, 192, 0.125);
+.posts-grid-right::-webkit-scrollbar
+{
+  width: 0px !important;
+  background: transparent !important;
 }
 
 .posts-grid-right-content
 {
-  
+  display: flex;  
+  flex-flow: column;
+}
+
+.posts-grid-right-content .paragraph
+{
+  color: gray;
+  line-height: 26px;
 }
 
 #scrollTopBtn
@@ -937,7 +982,7 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 .decision--box:hover
 {
-  opacity: .5;
+  opacity: .75;
   transition: opacity 200ms ease-in 100ms;
 }
 

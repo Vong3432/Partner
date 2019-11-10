@@ -69,8 +69,8 @@ function App() {
               <Route path="/register" exact component={SignUpLayout} />
               <Route path="/login" exact component={SignInLayout} />  
               <Route path="/addJob" exact component={AddJobPage} />  
-              <Route path="/profile" exact component={Profile} />  
-              <Route path="/profile/employertable" exact component={EmployerTable} />  
+              <Route path="/profile/:id" exact component={Profile} />  
+              <Route path="/profile/employertable/:id" exact component={EmployerTable} />  
               <Route path="/profile/messages" exact component={Messages} />  
               <Route path="/resume" exact component={Resume} />
             </Container>          

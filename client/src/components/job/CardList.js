@@ -17,17 +17,23 @@ const CardList = ({ jobCallbackFunction, getJobs, job}) => {
     const [filterSearch, setFilterSearch] = useState({
         jobTitle: "",
         description: ""
-    })
+    })    
 
-    function filterFunction(input, job) {                
-        return ("" || job.title.toLocaleLowerCase().search(input.jobTitle.toLocaleLowerCase()) !== -1) && ("" || job.description.toLocaleLowerCase().search(filterSearch.description.toLocaleLowerCase()) !== -1)
-    }
-
-    useEffect(() => {   
-        getJobs()
-        setIsLoading(false)                  
+    useEffect(() => {           
         setFilterSearch(jobCallbackFunction)
-    }, [jobCallbackFunction])        
+    }, [jobCallbackFunction])    
+
+    useEffect(() => {
+        getJobs()                      
+        setIsLoading(false)                  
+    }, [])
+    
+    const filterFunction = (input, job) => {     
+        if(job)           
+            return ((job.title||'').toLocaleLowerCase().search(input.jobTitle.toLocaleLowerCase()) !== -1 ) && ((job.description || "").toLocaleLowerCase().search(filterSearch.description.toLocaleLowerCase()) !== -1 || "")
+        else 
+            return null
+    }
 
     return (
         <>

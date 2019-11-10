@@ -67,8 +67,8 @@ const EmployerTable = (props) => {
 
                     {/* social media links */}
                     <div className="nav employer-navbar mt-auto mb-5" style={{ minHeight: "initial" }}>
-                        <NavLink exact={true} to={{ pathname: '/profile', state: { user: props.user } }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
-                        <NavLink exact={true} to={{ pathname: '/profile/employertable', state: { user: props.user } }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
+                        <NavLink exact={true} to={{ pathname: `/profile/${props.match.params.id}`, state:{user: props.user, profile: props.profile} }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
+                        <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state:{user: props.user, profile: props.profile} }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
                         <NavLink exact={true} to="/messages" tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>
                     </div>
 

@@ -26,10 +26,18 @@ router.post('/', (req, res) => {
     const { employer_id, title, description, requirement, type, category, salary, duration } = req.body;
     due_date.setDate(upload_date.getDate() + 5);
     
+    let str=""
+    for(key in type) {
+        if(type.hasOwnProperty(key)) {
+            var value = type[key];
+            str = str+value+","
+            //do something with value;
+        }
+    }
     const sql = `
     INSERT INTO job(job_id, employer_id, title, upload_date, due_date, description, requirement, salary, status, type, category) VALUES(?)`    
 
-    conn.query(sql, [[jobID, employer_id, title, upload_date, due_date, description, requirement, salary, "Open", JSON.stringify(type), category]], (err, results) => {
+    conn.query(sql, [[jobID, employer_id, title, upload_date, due_date, description, requirement, salary, "Open", str, category]], (err, results) => {
         (err) ? res.json(err) : res.json(results)
     })    
 
@@ -49,7 +57,7 @@ router.get('/pendinglist', (req, res) => {
     conn.query(sql, (err, results) => {   
         
         // for each result, display the title of it (debug purpose)
-        results.map(result => console.log(result)) 
+        // results.map(result => console.log(result)) 
         
         // if err, send err 
         // else send results to front-end
@@ -69,7 +77,7 @@ router.get('/displayjobs', (req, res) => {
     conn.query(sql, (err, results) => {   
         
         // for each result, display the title of it (debug purpose)
-        results.map(result => console.log(result)) 
+        // results.map(result => console.log(result)) 
         
         // if err, send err 
         // else send results to front-end
