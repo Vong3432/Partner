@@ -1,34 +1,34 @@
-import { GET_JOBS, ADD_JOB, DELETE_JOB, UPDATE_JOB, JOBS_LOADING } from '../actions/types'
+import { GET_POSTS, ADD_POST, DELETE_POST, EDIT_POST, POST_LOADING } from '../actions/types'
 
 const initialState = {
-    jobs: [],
+    posts: null,
     loading: false
 }
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case GET_JOBS:
+        case GET_POSTS:
             return {
                 ...state,
-                jobs: action.payload,
+                posts: action.payload,
                 loading: false
             }
-        case DELETE_JOB:
+        case DELETE_POST:
             return {
                 ...state,
-                jobs: state.jobs.filter(job => job.id !== action.payload)
+                posts: state.posts.filter(post => post._id !== action.payload)
             }
-        case ADD_JOB:
+        case ADD_POST:
             return {
                 ...state,
-                jobs: [action.payload, ...state.jobs]
+                posts: [action.payload, ...state.posts]
             }
-        case UPDATE_JOB:
+        case EDIT_POST:
             return {
                 ...state,
-                jobs: state.jobs.filter(job => job.id !== action.payload.id).push(action.payload)
+                posts: [action.payload, ...state.posts]
             }
-        case JOBS_LOADING:
+        case POST_LOADING:
             return {
                 ...state,
                 loading: true

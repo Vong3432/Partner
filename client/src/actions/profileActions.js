@@ -22,6 +22,7 @@ export const showProfile = id => (dispatch, getState) => {
                 type: SHOW_PROFILE,
                 payload: res.data
             }))
+        
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 

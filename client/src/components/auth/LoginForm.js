@@ -38,7 +38,7 @@ const LoginForm = (props) => {
     
                  // Attempt to login
                 props.login(User)                                                                
-                
+                // window.location.href = '/'                
             }
             else
                 setErrMsg('Please fill in all information.')

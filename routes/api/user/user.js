@@ -28,7 +28,7 @@ router.post('/login', (req, res) => {
         conn.query('SELECT * FROM account WHERE email = ? AND password = ?', [email, password], (error, results) => {
             
             if (results.length > 0) {                
-                console.log(results)
+                //console.log(results)
 				jwt.sign(
                     {id: results[0].user_id},
                     "myJwtSecret",

@@ -1,7 +1,10 @@
 const express = require('express')
+const http = require('http')
+const socketServer = require('socket.io')
+const axios = require('axios')
+const mysql = require('mysql')
+const uuid = require('uuid');
 const app = express()
-// const session = require('express-session')
-
 // to get data from res.body
 app.use(express.json())
 
@@ -13,12 +16,88 @@ app.use('/api/config', require('./routes/api/init'))
 app.use('/api/job', require('./routes/api/job'))
 app.use('/api/user', require('./routes/api/user/user'))
 app.use('/api/profile', require('./routes/api/user/profile'))
+app.use('/api/post', require('./routes/api/posts'))
 
-// /api/job/displayjobs
+// var serve = http.createServer(app)
+// var io = socketServer(serve)
 
 app.listen(port, () => console.log(`Listen on port ${port}`))
 
+// const connections = [];
 
+// io.on('connection', function (socket) {
+//     console.log("Connected to Socket!!" + socket.id)
+//     connections.push(socket)
+//     socket.on('disconnect', function () {
+//         console.log('Disconnected - ' + socket.id);
+//     });
+
+//     socket.on('addPost', (data) => {
+//         console.log(data)
+
+//         const conn = mysql.createConnection({
+//             host: "localhost",
+//             user: "root",
+//             password: "",
+//             database: "partner",
+//             // allow multiple SQL statement to be included
+//             multipleStatements: true
+//         })
+
+//         // destrucutre all submitted data from body
+//         const PostingID = uuid(),
+//             UploadTime = new Date()
+
+//         const { Description, Picture, ProfileID } = data;
+
+//         // ???
+//         // for(key in type) {
+//         //     if(type.hasOwnProperty(key)){
+//         //         var value = type[key];
+//         //         str = str + value + ","
+//         //         // do something with the value;
+//         //     }
+//         // }
+
+//         const sql = 'INSERT INTO posting (PostingID, ProfileID, Description, Picture, UploadTime) VALUES (?)';
+
+//         conn.query(sql, [[PostingID, ProfileID, Description, Picture, UploadTime]], (err, results) => {
+//             (err) ? console.log('fail') : io.emit('postAdded', data)
+//         })
+//         // axios
+//         // .post('/api/post', data)
+//         // .then(io.emit('postAdded', data))
+//         // .catch(err => console.log(err))
+//     })
+
+//     socket.on('getPost', (id) => {
+//         console.log(id+"s")
+
+//         const conn = mysql.createConnection({
+//             host: "localhost",
+//             user: "root",
+//             password: "",
+//             database: "partner",
+//             // allow multiple SQL statement to be included
+//             multipleStatements: true
+//         })                
+
+//         // define sql query
+//         const sql = `SELECT * FROM Posting WHERE ProfileID = '${id}'`;
+
+//         // run sql
+//         conn.query(sql, (err, results) => {
+
+//             // for each result, display the title of it (debug purpose)
+//             results.map(result => console.log(result))
+
+//             // if err, send err 
+//             // else send results to front-end
+//             err ? console.log(err) : io.emit('postLoaded', results)
+//         })
+//     })
+
+// });
 
 
 

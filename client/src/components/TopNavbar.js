@@ -56,9 +56,11 @@ const TopNavbar = (props) => {
                     <DropdownMenu>
                         {/* <DropdownItem header>Header</DropdownItem> */}
                         <DropdownItem>
-                            <NavLink className="px-0" style={{ opacity: "1" }} href="/">
-                                Edit profile
-                        </NavLink>
+                            {props.auth.user && (
+                                <NavLink tag={RRNavLink} className="px-0" style={{ opacity: "1" }} to={`/editProfile/${props.auth.user.id}`} >
+                                    Edit profile                                
+                                </NavLink>
+                            )}
                         </DropdownItem>
                         <DropdownItem divider />
                         <DropdownItem><Logout /></DropdownItem>

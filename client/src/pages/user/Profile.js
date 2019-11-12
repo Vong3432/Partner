@@ -1,34 +1,48 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { NavLink as RRNavLink } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'reactstrap';
 
 import Article from '../../components/user/Article'
 import { showProfile } from '../../actions/profileActions'
-
+import { getPosts } from '../../actions/postActions'
 import CreatePost from '../../components/user/CreatePost'
 
 import PropTypes from 'prop-types'
+// import io from 'socket.io-client'
+// let socket
 
 const Profile = (props) => {
 
-    const text = "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus."
+    const text = "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus."    
 
-    Profile.propTypes = {
-        showProfile: PropTypes.func.isRequired,
-        user: PropTypes.object.isRequired,
-        profile: PropTypes.object.isRequired
-    }
+    const dispatch = useDispatch()    
 
     const [isOwner, setIsOwner] = useState(false)
     const [isEmployer, setIsEmployer] = useState(false)
-    useEffect(() => {
-        const paramID = props.match.params.id
-        const { user } = props
-        console.log(props)
-        props.showProfile(paramID)
 
-        if (props.profile.category === "employer")
+    const auth = useSelector(state => state.auth)
+    const profile = useSelector(state => state.profile.user)
+    const posts = useSelector(state => state.post.posts)
+    const user = useSelector(state => state.auth.user)
+
+    useEffect(() => {
+
+        const paramID = props.match.params.id               
+        //props.loadInitialDataSocket(socket, props.match.params.id)        
+
+        // socket = io.connect("http://localhost:5000")
+        // console.dir(socket)
+
+        // socket.on('postLoaded', res=>{
+        //     console.dir(res)
+        //     dispatch(getPosts(res))
+        // })
+        
+        dispatch(getPosts(paramID))
+                
+        console.log(user)
+        if (profile.category === "employer")
             setIsEmployer(true)
         else
             setIsEmployer(false)
@@ -39,9 +53,16 @@ const Profile = (props) => {
             else
                 setIsOwner(false)
         }
-
-
-    }, [])
+                
+        dispatch(showProfile(paramID))
+        // props.getPosts(paramID)
+        // return(() => socket.emit('disconnect'))
+    }, [profile.category])        
+    
+    // useEffect(() => {
+    //     const paramID = props.match.params.id        
+    //     props.getPosts(paramID)
+    // }, [props.post.loading])
 
     return (
         <>
@@ -52,7 +73,7 @@ const Profile = (props) => {
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
                         <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                        <h2 className="profile-username mt-2">{props.profile.name}</h2>
+                        <h2 className="profile-username mt-2">{profile.name}</h2>
                     </div>
 
                     {/* social media links */}
@@ -70,13 +91,13 @@ const Profile = (props) => {
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
                         <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                        <h2 className="profile-username mt-2">{props.profile.name}</h2>
+                        <h2 className="profile-username mt-2">{profile.name}</h2>
                     </div>
 
                     {/* social media links */}
                     <div className="nav employer-navbar mt-auto mb-5" style={{ minHeight: "initial", position: "sticky !important", top: "0", zIndex: "99", }}>
                         <NavLink exact={true} to={{ pathname: `/profile/${props.match.params.id}` }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
-                        <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state: { user: props.user, profile: props.profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
+                        <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state: { user: user, profile: profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
                         <NavLink exact={true} to={{ pathname: '/profile/messages' }} tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>
                         <NavLink exact={true} to={{ pathname: '/addJob' }} tag={RRNavLink} activeClassName="employer-navlink-active" className="ml-auto primary-bg-button">Post Job</NavLink>
                     </div>
@@ -207,11 +228,15 @@ const Profile = (props) => {
                     {/* Article */}
                     <div className="profile--article-container">
                         {(isOwner) && (
-                            <CreatePost />
+                            <CreatePost routeProps={props} auth={user} />
                         )}
-                        <Article text={text} author={props.profile.name} />
-                        <Article text={text} author={props.profile.name}  />
-                        <Article text={text} author={props.profile.name}  />
+                        {/* {props.post.posts.map((item,index) => (
+                            <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={props.profile.name} />
+                        ))} */}
+                        { posts ? posts.map((item,index) => (
+                            <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.name} />
+                        )) : null}
+                                                                        
                     </div>
 
                 </div>
@@ -222,13 +247,4 @@ const Profile = (props) => {
     )
 }
 
-
-function mapStateToProps(state) {
-    return {
-        user: state.auth.user,
-        profile: state.profile.user
-        // isAuthenticated: state.auth.isAuthenticated
-    }
-}
-
-export default connect(mapStateToProps, { showProfile })(Profile);
+export default Profile;

@@ -4,6 +4,7 @@ const router = express.Router()
 const uuid = require('uuid');
 const auth = require('../../middleware/auth')
 const jwt = require('jsonwebtoken')
+let socket = require("socket.io-client")('http://localhost:3000')
 
 // Create table
 const conn = mysql.createConnection({
@@ -22,11 +23,12 @@ router.get('/getProfile/:id', (req, res) => {
     // destrucutre all submitted data from body    
     
     console.log(req.params.id)
+    // socket.emit('incoming data', 5)
         
         conn.query('SELECT * FROM account WHERE user_id = ?', [req.params.id], (error, results) => {
             
             if (results.length > 0) {  
-                console.log(results)              
+                //console.log(results)              
                 return res.json(results[0])                
 			} else {                
                 return res.status(400).json({ msg: 'User not found.' })            	

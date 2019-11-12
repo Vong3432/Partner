@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GET_JOBS, ADD_JOB, DELETE_JOB, JOBS_LOADING } from './types'
+import { GET_JOBS, ADD_JOB, DELETE_JOB, UPDATE_JOB, JOBS_LOADING } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
@@ -23,6 +23,7 @@ export const addJob = item => (dispatch, getState) => {
                     type: ADD_JOB,
                     payload: res.data
                 }))
+        .then(res => dispatch(getJobs()))
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 
@@ -37,6 +38,19 @@ export const deleteJob = id => (dispatch, getState) => {
         })
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
+
+export const updateJob = id => (dispatch, getState) => {
+    console.log(id)
+    axios.delete(`/api/job/updatejob/${id}`, tokenConfig(getState))
+        .then(res => {
+            dispatch({
+                type: UPDATE_JOB,
+                payload: res.data, id
+            })
+        })
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+}
+
 
 export const setJobsLoading = () => {
     return {

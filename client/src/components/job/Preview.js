@@ -1,16 +1,17 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { PreviewContext } from '../../PreviewContext'
 import Spinner from '../../components/Spinner'
-
+// import nl2br from 'react-nl2br'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-const Preview = (props) => {
+const Preview = (props) => {    
 
     const [selectedJob, setSelectedJob] = useContext(PreviewContext)
     const [multipleDescription, setMultimeDescription] = useState([])
     const [multipleRequirement, setMultipleRequirement] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const nlb2r = require('react-nl2br')    
 
     const msg = "Please select a job";
 
@@ -19,8 +20,8 @@ const Preview = (props) => {
         if(selectedJob.title)
             {
                 setIsLoading(false)
-                setMultimeDescription(selectedJob.description.split("<next>")) 
-                setMultipleRequirement(selectedJob.requirement.split("<next>"))                                           
+                // setMultimeDescription(selectedJob.description.split("<next>")) 
+                // setMultipleRequirement(selectedJob.requirement.split("<next>"))                                           
             }
         return (() => console.log('Preview unmounted'))
     }, [selectedJob])   
@@ -64,15 +65,17 @@ const Preview = (props) => {
                     <h3 className="my-3">{selectedJob.title}</h3>
 
                     <h5 className="mt-4">Description</h5> 
-                    <div id="divider" className="mb-3"></div>
-                    {multipleDescription.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}                                       
-
+                    <div id="divider" className="mb-2"></div>
+                    {/* {multipleDescription.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}                                        */}
+                    <p style={{textAlign:"justify"}} className="paragraph my-2">{nlb2r(selectedJob.description)}</p>                    
+                    
                     <h5 className="mt-4">Requirement</h5>
-                    <div id="divider" className="mb-3"></div>
-                    {multipleRequirement.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)} 
+                    <div id="divider" className="mb-2"></div>
+                    {/* {multipleRequirement.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}  */}
+                    <p style={{textAlign:"justify"}} className="paragraph my-2">{nlb2r(selectedJob.requirement)}</p>
 
                     <h5 className="mt-4">Job Type</h5>
-                    <div id="divider" className="mb-3"></div>
+                    <div id="divider" className="mb-2"></div>
                     <div className="d-flex flex-row">
                         <p className="paragraph my-2">{selectedJob.type}</p>
                     </div>                    

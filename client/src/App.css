@@ -86,6 +86,12 @@ body
 	-moz-osx-font-smoothing: grayscale;
 }
 
+label {
+  cursor: pointer;
+  /* Style as you please, it will become the visible UI component. */
+}
+
+
 /* remove google chrome autocomplete's styling */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -706,10 +712,8 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 #avatar--small
 {
-  max-width: 50px;
-  max-height: 50px;
-  width: 100%;
-  height: 100%;
+  width: 50px;
+  height: 50px;
   object-fit: cover;
   border-radius: 50px;
 }
@@ -839,6 +843,20 @@ input[type="text"], input[type="email"], input[type="password"], select
 .profile--gallery-container
 {
   grid-area: gallery;
+}
+
+.gallery-grid
+{
+  display: grid;
+  gap: 15px;  
+  grid-template-areas: 'c c c';
+  grid-auto-columns: minmax(auto, 1fr) minmax(auto, 1fr) minmax(auto, 1fr);
+  grid-auto-rows: minmax(200px,1fr);
+}
+
+.gallery-tab-item
+{
+  background: gray;
 }
 
 .profile--article-container

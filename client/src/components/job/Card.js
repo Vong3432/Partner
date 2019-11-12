@@ -16,7 +16,7 @@ const Card = ({job: {employer_id, job_id, title, upload_date, due_date, logo, de
     return (
         <>
         <div className="card mb-4 card-shadow" 
-            onClick={ ()=> setSelectedJob((prevState) => ({employer_id, job_id, title, upload_date, due_date, logo, description, requirement, status, type, category, salary})) }
+            onClick={ ()=> {setSelectedJob((prevState) => ({employer_id, job_id, title, upload_date, due_date, logo, description, requirement, status, type, category, salary})) }}
         >
             {/* <img src="..." className="card-img-top" alt="..." /> */}
             <div className="card-body">

@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Card from './Card'
 import axios from 'axios'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getJobs, deleteJob } from '../../actions/jobActions'
 import PropTypes from 'prop-types'
 
-const CardList = ({ jobCallbackFunction, getJobs, job}) => {
+const CardList = ({ jobCallbackFunction }) => {
+    
+    const dispatch = useDispatch()
+    const job = useSelector(state => state.job)
+    console.log(job)
 
     CardList.propTypes = {
         getJobs: PropTypes.func.isRequired,
-        job: PropTypes.object.isRequired,
+        job: PropTypes.object.isRequired
         // isAuthenticated: PropTypes.bool
     }
 
@@ -24,7 +28,7 @@ const CardList = ({ jobCallbackFunction, getJobs, job}) => {
     }, [jobCallbackFunction])    
 
     useEffect(() => {
-        getJobs()                      
+        dispatch(getJobs())
         setIsLoading(false)                  
     }, [])
     
@@ -53,12 +57,4 @@ const CardList = ({ jobCallbackFunction, getJobs, job}) => {
 //     isAuthenticated: state.auth.isAuthenticated
 // })
 
-function mapStateToProps(state)
-{    
-    return{
-        job: state.job,
-        // isAuthenticated: state.auth.isAuthenticated
-    }
-}
-
-export default connect(mapStateToProps, { getJobs })(CardList);
+export default CardList;

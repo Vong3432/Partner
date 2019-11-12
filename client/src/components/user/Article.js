@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Article = ({ text, author }) => {
+const Article = ({ text, author, image }) => {
     return (
         <>
             {/* post */}
@@ -12,6 +12,7 @@ const Article = ({ text, author }) => {
                         <p className="paragraph">
                             {text}
                         </p>
+                        {image? <img style={{maxWidth:"100%", maxHeight:"400px", objectFit:"contain"}} src={require(`../../uploads/posts/${image}`)} alt={image}/> : null}
                     </div>
                 </div>
             </article>

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+//import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 // import reactstrap
 import { Container } from 'reactstrap'
@@ -25,6 +26,7 @@ import store from './store'
 import axios from 'axios'
 import EmployerTable from './components/user/EmployerTable';
 import { Messages } from './components/user/Messages';
+import EditProfile from './pages/user/EditProfile';
 
 function App() {  
 
@@ -70,6 +72,7 @@ function App() {
               <Route path="/login" exact component={SignInLayout} />  
               <Route path="/addJob" exact component={AddJobPage} />  
               <Route path="/profile/:id" exact component={Profile} />  
+              <Route path="/editProfile/:id" exact component={EditProfile} />  
               <Route path="/profile/employertable/:id" exact component={EmployerTable} />  
               <Route path="/profile/messages" exact component={Messages} />  
               <Route path="/resume" exact component={Resume} />

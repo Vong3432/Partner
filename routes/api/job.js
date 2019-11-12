@@ -33,45 +33,24 @@ router.post('/', (req, res) => {
             str = str+value+","
             //do something with value;
         }
-    }
+    }    
     const sql = `
     INSERT INTO job(job_id, employer_id, title, upload_date, due_date, description, requirement, salary, status, type, category) VALUES(?)`    
 
     conn.query(sql, [[jobID, employer_id, title, upload_date, due_date, description, requirement, salary, "Open", str, category]], (err, results) => {
+        
         (err) ? res.json(err) : res.json(results)
     })    
 
 })
 
-// @route   GET api/pending_list
-// @desc    Display all pending jobs
-// @access  Private
-router.get('/pendinglist', (req, res) => {    
-
-    // define sql query
-    const sql = `SELECT j.job_id, j.employer_id, j.title, j.upload_date, j.content, j.description, j.duration, j.requirement, j.salary, j.status 
-                FROM pendinglist p JOIN job j ON (p.job_id = j.job_id)
-                WHERE j.status = 'pending';`;
-    
-    // run sql
-    conn.query(sql, (err, results) => {   
-        
-        // for each result, display the title of it (debug purpose)
-        // results.map(result => console.log(result)) 
-        
-        // if err, send err 
-        // else send results to front-end
-        err ? res.send(err) : res.send(results)        
-    }) 
-})
-
-// @route   GET api/job
-// @desc    Display all jobs
+// @route   GET api/postjob
+// @desc    Display all postjobs
 // @access  Public
 router.get('/displayjobs', (req, res) => {    
 
     // define sql query
-    const sql = "SELECT * FROM job";
+    const sql = 'SELECT * FROM Job';
     
     // run sql
     conn.query(sql, (err, results) => {   
@@ -85,8 +64,8 @@ router.get('/displayjobs', (req, res) => {
     }) 
 })
 
-// @route   GET api/job
-// @desc    Display some searched jobs
+// @route   GET api/postjob
+// @desc    Display some searched postjobs
 // @access  Public
 router.get('/displayjobs/:input', (req, res) => {
     
@@ -94,7 +73,7 @@ router.get('/displayjobs/:input', (req, res) => {
     const usersInput = req.params.input
 
     // define sql query
-    const sql = `SELECT * FROM job WHERE title LIKE '%${usersInput}%'`;
+    const sql = `SELECT * FROM job WHERE title LIKE %${usersInput}%`;
     
     // run sql
     conn.query(sql, (err, results) => {   
@@ -108,47 +87,47 @@ router.get('/displayjobs/:input', (req, res) => {
     }) 
 })
 
-// @route   DELETE api/job
-// @desc    Delete a job
+// @route   DELETE api/postjob
+// @desc    Delete a postjob
 // @access  Private
-router.delete('/deletejob/:jobid', (req, res) => {
+router.delete('/deletejob/:postjobid', (req, res) => {
 
     // get id from url parameter
-    const id = req.params.jobid
-    
+    const id = req.params.postjobid
 
     // define sql query
-    const sql = `DELETE FROM job WHERE job_id = '${id}'`;     
-
+    const sql = `DELETE FROM Job WHERE JobID = ${id}`; 
+    
     // run sql
     conn.query(sql, (err, results) => {           
         // if err, send err 
-        // else send results to front-end                              
-        err ? res.send(err) : res.send('Current job has been deleted successfully.')        
+        // else send results to front-end                        
+        err ? res.send(err) : res.status(200).json(id)
     }) 
 })
 
-// @route   UPDATE api/job
-// @desc    update a job
+// @route   UPDATE api/postjob
+// @desc    update a postjob
 // @access  Private
-router.put('/updatejob/:jobid', (req, res) => {
+router.put('/updatejob/:postjobid', (req, res) => {
 
     // get id from url parameter
-    const id = req.params.jobid
+    const id = req.params.postjobid
 
     // destrucutre all submitted data from body
-    const { upload_date, title, category, content, description, duration, requirement, salary } = req.body    
+    const { JobID, Title, Salary, Description, Requirement, Category, Type, PostDay, UploadDate } = req.body    
 
     // define sql query
-    const sql = `UPDATE job 
+    /*const sql = `UPDATE job 
                 SET upload_date = ${upload_date}, title = ${title}, category = ${category}, description = ${description}, duration = ${duration}, requirement = ${requirement}, salary = ${salary}
-                WHERE job_id = ${id}`;
+                WHERE job_id = ${id}`;*/
+    const sql = `UPDATE Job SET Title=${Title}, Salary=${Salary}, Description=${Description}, Requirement=${Requirement}, Category=${Category}, Type=${Type}, PostDay=${PostDay}, UploadDate=new Date() WHERE JobID = ${id}`;
 
     // run sql
     conn.query(sql, (err, results) => {                        
         // if err, send err 
-        // else send results to front-end   
-        err ? res.send(err) : res.send("Update job successfully")        
+        // else send results to front-end   w
+        err ? res.send(err) : res.status(200).json(results[0])        
     }) 
     
 })

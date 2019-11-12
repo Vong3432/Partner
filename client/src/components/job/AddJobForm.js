@@ -123,7 +123,7 @@ const AddJob = (props) => {
                     <img className="small-icon" src={require('../../images/conversation.svg')} alt="conversation" />
                     <div className="d-flex flex-column ml-3 w-100">
                         <label htmlFor="description" className="mb-0">Job Description</label>
-                        <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong>
+                        {/* <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong> */}
                         <textarea name="description" onChange={(e) => handleChange(e)} id="" placeholder="Some description ...">{job.description}</textarea>
                     </div>
                 </div>
@@ -132,7 +132,7 @@ const AddJob = (props) => {
                     <img className="small-icon" src={require('../../images/testing.svg')} alt="testing" />
                     <div className="d-flex flex-column ml-3 w-100">
                         <label htmlFor="requirement" className="mb-0">Job Requirements</label>
-                        <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong>
+                        {/* <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong> */}
                         <textarea name="requirement" onChange={(e) => handleChange(e)} id="" placeholder="Some description ...">{job.requirement}</textarea>
                     </div>
                 </div>
