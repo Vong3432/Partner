@@ -940,7 +940,7 @@ input[type="text"], input[type="email"], input[type="password"], select
 }
 
 .resume-form input, .resume-form select, .resume-form textarea,
-.addjob-form--part input, .addjob-form--part select, .addjob-form--part textarea
+.addjob-form--part input, .addjob-form--part select, .addjob-form--part textarea, .profile-section textarea
 {
   font-size: 1rem;  
   padding: .75em 1em;

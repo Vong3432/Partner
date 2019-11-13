@@ -4,6 +4,8 @@ import {PreviewContext} from '../../PreviewContext'
 
 const Card = ({job: {employer_id, job_id, title, upload_date, due_date, logo, description, requirement, status, type, category, salary}}) => {
 
+    var mydate = new Date(due_date)
+
     const [selectedJob, setSelectedJob] = useContext(PreviewContext)        
     const [typeArr, setTypeArr] = useState([])
 
@@ -36,6 +38,7 @@ const Card = ({job: {employer_id, job_id, title, upload_date, due_date, logo, de
                         </div>                        
                     </div>
                 </div>
+                <small>{mydate.toDateString()}</small>
                 <h5 className="card-title">{title}</h5>
                 {/* <p className="card-text" style={{maxHeight: "155px", whiteSpace:"nowrap",overflow:"hidden", textOverflow:"ellipsis"}}>{description}</p> */}
                 {/* <p className="card-text">{console.log(type)}</p> */}

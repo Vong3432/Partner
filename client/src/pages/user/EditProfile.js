@@ -100,10 +100,10 @@ const EditProfile = (props) => {
                 {/* About */}
                 <div className="p-5 card-shadow profile--about-container" style={part}>
                     <h5 className="header">About Me</h5>
-                    {/* <textarea name="" id="">{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."}</textarea> */}
-                    <p className="paragraph">
+                    <textarea name="" style={{maxWidth:"100%", width:"100%", height:"10em", border:".25px solid rgba(0,0,0,0.1)"}} className="paragraph" id="">{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."}</textarea>
+                    {/* <p className="paragraph">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </p>
+                        </p> */}
 
                     {!isEmployer && (
                         <h5 className="mt-5 header">CV/Resume</h5>
@@ -123,8 +123,8 @@ const EditProfile = (props) => {
                     <div className="d-flex flex-row mt-3">
                         <img className="small-icon" src={require('../../images/email.svg')} alt="email" />
                         <div className="d-flex flex-column ml-2">
-                            <h6 className="small-header">Email</h6>
-                            <small>johndoe@gmail.com</small>
+                            <h6 className="small-header">Email</h6>                            
+                            <input type="text" name="email" id="" value={"johndoe@gmail.com"}/>
                         </div>
                     </div>
 
@@ -135,7 +135,7 @@ const EditProfile = (props) => {
                         <img className="small-icon" src={require('../../images/availability.svg')} alt="availability" />
                         <div className="d-flex flex-column ml-2">
                             <h6 className="small-header">Availability</h6>
-                            <small>Full-Time/Part-Time</small>
+                            <input type="text" name="availability" id="" value={"Full-Time/Part-Time"}/>
                         </div>
                     </div>                    
                     
@@ -143,7 +143,7 @@ const EditProfile = (props) => {
                         <img className="small-icon" src={require('../../images/age.svg')} alt="age" />
                         <div className="d-flex flex-column ml-2">
                             <h6 className="small-header">Age</h6>
-                            <small>30</small>
+                            <input type="text" name="age" id="" value={"30"}/>
                         </div>
                     </div>
                     </>
@@ -154,7 +154,7 @@ const EditProfile = (props) => {
                         <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
                         <div className="d-flex flex-column ml-2">
                             <h6 className="small-header">Location</h6>
-                            <small>Los Angeles</small>
+                            <input type="text" name="location" id="" value={"Los Angeles"}/>
                         </div>
                     </div>
 
@@ -189,12 +189,15 @@ const EditProfile = (props) => {
                             <h5 className="header" style={{ textTransform: "uppercase" }}>skills</h5>
                             <i className="material-icons ml-auto" style={{ color: "var(--primary-color)", lineHeight: "29.25px" }}>&#xe88f;</i>
                         </div>
-                        <div>
-                            <span className="badge badge-primary">Primary</span>
-                            <span className="badge badge-primary">Primary</span>
+                        <input type="text" name="skills" id=""/>
+                        <div className="my-2">
+                            <span className="badge mr-1 tag p-2">Primary</span>
+                            <span className="badge tag p-2">Some skill</span>
                         </div>
                     </div>
                 )}
+
+                <button style={{borderRadius:"0"}} className="mt-3 mb-5 primary-bg-button">Edit</button>
 
             </section>
         </>

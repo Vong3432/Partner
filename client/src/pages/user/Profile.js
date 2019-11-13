@@ -26,6 +26,12 @@ const Profile = (props) => {
     const posts = useSelector(state => state.post.posts)
     const user = useSelector(state => state.auth.user)
 
+    if(profile === null)
+    {
+        dispatch(showProfile(props.match.params.id))
+        dispatch(getPosts(props.match.params.id))
+    }        
+
     useEffect(() => {
 
         const paramID = props.match.params.id               

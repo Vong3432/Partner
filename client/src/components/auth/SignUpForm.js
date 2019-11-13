@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { register } from '../../actions/authActions'
 
 const SignUpForm = () => {
 
+    const dispatch = useDispatch()
+
     const [ userInfo, setUserInfo ] = useState({
-        firstName: '',
-        lastName: '',
+        name: '',
         email: '',
         password: '',
-        userType: ''
+        userType: 'employer'
     })
 
     const [ isFirstForm, setIsFisrtForm ] = useState(true)
@@ -21,7 +24,8 @@ const SignUpForm = () => {
 
     const onSubmit = e => {
         e.preventDefault();        
-        console.log('You have successfully created a new account')        
+        // console.log(userInfo)
+        dispatch(register(userInfo))
     }
 
     const handleChange = e => {       
@@ -36,7 +40,8 @@ const SignUpForm = () => {
 
     useEffect(() => {
         console.log('effect after render')        
-    }, [])
+        console.log(userInfo)
+    }, [userInfo])
     
 
     return (
@@ -56,6 +61,17 @@ const SignUpForm = () => {
             </div>
 
             <div id="divider" className="mt-0 mb-4" style={{width:"20%"}}></div>            
+
+            <div className="d-flex flex-column mt-4">
+                <label htmlFor="name">Username</label>
+                <input 
+                    type="text" 
+                    name="name" 
+                    id="name"
+                    value={ userInfo.name }
+                    onChange={handleChange}
+                />
+            </div>
 
             <div className="d-flex flex-column mt-4">
                 <label htmlFor="email">Email</label>
@@ -89,7 +105,8 @@ const SignUpForm = () => {
                     <label htmlFor="userType">I want to create my account as</label>                    
                     <select 
                         name="userType" 
-                        onChange={handleChange} 
+                        defaultChecked
+                        onChange={(e) => handleChange(e)} 
                         style={{
                             fontSize:"1.7rem", 
                             fontFamily:"helveticaMedium",                            

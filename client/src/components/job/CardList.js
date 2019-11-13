@@ -8,20 +8,15 @@ import PropTypes from 'prop-types'
 const CardList = ({ jobCallbackFunction }) => {
     
     const dispatch = useDispatch()
-    const job = useSelector(state => state.job)
-    console.log(job)
-
-    CardList.propTypes = {
-        getJobs: PropTypes.func.isRequired,
-        job: PropTypes.object.isRequired
-        // isAuthenticated: PropTypes.bool
-    }
+    const job = useSelector(state => state.job)    
 
     const [isLoading, setIsLoading] = useState(true)
     const [filterSearch, setFilterSearch] = useState({
         jobTitle: "",
         description: ""
     })    
+
+
 
     useEffect(() => {           
         setFilterSearch(jobCallbackFunction)
@@ -42,9 +37,11 @@ const CardList = ({ jobCallbackFunction }) => {
     return (
         <>
             {          
-                job.jobs
-                    .filter(item => filterSearch ? filterFunction(filterSearch, item) : item)                    
-                    .map((item, index) => <Card index={index} job={item} />)
+                job.jobs 
+                    ? job.jobs
+                        .filter(item => filterSearch ? filterFunction(filterSearch, item) : item)                    
+                        .map((item, index) => <Card index={index} job={item} />)
+                    : dispatch(getJobs())
             }
 
         </>

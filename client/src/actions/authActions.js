@@ -11,27 +11,27 @@ import {
     REGISTER_FAIL
 } from '../actions/types'
 
-// Check token & load user
-export const loadUser = () => (dispatch, getState) => {
+// // Check token & load user
+// export const loadUser = () => (dispatch, getState) => {
     
-    // User loading
-    dispatch({ type: USER_LOADING })        
+//     // User loading
+//     dispatch({ type: USER_LOADING })        
 
-    axios.get('/api/user', tokenConfig(getState))
-        .then(res => dispatch({
-            type: USER_LOADED,
-            payload: res.data
-        }))        
-        .catch(err => {
-            dispatch(returnErrors(err.response.data, err.response.status))
-            dispatch({
-                type: AUTH_ERROR
-            })
-        })
-}
+//     axios.get('/api/user', tokenConfig(getState))
+//         .then(res => dispatch({
+//             type: USER_LOADED,
+//             payload: res.data
+//         }))        
+//         .catch(err => {
+//             dispatch(returnErrors(err.response.data, err.response.status))
+//             dispatch({
+//                 type: AUTH_ERROR
+//             })
+//         })
+// }
 
 // Register User
-export const register = ({ email, password }) => dispatch => {
+export const register = ({ email, password, userType, name }) => dispatch => {
     
     // Headers
     const config = {
@@ -41,9 +41,9 @@ export const register = ({ email, password }) => dispatch => {
     }
 
     // Request body
-    const body = ({ email, password })   
+    const body = ({ email, password, userType, name })   
 
-    axios.post('/api/users', body, config)
+    axios.post('/api/user/register', body, config)
         .then(res => dispatch({
             type: REGISTER_SUCCESS,
             payload: res.data 
