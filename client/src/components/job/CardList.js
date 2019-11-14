@@ -8,28 +8,32 @@ import PropTypes from 'prop-types'
 const CardList = ({ jobCallbackFunction }) => {
     
     const dispatch = useDispatch()
-    const job = useSelector(state => state.job)    
+    const job = useSelector(state => state.job.jobs)    
 
     const [isLoading, setIsLoading] = useState(true)
+    const [fetchJob, setFetchJob] = useState()
     const [filterSearch, setFilterSearch] = useState({
         jobTitle: "",
-        description: ""
+        description: 0
     })    
 
+    useEffect(() => {        
+        dispatch(getJobs())
+        setFetchJob(job)        
 
+        setIsLoading(false)        
+        return(()=>setIsLoading(true))
+    }, [job])
 
     useEffect(() => {           
         setFilterSearch(jobCallbackFunction)
+        console.log(filterSearch)
     }, [jobCallbackFunction])    
 
-    useEffect(() => {
-        dispatch(getJobs())
-        setIsLoading(false)                  
-    }, [])
     
-    const filterFunction = (input, job) => {     
-        if(job)           
-            return ((job.title||'').toLocaleLowerCase().search(input.jobTitle.toLocaleLowerCase()) !== -1 ) && ((job.description || "").toLocaleLowerCase().search(filterSearch.description.toLocaleLowerCase()) !== -1 || "")
+    const filterFunction = (input, i) => {     
+        if(i)           
+            return ((i.title||'').toLocaleLowerCase().search(input.jobTitle.toLocaleLowerCase()) !== -1 ) && ((i.Category || "").search(filterSearch.category) !== -1 || "")
         else 
             return null
     }
@@ -37,11 +41,12 @@ const CardList = ({ jobCallbackFunction }) => {
     return (
         <>
             {          
-                job.jobs 
-                    ? job.jobs
-                        .filter(item => filterSearch ? filterFunction(filterSearch, item) : item)                    
-                        .map((item, index) => <Card index={index} job={item} />)
-                    : dispatch(getJobs())
+                fetchJob ? (
+                    fetchJob
+                    .filter(item => filterSearch ? filterFunction(filterSearch, item) : item)                    
+                    .map((item, index) => <Card index={index} job={item} />)
+                ) : null
+                    
             }
 
         </>

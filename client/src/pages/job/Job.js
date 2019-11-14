@@ -8,7 +8,7 @@ const Job = () => {
 
     const [searchField, setSearchField] = useState({
         jobTitle: "",
-        description:""
+        category:""
     })
         
 

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { register } from '../../actions/authActions'
+import { clearErrors } from '../../actions/errorActions'
 
 const SignUpForm = () => {
 
     const dispatch = useDispatch()
+    const error = useSelector(state => state.error)
 
     const [ userInfo, setUserInfo ] = useState({
         name: '',
@@ -23,13 +25,23 @@ const SignUpForm = () => {
     }
 
     const onSubmit = e => {
+        
         e.preventDefault();        
-        // console.log(userInfo)
+        
+        console.log(error)
         dispatch(register(userInfo))
+        if(error.id === "REGISTER_FAIL")
+            alert('Ops, there is an error occured. Please try again.')
+        else   
+        {
+            alert('You have register successfully.')
+            window.location.href = '/login'
+        }            
     }
 
     const handleChange = e => {       
-        const { name, value }  = e.target;        
+        const { name, value }  = e.target;   
+        dispatch(clearErrors())     
         
         setUserInfo({
             ...userInfo,

@@ -47,7 +47,7 @@ const TopNavbar = (props) => {
         <div className="d-flex flex-row align-items-center">
             <NavItem>
                 {props.auth.user && (
-                    <NavLink className="mr-0 pr-0" style={{ color: "var(--primary-color)", opacity: "1" }} to={`/profile/${props.auth.user.id}`} tag={RRNavLink} >{user ? `Welcome ${user.name}` : console.log(user)}</NavLink>
+                    <NavLink className="mr-0 pr-0" style={{ color: "var(--primary-color)", opacity: "1" }} to={`/profile/${props.auth.user.id}`} href={`/profile/${props.auth.user.id}`} tag={RRNavLink} >{user ? `Welcome ${user.name}` : console.log(user)}</NavLink>
                 )}
             </NavItem>
             <NavItem>

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom'
 
-import { deleteJob } from '../../actions/jobActions'
+import { deleteJob, updateJob, getApplyJobRequest, getJobs } from '../../actions/jobActions'
 import axios from 'axios'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const EmployerTable = (props) => {
 
@@ -15,104 +16,205 @@ const EmployerTable = (props) => {
         // isAuthenticated: PropTypes.bool
     }
 
+
+    const [modal, setModal] = useState(false)
     const [isOwner, setIsOwner] = useState(true)
+    const [index, setIndex] = useState(0)
     const [isEmployer, setIsEmployer] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
+    const [currentJob, setCurrentJob] = useState({
+        Title:"",
+        Location:"",
+        Salary:"",
+        Requirement:"",
+        Description:"",
+        Status:""
+    })
+
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.auth)
+    const job = useSelector(state => state.job)
+
+    const toggle = () => 
+    {
+        setModal(!modal);    
+        console.log(currentJob)     
+    }
+
+    const displayModal = (index) => { 
+        console.log(index)       
+        setIndex(index)             
+    }
     
-    const [data, setData] = useState([
-        {
-            id:"0fbe0400-ab5b-408e-aea5-027defd793e6",
-            title:"1st class chef",
-            location:"JB",
-            candidates: 5,
-            views: 1000,
-            lifeSpan: "60d15h05m",
-            status:"Open"
-        },
-        {
-            id:2,
-            title:"1st class chef",
-            location:"KL",
-            candidates: 5,
-            views: 1000,
-            lifeSpan: "60d15h05m",
-            status:"Open"
-        },
-        {
-            id:3,
-            title:"1st class chef",
-            location:"Penang",
-            candidates: 5,
-            views: 1000,
-            lifeSpan: "60d15h05m",
-            status:"Open"
-        },
-    ])        
+    useEffect(() => {        
+        setCurrentJob(job.jobs[index])
+    },[index])
+
+    useEffect(() => {
+        console.log(user)
+        // dispatch(getApplyJobRequest(user.user.name))   
+        // setCurrentJob(job.jobs)
+        // console.log(job.jobs)
+        if (user.user.category === "employer" && user.isAuthenticated === true) {
+            if (isLoading === true)
+                dispatch(getJobs())            
+            setIsLoading(false)
+        }
+
+        else {
+            alert('You dont have the authorization to access this page.')
+            window.location.href = "/"
+        }
+
+        return (() => setIsLoading(true))
+    }, [])
+
+    const onEdit = (e) => {
+        e.persist()
+        console.log(e.target.name, e.target.value)
+        setCurrentJob((prevState) => ({...prevState,[e.target.name]: e.target.value}) )
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault()
+        dispatch(updateJob(job.jobs[index].JobID, currentJob))
+        dispatch(getJobs())
+    }
 
     const onDelete = (e, id) => {
-        e.preventDefault()            
-        props.deleteJob(id)
+        e.preventDefault()
+        console.log(id)
+        dispatch(deleteJob(id))
     }
 
     return (
         <>
             {(isEmployer && isOwner) && (
                 <>
-                <section style={{ backgroundColor: "black" }} className="d-flex flex-column justify-content-center">
+                    {job.applyRequestList && (
+                        <Modal isOpen={modal} toggle={toggle}>
+                        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+                        <ModalBody>
+                            <div className="addjob-form--part mb-3">
+                                <div className="d-flex flex-column w-100">
+                                    <h4 className="title">Job Information</h4>
+                                    <div id="divider"></div>
 
-                    {/* user avatar and name */}
-                    <div className="text-center mt-auto">
-                        <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                        <h2 className="profile-username mt-2">JJ</h2>
-                    </div>
+                                    <div className="d-flex flex-row mt-5 my-3 w-100">
+                                        <img className="small-icon" src={require('../../images/suitcase.svg')} alt="suitcase" />
+                                        <div className="d-flex flex-column ml-3 w-100">
+                                            <label htmlFor="title">Job Title</label>
+                                            <input name="Title" value={currentJob.Title} onChange={(e) => onEdit(e)} type="text" id="" placeholder="e.g Programmer ..." />
+                                        </div>
+                                    </div>
 
-                    {/* social media links */}
-                    <div className="nav employer-navbar mt-auto mb-5" style={{ minHeight: "initial" }}>
-                        <NavLink exact={true} to={{ pathname: `/profile/${props.match.params.id}`, state:{user: props.user, profile: props.profile} }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
-                        <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state:{user: props.user, profile: props.profile} }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
-                        <NavLink exact={true} to="/messages" tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>
-                    </div>
+                                    <div className="d-flex flex-row my-3 w-100">
+                                        <img className="small-icon" src={require('../../images/funds.svg')} alt="funds" />
+                                        <div className="d-flex flex-column ml-3 w-100">
+                                            <label htmlFor="salary">Salary</label>
+                                            <div className="d-flex flex-row align-items-center w-100">
+                                                <h6 className="mr-3" style={{ fontSize: ".9rem" }}>{job.applyRequestList.Salary}</h6>
+                                                <input style={{ width: "100%" }} type="text" id="" onChange={e => onEdit(e)} value={currentJob.Salary} name="Salary" placeholder="3000" />
+                                            </div>
+                                        </div>
+                                    </div>
 
-                </section>
+                                    <div className="d-flex flex-row my-3 w-100">
+                                        <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
+                                        <div className="d-flex flex-column ml-3 w-100">
+                                            <label htmlFor="location">Location</label>
+                                            <input style={{ width: "100%" }} type="text" id="" onChange={e => onEdit(e)} value={currentJob.Location} name="Location" placeholder="Johor Bahru" />
+                                        </div>
+                                    </div>
 
-                <table class="table table-hover" style={{marginTop:"90vh", marginBottom:"20vh"}}>
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>                            
-                            <th scope="col">Job</th>
-                            <th scope="col">Location</th>
-                            <th scope="col">Candidates</th>
-                            <th scope="col">Views</th>
-                            <th scope="col">Life Span</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((item) => (
+                                    <div className="d-flex flex-row my-3 w-100">
+                                        <img className="small-icon" src={require('../../images/conversation.svg')} alt="conversation" />
+                                        <div className="d-flex flex-column ml-3 w-100">
+                                            <label htmlFor="description" className="mb-0">Job Description</label>
+                                            {/* <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong> */}
+                                            <textarea name="Description" onChange={(e) => onEdit(e)} id="" placeholder="Some description ...">{currentJob.Description}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div className="d-flex flex-row my-3 w-100">
+                                        <img className="small-icon" src={require('../../images/testing.svg')} alt="testing" />
+                                        <div className="d-flex flex-column ml-3 w-100">
+                                            <label htmlFor="requirement" className="mb-0">Job Requirements</label>
+                                            {/* <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong> */}
+                                            <textarea name="Requirement" onChange={(e) => onEdit(e)} id="" placeholder="Some description ...">{currentJob.Requirement}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div className="d-flex flex-row my-3 w-100">                                        
+                                        <div className="d-flex flex-column mx-auto w-100">
+                                            <label htmlFor="requirement" className="mb-0">Status</label>
+                                            {/* <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong> */}
+                                            <input type="text" name="Status" onChange={(e) => onEdit(e)} id="" value={currentJob.Status} placeholder="Some description ..." />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary"onClick={e=>{toggle(); onSubmit(e)}}>Update</Button>{' '}
+                            <Button color="secondary" onClick={toggle}>Cancel</Button>
+                        </ModalFooter>
+                    </Modal>
+                    )}
+                    
+                    <section style={{ backgroundColor: "black" }} className="d-flex flex-column justify-content-center">
+
+                        {/* user avatar and name */}
+                        <div className="text-center mt-auto">
+                            <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
+                            <h2 className="profile-username mt-2">{user.name}</h2>
+                        </div>
+
+                        {/* social media links */}
+                        <div className="nav employer-navbar mt-auto mb-5" style={{ minHeight: "initial" }}>
+                            <NavLink exact={true} to={{ pathname: `/profile/${props.match.params.id}`, state: { user: props.user, profile: props.profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
+                            <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state: { user: props.user, profile: props.profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
+                            <NavLink exact={true} to="/messages" tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>
+                        </div>
+
+                    </section>
+
+                    <table class="table table-hover" style={{ marginTop: "90vh", marginBottom: "20vh" }}>
+                        <thead>
                             <tr>
-                                <th scope="row"><button onClick={(e) => onDelete(e, item.id)} className="danger-bg-button" style={{width:"initial", fontSize:".7rem"}}>X</button></th>                                
-                                <td>{item.title}</td>
-                                <td>{item.location}</td>
-                                <td>{item.candidates} Candidates</td>
-                                <td>{item.views}</td>
-                                <td>{item.lifeSpan}</td>
-                                <td>{item.status}</td>
+                                <th scope="col"></th>
+                                <th scope="col">Job</th>
+                                <th scope="col">Salary</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Candidates</th>
+                                <th scope="col">Views</th>
+                                <th scope="col">Life Span</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Edit</th>
                             </tr>
-                        ))}                                                                   
-                    </tbody>
-                </table>
-                
+                        </thead>
+                        <tbody>
+                            {job.jobs ? job.jobs.map((item, index) => (
+                                <tr>
+                                    <th scope="row"><button onClick={(e) => onDelete(e, item.JobID)} className="danger-bg-button" style={{ width: "initial", fontSize: ".7rem" }}>X</button></th>
+                                    <td>{item.Title}</td>
+                                    <td>RM{item.Salary}</td>
+                                    <td>{item.Location}</td>
+                                    <td>{item.candidates} Candidates</td>
+                                    <td>{item.View}</td>
+                                    <td>{item.DueDate}</td>
+                                    <td>{item.Status}</td>
+                                    <td><i onClick={e=>{toggle(); displayModal(index)}} style={{ fontSize: ".7rem", cursor: "pointer" }} class='fas'>&#xf044;</i></td>
+                                </tr>
+                            )) : dispatch(getApplyJobRequest(user.user.name))}
+                        </tbody>
+                    </table>
+
                 </>
             )}
         </>
     )
 }
 
-function mapStateToProps(state)
-{    
-    return{
-        job: state.job,
-        // isAuthenticated: state.auth.isAuthenticated
-    }
-}
-
-export default connect(mapStateToProps, { deleteJob })(EmployerTable);
+export default EmployerTable;

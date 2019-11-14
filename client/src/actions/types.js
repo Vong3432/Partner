@@ -1,7 +1,14 @@
 export const GET_JOBS = 'GET_JOBS';
+export const GET_JOB_CATEGORY = 'GET_JOB_CATEGORY';
 export const ADD_JOB = 'ADD_JOB';
+export const APPLY_JOB = 'APPLY_JOB';
+export const GET_APPLYJOBS = 'GET_APPLYJOBS'
+export const GET_APPLYJOB_REQUEST = 'GET_APPLYJOB_REQUEST'
+export const ADD_FAIL = 'ADD_FAIL';
 export const UPDATE_JOB = 'UPDATE_JOB';
+export const UPDATE_FAIL = 'UPDATE_FAIL';
 export const DELETE_JOB = 'DELETE_JOB';
+export const DELETE_FAIL = 'DELETE_FAIL';
 export const JOBS_LOADING = 'JOBS_LOADING';
 export const USER_LOADING = 'USER_LOADING';
 export const USER_LOADED = 'USER_LOADED';

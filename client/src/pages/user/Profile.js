@@ -18,6 +18,7 @@ const Profile = (props) => {
 
     const dispatch = useDispatch()    
 
+    const [isLoading, setIsLoading] = useState(false)
     const [isOwner, setIsOwner] = useState(false)
     const [isEmployer, setIsEmployer] = useState(false)
 
@@ -26,11 +27,20 @@ const Profile = (props) => {
     const posts = useSelector(state => state.post.posts)
     const user = useSelector(state => state.auth.user)
 
-    if(profile === null)
-    {
-        dispatch(showProfile(props.match.params.id))
-        dispatch(getPosts(props.match.params.id))
-    }        
+    useEffect(() => {
+        const paramID = props.match.params.id  
+        dispatch(getPosts(paramID))
+        dispatch(showProfile(paramID))        
+        setIsLoading(true)
+    }, [])
+
+    useEffect(() => {
+        if(profile === null)
+        {
+            dispatch(showProfile(props.match.params.id))
+            dispatch(getPosts(props.match.params.id))
+        }        
+    })            
 
     useEffect(() => {
 
@@ -47,8 +57,8 @@ const Profile = (props) => {
         
         dispatch(getPosts(paramID))
                 
-        console.log(user)
-        if (profile.category === "employer")
+        console.log(user, profile)
+        if (profile.AccountType === "employer")
             setIsEmployer(true)
         else
             setIsEmployer(false)
@@ -63,7 +73,7 @@ const Profile = (props) => {
         dispatch(showProfile(paramID))
         // props.getPosts(paramID)
         // return(() => socket.emit('disconnect'))
-    }, [profile.category])        
+    }, [profile.AccountType])        
     
     // useEffect(() => {
     //     const paramID = props.match.params.id        
@@ -79,7 +89,7 @@ const Profile = (props) => {
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
                         <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                        <h2 className="profile-username mt-2">{profile.name}</h2>
+                        <h2 className="profile-username mt-2">{profile.Name}</h2>
                     </div>
 
                     {/* social media links */}
@@ -97,7 +107,7 @@ const Profile = (props) => {
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
                         <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                        <h2 className="profile-username mt-2">{profile.name}</h2>
+                        <h2 className="profile-username mt-2">{profile.Name}</h2>
                     </div>
 
                     {/* social media links */}
@@ -118,7 +128,7 @@ const Profile = (props) => {
                     <div className="profile--about-container">
                         <h5 className="header">About Me</h5>
                         <p className="paragraph">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            {profile.About}
                         </p>
 
                         {!isEmployer && (
@@ -240,7 +250,7 @@ const Profile = (props) => {
                             <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={props.profile.name} />
                         ))} */}
                         { posts ? posts.map((item,index) => (
-                            <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.name} />
+                            <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
                         )) : null}
                                                                         
                     </div>

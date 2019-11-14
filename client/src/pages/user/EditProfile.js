@@ -5,6 +5,7 @@ import { NavLink as RRNavLink } from 'react-router-dom'
 
 import { showProfile } from '../../actions/profileActions'
 import { getPosts } from '../../actions/postActions'
+import Profile from './Profile';
 
 const EditProfile = (props) => {
 
@@ -23,8 +24,11 @@ const EditProfile = (props) => {
     const [isOwner, setIsOwner] = useState(false)
     const [isEmployer, setIsEmployer] = useState(false)
 
-    useEffect(() => {
+    if(profile === null)
+        dispatch(showProfile(props.match.params.id))
 
+    useEffect(() => {
+        console.log(profile)
         const paramID = props.match.params.id
         //props.loadInitialDataSocket(socket, props.match.params.id)        
 
@@ -51,19 +55,21 @@ const EditProfile = (props) => {
                 setIsOwner(false)
         }
 
-        dispatch(showProfile(paramID))
+        dispatch(showProfile(paramID))        
 
     }, [profile.category])
+    
 
     return (
         <>
+        
             {(!isEmployer || !isOwner) && (
                 <section style={{ backgroundColor: "black" }} className="d-flex flex-column justify-content-center">
 
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
                         <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                        <h2 className="profile-username mt-2">{profile.name}</h2>
+                        <h2 className="profile-username mt-2">{user.name}</h2>
                     </div>
 
                     {/* social media links */}
@@ -100,7 +106,7 @@ const EditProfile = (props) => {
                 {/* About */}
                 <div className="p-5 card-shadow profile--about-container" style={part}>
                     <h5 className="header">About Me</h5>
-                    <textarea name="" style={{maxWidth:"100%", width:"100%", height:"10em", border:".25px solid rgba(0,0,0,0.1)"}} className="paragraph" id="">{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."}</textarea>
+                    <textarea name="" style={{maxWidth:"100%", width:"100%", height:"10em", border:".25px solid rgba(0,0,0,0.1)"}} className="paragraph" id="">{profile.About}</textarea>
                     {/* <p className="paragraph">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </p> */}
@@ -124,7 +130,7 @@ const EditProfile = (props) => {
                         <img className="small-icon" src={require('../../images/email.svg')} alt="email" />
                         <div className="d-flex flex-column ml-2">
                             <h6 className="small-header">Email</h6>                            
-                            <input type="text" name="email" id="" value={"johndoe@gmail.com"}/>
+                            <input type="text" name="email" id="" value={profile.Email}/>
                         </div>
                     </div>
 
@@ -135,7 +141,7 @@ const EditProfile = (props) => {
                         <img className="small-icon" src={require('../../images/availability.svg')} alt="availability" />
                         <div className="d-flex flex-column ml-2">
                             <h6 className="small-header">Availability</h6>
-                            <input type="text" name="availability" id="" value={"Full-Time/Part-Time"}/>
+                            <input type="text" name="availability" id="" value={Profile.Availability}/>
                         </div>
                     </div>                    
                     
@@ -143,7 +149,7 @@ const EditProfile = (props) => {
                         <img className="small-icon" src={require('../../images/age.svg')} alt="age" />
                         <div className="d-flex flex-column ml-2">
                             <h6 className="small-header">Age</h6>
-                            <input type="text" name="age" id="" value={"30"}/>
+                            <input type="text" name="age" id="" value={Profile.Age}/>
                         </div>
                     </div>
                     </>
@@ -154,7 +160,7 @@ const EditProfile = (props) => {
                         <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
                         <div className="d-flex flex-column ml-2">
                             <h6 className="small-header">Location</h6>
-                            <input type="text" name="location" id="" value={"Los Angeles"}/>
+                            <input type="text" name="location" id="" value={Profile.Location}/>
                         </div>
                     </div>
 

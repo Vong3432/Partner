@@ -51,14 +51,12 @@ router.get('/displayprofile', (req, res) => {
 // @desc    Display some searched unique profile
 // @access  Private
 router.get('/displayprofile/:id', (req, res) => {
-
-
-    conn.query('SELECT * FROM Profile WHERE ProfileID = ?', [req.params.id], (error, results) => {
-
-        if (results.length > 0) {
-            //console.log(results)              
+    
+    conn.query(`SELECT p.*, a.* FROM Profile AS p JOIN Account AS a ON a.AccountID = p.AccountID WHERE p.AccountID = ?`, [req.params.id], (error, results) => {
+        
+        if (results.length > 0) {                         
             return res.json(results[0])
-        } else {
+        } else {            
             return res.status(400).json({ msg: 'User not found.' })
         }
     })

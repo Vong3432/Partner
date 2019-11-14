@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { getCategory } from '../actions/jobActions'
 
 const SearchField = ({ handleChange }) => {
 
@@ -8,12 +10,24 @@ const SearchField = ({ handleChange }) => {
     // set className to blockquote and advSearchClass depends on show variable
     const [blockquoteClass, setBlockQuoteClass] = useState("")
     const [advSearchClass, setAdvSearchClass] = useState("")
+    const [isLoading, setIsLoading] = useState(true)  
+    
+    const dispatch = useDispatch()
+    const category = useSelector(state => state.job.category)
 
     // advance search styling
     const advanceSearchStyling = {
         cursor: "pointer",
         textDecoration: "underline"
     }
+
+    useEffect(() => {
+        if(isLoading === true)
+        {
+            dispatch(getCategory())
+        }
+        setIsLoading(false)
+    }, [])
 
     function handleBlockquote() {
         return show ? setBlockQuoteClass("transition-hide d-none") : setBlockQuoteClass("transition-show d-block")
@@ -53,12 +67,10 @@ const SearchField = ({ handleChange }) => {
 
                 <div className="w-30 text-left">
 
-                    <label htmlFor="description">Description</label>
-                    <select name="description" onChange={handleChange} className="custom-select">
+                    <label htmlFor="category">Category</label>
+                    <select name="category" onChange={handleChange} className="custom-select">
                         <option value="">Open this select menu</option>
-                        <option value="software">Software</option>
-                        <option value="senior">Senior</option>
-                        <option value="3">Three</option>
+                        {category.map(i => <option value={i.ID}>{i.Value}</option>)}                                                
                     </select>
                 </div>
 

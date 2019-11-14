@@ -1,49 +1,79 @@
 import React, { useState, useEffect } from 'react'
 
-import { connect } from 'react-redux'
-import { addJob } from '../../actions/jobActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { addJob, getCategory } from '../../actions/jobActions'
+import { clearErrors } from '../../actions/errorActions'
+import axios from 'axios'
 import PropTypes from 'prop-types'
 
 const AddJob = (props) => {
-    AddJob.propTypes = {    
+    AddJob.propTypes = {
         job: PropTypes.object.isRequired,
         user: PropTypes.object.isRequired,
         addJob: PropTypes.func.isRequired
     }
 
+    const dispatch = useDispatch()
+    const error = useSelector(state => state.error)
+
+    const user = useSelector(state => state.auth.user)
+    const jobs = useSelector(state => state.job.jobs)
+    const categories = useSelector(state => state.job.category)
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+
+        if (isLoading === true)
+            dispatch(getCategory())
+        setIsLoading(false)
+        console.log(categories)
+    }, [])
+
     // state
     const [job, setJob] = useState({
         title: "",
         description: "",
-        category: "",
+        category: 0,
         type: {
 
         },
+        location: "",
         requirement: "",
         duration: 0,
         salary: 0
     })
     const [step, setStep] = useState(1)
     const [errMsg, setErrMsg] = useState("")
+    const [file, setFile] = useState("")
+    const [name, setImgName] = useState("")
+    const [img, setImg] = useState(null)
 
     // side-effect
     useEffect(() => {
-        console.log(props.user.user.category)
-        if(props.user.user.category !== "employer")
-        {
+        console.log(user)
+        if (user.category !== "employer") {
             alert("You can't access to this page.")
-            window.location.href="/"
+            window.location.href = "/"
         }
     }, [job])
 
     // event handler
     const handleChange = e => {
         const { name, value } = e.target;
+        dispatch(clearErrors())
 
-        setJob({
-            ...job,
-            [name]: value
-        })
+        if (name === "image") {            
+            setImg(URL.createObjectURL(e.target.files[0]))
+            setFile(e.target.files[0])
+            setImgName(e.target.files[0].name)
+            console.log("is image")
+        }
+        else {
+            setJob({
+                ...job,
+                [name]: value
+            })
+        }
 
         console.log(job)
 
@@ -51,46 +81,71 @@ const AddJob = (props) => {
 
     const onSubmit = e => {
         e.preventDefault()
-        setErrMsg('')
+        setErrMsg('')        
 
-        if (job.title && job.description && job.duration && job.requirement && job.type && job.category && job.salary) {
-            const newJob = {                
-                employer_id: props.user.user.id, 
-                title: job.title,                
+        if (file) {
+            const data = new FormData()
+            data.append('file', file)
+            axios.post("/api/job/upload", data, {
+                // receive two    parameter endpoint url ,form data
+            })
+                .then(res => { // then print response status
+                    console.log(res.statusText)
+                    setFile("")
+                    setImg(null)
+                    setImgName("")
+                })
+        }
+
+        if (job.title && job.description && job.location && job.duration && job.requirement && job.type && job.category && job.salary) {
+            const newJob = {
+                employer_id: user.id,
+                name: user.name,
+                title: job.title,
                 description: job.description,
                 requirement: job.requirement,
                 type: job.type,
                 category: job.category,
+                location: job.location,
                 salary: job.salary,
-                duration: job.duration
+                duration: job.duration,
+                image: name || ""
             }
-            props.addJob(newJob)
-            window.alert('Added successfully.')            
+            dispatch(addJob(newJob))
+
+            if (error.id === "ADD_FAIL") {
+                alert('Please make sure you have fill in all information.')
+            }
+
+            else
+            {
+                window.alert('Added successfully.')
+                window.location.href = "/"
+            }                
         }
         else
             alert('Please fill in all information.')
     }
 
     useEffect(() => {
-        if(step > 1)
-        {
+        if (step > 1) {
             window.scrollTo({
                 'behavior': 'smooth',
-                'left':0,
+                'left': 0,
                 'top': window.scrollY + 400
             })
-        }        
+        }
     }, [step])
 
-        // css
+    // css
     const activeTab = {
-        backgroundColor:"var(--primary-color)",
-        color:"#fff"
+        backgroundColor: "var(--primary-color)",
+        color: "#fff"
     }
 
     const normalTab = {
-        backgroundColor:"transparent",
-        color:"var(--dark-color)"
+        backgroundColor: "transparent",
+        color: "var(--dark-color)"
     }
 
     // components
@@ -113,9 +168,17 @@ const AddJob = (props) => {
                     <div className="d-flex flex-column ml-3 w-100">
                         <label htmlFor="salary">Salary</label>
                         <div className="d-flex flex-row align-items-center w-100">
-                            <h6 className="mr-3" style={{fontSize:".9rem"}}>RM</h6>
-                            <input style={{width:"100%"}} type="text" id="" onChange={e => handleChange(e)} value={job.salary} name="salary" placeholder="3000" />
-                        </div>                    
+                            <h6 className="mr-3" style={{ fontSize: ".9rem" }}>RM</h6>
+                            <input style={{ width: "100%" }} type="text" id="" onChange={e => handleChange(e)} value={job.salary} name="salary" placeholder="3000" />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="d-flex flex-row my-3 w-100">
+                    <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
+                    <div className="d-flex flex-column ml-3 w-100">
+                        <label htmlFor="location">Location</label>
+                        <input style={{ width: "100%" }} type="text" id="" onChange={e => handleChange(e)} value={job.location} name="location" placeholder="Johor Bahru" />
                     </div>
                 </div>
 
@@ -143,14 +206,24 @@ const AddJob = (props) => {
                         <label htmlFor="description">Job Category</label>
                         <select required onChange={(e) => handleChange(e)} name="category" id="category">
                             <option value="">Select category:</option>
-                            <option value="IT">IT</option>
+                            {categories ? categories.map((i) => <option key={i.ID} value={i.ID}>{i.Value}</option>) : dispatch(getCategory())}
                         </select>
                     </div>
                 </div>
+                
+                <img src={img} style={{ maxWidth: "100%", maxHeight: "100%", width: "100%", height: "100%", objectFit: "cover" }} />
+                
+                <div className="image-upload ml-1 my-3">
+                    <label htmlFor="image">
+                        <img style={{width:"3em", height:"3em"}} src={require('../../images/photo.svg')} />
+                    </label>
 
+                    <input id="image" accept="image/*" name="image" type="file" style={{display:"none"}} onChange={e => handleChange(e)} />
+                    <small className="ml-2 paragraph">Feel free to upload an image</small>
+                </div>                
 
-                {(job.title && job.description && job.category && job.requirement) && (
-                    <button onClick={(e) => {e.preventDefault(); setStep(step + 1)}} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
+                {(job.title && job.description && job.location && job.category && job.requirement) && (
+                    <button onClick={(e) => { e.preventDefault(); setStep(step + 1) }} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
                 )}
 
             </div>
@@ -158,53 +231,53 @@ const AddJob = (props) => {
     )
 
     const step2 = (
-        <div className={step >= 2 ? "addjob-form--part mb-3 transition-show": "transition-hide addjob-form--part mb-3"}>
+        <div className={step >= 2 ? "addjob-form--part mb-3 transition-show" : "transition-hide addjob-form--part mb-3"}>
             <div className="decision--box-container">
-                
+
                 <label className="mb-3" style={{ gridArea: "title" }}>
                     <h4 className="title">Job Type</h4>
                     <div id="divider"></div>
-                </label>                
+                </label>
 
-                <div className="decision--box" style={job.type.fullTime === "Full Time" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, fullTime: "Full Time"} }))}>                    
+                <div className="decision--box" style={job.type.fullTime === "Full Time" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, fullTime: "Full Time" } }))}>
                     <h5>Full-Time</h5>
                 </div>
-                <div className="decision--box" style={job.type.partTime === "Part Time" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, partTime: "Part Time"} }))}>                
+                <div className="decision--box" style={job.type.partTime === "Part Time" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, partTime: "Part Time" } }))}>
                     <h5>Part-Time</h5>
                 </div>
-                <div className="decision--box" style={job.type.contract === "Contract" ? activeTab : normalTab}onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, contract: "Contract"} }))}>                    
+                <div className="decision--box" style={job.type.contract === "Contract" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, contract: "Contract" } }))}>
                     <h5>Contract</h5>
                 </div>
-                <div className="decision--box" style={job.type.commission === "Commission" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, commission: "Commission"} }))}>                    
+                <div className="decision--box" style={job.type.commission === "Commission" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, commission: "Commission" } }))}>
                     <h5>Commission</h5>
                 </div>
-                <div className="decision--box" style={job.type.internship === "Internship" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: {...prevJob.type, internship: "Internship"} }))}>                    
+                <div className="decision--box" style={job.type.internship === "Internship" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, internship: "Internship" } }))}>
                     <h5>Internship</h5>
-                </div>                
+                </div>
 
             </div>
             {(job.type) && (
                 <div className="d-flex flex-row">
-                    <button onClick={(e) => {e.preventDefault(); setJob((prevJob) => ({ ...prevJob, type: {} }))}} className="ml-auto mr-0 mt-3 no-styling-button" style={{ borderRadius: "0" }}>Reset</button>
-                    <button onClick={(e) => {e.preventDefault(); setStep(step + 1)}} className="ml-3 mr-0 mt-3 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
+                    <button onClick={(e) => { e.preventDefault(); setJob((prevJob) => ({ ...prevJob, type: {} })) }} className="ml-auto mr-0 mt-3 no-styling-button" style={{ borderRadius: "0" }}>Reset</button>
+                    <button onClick={(e) => { e.preventDefault(); setStep(step + 1) }} className="ml-3 mr-0 mt-3 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
                 </div>
             )}
         </div>
     )
 
     const step3 = (
-        <div className={step >= 3 ? "addjob-form--part mb-3 transition-show": "transition-hide addjob-form--part mb-3"}>
+        <div className={step >= 3 ? "addjob-form--part mb-3 transition-show" : "transition-hide addjob-form--part mb-3"}>
             <div className="d-flex flex-row align-items-center flex-wrap w-100">
-                <h4 className="title mr-1">I want to post this job for:</h4>                
+                <h4 className="title mr-1">I want to post this job for:</h4>
                 <div className="ml-auto d-flex flex-row align-items-center">
-                    <input style={{maxWidth:"80px"}} className="mr-3" type="number" id="" onChange={e => handleChange(e)} name="duration" placeholder="7" />
-                    <h6>Days</h6>                            
-                </div> 
+                    <input style={{ maxWidth: "80px" }} className="mr-3" type="number" id="" onChange={e => handleChange(e)} name="duration" placeholder="7" />
+                    <h6>Days</h6>
+                </div>
 
 
                 {(job.duration) ? (
                     <button onClick={(e) => onSubmit(e)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Post</button>
-                ): ""}
+                ) : ""}
 
             </div>
         </div>
@@ -212,7 +285,7 @@ const AddJob = (props) => {
 
     return (
         <>
-            <form className="form mx-auto" onSubmit={onSubmit} style={{ marginTop: "6em", maxWidth: "80%", marginBottom:"3em" }}>
+            <form className="form mx-auto" onSubmit={onSubmit} style={{ marginTop: "6em", maxWidth: "80%", marginBottom: "3em" }}>
                 {(step >= 1) && step1}
                 {(step >= 2) && step2}
                 {(step >= 3) && step3}
@@ -221,13 +294,4 @@ const AddJob = (props) => {
     )
 }
 
-function mapStateToProps(state)
-{    
-    return{
-        job: state.job,
-        user: state.auth
-        // isAuthenticated: state.auth.isAuthenticated
-    }
-}
-
-export default connect(mapStateToProps, { addJob })(AddJob);
+export default AddJob;

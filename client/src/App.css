@@ -342,8 +342,7 @@ h1,h2,h3,h4,h5,h6{
 {
   position: relative;  
   /* margin-top: 75vh; */
-  margin-top: 90vh;
-  min-height: 0;  
+  margin-top: 90vh;  
 }
 
 /* 4. Own component settings */
@@ -623,7 +622,7 @@ input[type="text"], input[type="email"], input[type="password"], select
   grid-template-areas: 'left right';
   gap: 30px 15px;
   grid-auto-columns: minmax(30%,1fr) minmax(50%, 1fr);
-  grid-auto-rows: minmax(50vh, 1fr);
+  grid-auto-rows: minmax(70vh, 1fr);
 
   margin-bottom: 2em;
   /* min-height: 100vh; */
@@ -755,7 +754,7 @@ input[type="text"], input[type="email"], input[type="password"], select
 .profile-grid
 {
   
-  height: 50vh;
+  height: 70vh;
 
   display: grid;
   gap: 15px 20px;

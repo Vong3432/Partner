@@ -9,7 +9,8 @@ import { returnErrors } from './errorActions'
 */
 
 export const showProfile = id => (dispatch, getState) => {
-    dispatch(setProfileLoading());    
+    dispatch(setProfileLoading());   
+    console.log(id) 
     axios
         /*
             Tasks:
@@ -21,8 +22,7 @@ export const showProfile = id => (dispatch, getState) => {
             dispatch({
                 type: SHOW_PROFILE,
                 payload: res.data
-            }))
-        
+            }))                
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 

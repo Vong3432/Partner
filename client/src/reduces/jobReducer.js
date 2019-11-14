@@ -1,7 +1,10 @@
-import { GET_JOBS, ADD_JOB, DELETE_JOB, UPDATE_JOB, JOBS_LOADING } from '../actions/types'
+import { GET_JOBS, ADD_JOB,GET_APPLYJOBS, DELETE_JOB, UPDATE_JOB, JOBS_LOADING, GET_JOB_CATEGORY, APPLY_JOB, GET_APPLYJOB_REQUEST } from '../actions/types'
 
 const initialState = {
     jobs: [],
+    category: [],
+    applyJobList: [],
+    applyRequestList: [],
     loading: false
 }
 
@@ -13,6 +16,21 @@ export default function (state = initialState, action) {
                 jobs: action.payload,
                 loading: false
             }
+        case GET_JOB_CATEGORY:
+            return {
+                ...state,
+                category: action.payload
+            }
+        case GET_APPLYJOBS:
+            return{
+                ...state,
+                applyJobList: action.payload
+            }
+        case GET_APPLYJOB_REQUEST:
+            return{
+                ...state,
+                applyRequestList: action.payload
+            }
         case DELETE_JOB:
             return {
                 ...state,
@@ -22,6 +40,10 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 jobs: [action.payload, ...state.jobs]
+            }
+        case APPLY_JOB:
+            return{
+                ...state                
             }
         case UPDATE_JOB:
             return {
