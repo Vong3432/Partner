@@ -44,17 +44,39 @@ router.post('/login', (req, res) => {
                         });
                     }
                 )
+            }
 
-            } else {
-                return res.status(400).json({ msg: 'User not found.' })
+            else {
+                conn.query('SELECT * FROM admin WHERE AdminID = ? AND Password = ?', [email, password], (err, results) => {
+                    // console.log(email,password+"sadasd")
+                    if (results.length > 0) {
+                        //console.log(results)
+                        jwt.sign(
+                            { id: results[0].AdminID },
+                            "myJwtSecret",
+                            { expiresIn: 3600 },
+                            (err, token) => {
+                                if (err) throw err
+                                return res.status(200).json({
+                                    token,
+                                    user: {
+                                        id: results[0].AdminID,
+                                        name: results[0].Name,                                        
+                                        category: "ADMIN"
+                                    }
+                                });
+                            }
+                        )
+                    }
+                    else
+                        return res.status(400).json({ msg: 'User not found.' })
+                })                
             }
         })
     }
     else {
         return res.status(400).json({ msg: 'Please enter email and password' })
     }
-
-
 })
 
 // @route   POST api/user
@@ -64,10 +86,10 @@ router.post('/register', (req, res) => {
 
     // destrucutre all submitted data from body
     const { name, email, password, userType } = req.body;
-    
+
     // console.log(req.body)
 
-    const AccountUUID = uuid()    
+    const AccountUUID = uuid()
 
     if (email && password && name && userType) {
         conn.query(`SELECT * FROM account WHERE Email = ? AND Password = ?`, [email, password], (error, results) => {
@@ -76,23 +98,21 @@ router.post('/register', (req, res) => {
                 return res.status(400).json({ msg: 'User is already registered.' })
             } else {
 
-                if(userType === 'employer')
-                {
+                if (userType === 'employer') {
                     const date = new Date();
                     conn.query(`INSERT INTO company(CompanyID, UserID, PublishedYear, Name) VALUES (?)`, [[AccountUUID, AccountUUID, date, name]], (err, results) => {
-                        if(err) throw err;
+                        if (err) throw err;
                     })
                 }
 
                 conn.query(`INSERT INTO account(AccountID, UserID, ProfileID, Name, Email, Password, AccountType) VALUES (?)`, [[AccountUUID, AccountUUID, AccountUUID, name, email, password, userType]], (err, results) => {
-                    if (err)
-                    {
+                    if (err) {
                         // console.log('has err')
-                        return res.send(err)                        
-                    }     
-                    
-                    conn.query(`INSERT INTO Profile(ProfileID, AccountID) VALUES (?);`, [[AccountUUID, AccountUUID]], (errors,profile) => {
-                        if(err) return res.send(err)
+                        return res.send(err)
+                    }
+
+                    conn.query(`INSERT INTO Profile(ProfileID, AccountID) VALUES (?);`, [[AccountUUID, AccountUUID]], (errors, profile) => {
+                        if (err) return res.send(err)
 
                         else {
                             conn.query(`SELECT * FROM account WHERE email = ? AND password = ?`, [email, password], (error, results) => {
@@ -115,14 +135,14 @@ router.post('/register', (req, res) => {
                                             });
                                         }
                                     )
-    
+
                                 } else {
                                     return res.status(400).json({ msg: 'User not found.' })
                                 }
                             })
                         }
                     })
-                    
+
                 })
             }
         })

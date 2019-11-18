@@ -8,6 +8,9 @@ import { Container } from 'reactstrap'
 
 // import components
 import TopNavbar from './components/TopNavbar'
+import EmployerTable from './components/user/EmployerTable';
+import { Messages } from './components/user/Messages';
+import AdminDashboard from './components/admin/AdminDashboard';
 
 // import pages
 import Main from './pages/Main';
@@ -20,19 +23,17 @@ import Job from './pages/job/Job';
 import AddJobPage from './pages/job/AddJobPage';
 import Profile from './pages/user/Profile';
 import Resume from './pages/user/Resume';
+import EditProfile from './pages/user/EditProfile';
 
 import { Provider } from 'react-redux'
 import store from './store'
 import axios from 'axios'
-import EmployerTable from './components/user/EmployerTable';
-import { Messages } from './components/user/Messages';
-import EditProfile from './pages/user/EditProfile';
-import Admin from './pages/admin/Admin';
-import AdminDashboard from './components/admin/AdminDashboard';
+
 
 function App() {  
 
   const [isScrollingDown, setIsScrollDown] = useState(false);  
+  const [isAdmin, setIsAdmin] = useState(false)
   
   
   let flag;
@@ -66,7 +67,7 @@ function App() {
           <TopNavbar scrolling={isScrollingDown} />
           <Switch>
             <>
-            <Container className="my-3">
+            <Container className="my-3">              
               <Route path="/" exact component={Main} />
               <Route path="/about" exact component={About} />
               <Route path="/employee" exact component={Job} />
@@ -77,8 +78,7 @@ function App() {
               <Route path="/editProfile/:id" exact component={EditProfile} />  
               <Route path="/profile/employertable/:id" exact component={EmployerTable} />  
               <Route path="/profile/messages" exact component={Messages} />  
-              <Route path="/resume" exact component={Resume} />       
-              <Route path="/admin" exact component={Admin} />   
+              <Route path="/resume" exact component={Resume} />                     
               <Route path="/admin/dashboard" exact component={AdminDashboard} />        
             </Container>          
             </>

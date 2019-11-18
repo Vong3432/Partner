@@ -15,6 +15,7 @@ const LoginForm = (props) => {
 
     const error = useSelector( state => state.error)
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+    const user = useSelector(state => state.auth.user)
     const dispatch = useDispatch()
 
     const [ userInfo, setUserInfo ] = useState({        
@@ -45,7 +46,7 @@ const LoginForm = (props) => {
                 }
     
                  // Attempt to login
-                dispatch(login(User))                                                           
+                dispatch(login(User))                                     
 
                 // window.location.href = '/'                
             }
@@ -55,6 +56,11 @@ const LoginForm = (props) => {
 
         
     }   
+
+    useEffect(() => {
+        if(user && user.category === "ADMIN")
+            window.location.href = "/admin/dashboard";
+    }, [user])
 
     useEffect(() => {
         if(error.id === "LOGIN_FAIL")

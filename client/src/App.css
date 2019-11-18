@@ -56,8 +56,9 @@
   --white-color: #fff;
   --light-grey: #8F8F90;  
   --lighter-grey: rgba(0, 0, 0, 0.2);
-  --green-color:rgb(6, 179, 127);
+  --green-color: #58C57D;
   --lighter-green:rgb(31, 199, 185);
+  --blue-color: #3D4A5F;
   --danger:#FE3C3C;
 }
 

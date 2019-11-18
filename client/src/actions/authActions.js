@@ -7,6 +7,9 @@ import {
     LOGIN_SUCCESS,
     LOGIN_FAIL,
     LOGOUT_SUCCESS,
+    ADMIN_LOGIN_SUCCESS,
+    ADMIN_LOGIN_FAIL,
+    ADMIN_LOGOUT_SUCCESS,
     REGISTER_SUCCESS,
     REGISTER_FAIL
 } from '../actions/types'
@@ -92,6 +95,43 @@ export const login = ({ email, password }) => dispatch => {
 export const logout = () => {
     return{
         type: LOGOUT_SUCCESS
+    }
+}
+
+// admin login
+export const adminLogin = ({ AdminID, Password }) => dispatch => {
+    
+    // Headers
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }    
+
+    // Request body
+    // const body = JSON.stringify({ email, password })
+    const body = ({ AdminID, Password })    
+    
+    axios.post('/api/admin/login', body, config)
+        .then(res => dispatch({
+            type: ADMIN_LOGIN_SUCCESS,
+            payload: res.data                
+        }))    
+        .catch(err => {
+            console.log(err)
+            dispatch(returnErrors(err.response.data, err.response.status, "ADMIN_LOGIN_FAIL"))
+            dispatch({
+                type: ADMIN_LOGIN_FAIL
+            })
+            throw err
+        })
+
+}
+
+// logout admin
+export const adminLogout = () => {
+    return{
+        type: ADMIN_LOGOUT_SUCCESS
     }
 }
 
