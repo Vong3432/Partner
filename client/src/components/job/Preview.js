@@ -6,13 +6,13 @@ import { applyJob } from '../../actions/jobActions'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { getApplyJobs } from '../../actions/jobActions'
-import { clearErrors } from '../../actions/errorActions'
+// import { clearErrors } from '../../actions/errorActions'
 
 const Preview = (props) => {    
 
     const [selectedJob, setSelectedJob] = useContext(PreviewContext)
-    const [multipleDescription, setMultimeDescription] = useState([])
-    const [multipleRequirement, setMultipleRequirement] = useState([])
+    // const [multipleDescription, setMultipleDescription] = useState([])
+    // const [multipleRequirement, setMultipleRequirement] = useState([])
 
         
     const dispatch = useDispatch()
@@ -81,7 +81,7 @@ const Preview = (props) => {
                 !isLoading ?
                 <>
                     <div className="media align-items-start">
-                        <img style={{ maxWidth: "100px", maxHeight: "60px", objectFit: "contain" }} src={require('../../images/jr.jpg')} className="mr-3" alt="..." />
+                        <img style={{ maxWidth: "100px", maxHeight: "60px", objectFit: "contain" }} src={selectedJob.ProfilePic ? './uploads/profile/' + selectedJob.ProfilePic :null} className="mr-3" alt="..." />
                         <div className="media-body">
                             <h6 className="mt-0 card-companyName">{selectedJob.CompanyName}</h6>
                             <div className="d-flex flex-row">

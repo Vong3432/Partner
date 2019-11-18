@@ -7,6 +7,8 @@ import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Spinner from '../Spinner'
+import { showProfile } from '../../actions/profileActions';
 
 const EmployerTable = (props) => {
 
@@ -33,7 +35,10 @@ const EmployerTable = (props) => {
 
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth)
+    const profile = useSelector(state => state.profile.user)
     const job = useSelector(state => state.job)
+
+    const [src, setSrc] = useState(null)
 
     const toggle = () => 
     {
@@ -46,19 +51,19 @@ const EmployerTable = (props) => {
         setIndex(index)             
     }
     
+    
     useEffect(() => {        
-        setCurrentJob(job.jobs[index])
-    },[index])
-
-    useEffect(() => {
-        console.log(user)
         // dispatch(getApplyJobRequest(user.user.name))   
         // setCurrentJob(job.jobs)
         // console.log(job.jobs)
         if (user.user.category === "employer" && user.isAuthenticated === true) {
             if (isLoading === true)
-                dispatch(getJobs())            
-            setIsLoading(false)
+            {                
+                dispatch(showProfile(props.match.params.id))
+                dispatch(getJobs())       
+                setSrc(profile.ProfilePic)
+                setIsLoading(false)
+            }                                 
         }
 
         else {
@@ -66,12 +71,18 @@ const EmployerTable = (props) => {
             window.location.href = "/"
         }
 
-        return (() => setIsLoading(true))
+        return (() => {setIsLoading(true)})
     }, [])
+
+    useEffect(() => {        
+        if(job.jobs.length > 0)
+            setCurrentJob(job.jobs[index])
+    },[index])
+
 
     const onEdit = (e) => {
         e.persist()
-        console.log(e.target.name, e.target.value)
+        console.log(e.target.name, e.target.value)        
         setCurrentJob((prevState) => ({...prevState,[e.target.name]: e.target.value}) )
     }
 
@@ -89,9 +100,9 @@ const EmployerTable = (props) => {
 
     return (
         <>
-            {(isEmployer && isOwner) && (
+            {(isEmployer && isOwner ) && (
                 <>
-                    {job.applyRequestList && (
+                    {job.jobs && (
                         <Modal isOpen={modal} toggle={toggle}>
                         <ModalHeader toggle={toggle}>Modal title</ModalHeader>
                         <ModalBody>
@@ -167,8 +178,8 @@ const EmployerTable = (props) => {
 
                         {/* user avatar and name */}
                         <div className="text-center mt-auto">
-                            <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
-                            <h2 className="profile-username mt-2">{user.name}</h2>
+                            <img src={profile.ProfilePic ? '/uploads/profile/' + src : null} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />   
+                            <h2 className="profile-username mt-2">{isLoading === false ? profile.Name : null}</h2>
                         </div>
 
                         {/* social media links */}
@@ -176,11 +187,13 @@ const EmployerTable = (props) => {
                             <NavLink exact={true} to={{ pathname: `/profile/${props.match.params.id}`, state: { user: props.user, profile: props.profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
                             <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state: { user: props.user, profile: props.profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
                             <NavLink exact={true} to="/messages" tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>
+                            <NavLink exact={true} to={{ pathname: '/addJob' }} tag={RRNavLink} activeClassName="employer-navlink-active" className="ml-auto primary-bg-button">Post Job</NavLink>
                         </div>
 
                     </section>
 
-                    <table class="table table-hover" style={{ marginTop: "90vh", marginBottom: "20vh" }}>
+                    <div className="table-responsive">
+                    <table className="table" style={{ marginTop: "90vh", marginBottom: "20vh" }}>
                         <thead>
                             <tr>
                                 <th scope="col"></th>
@@ -210,6 +223,7 @@ const EmployerTable = (props) => {
                             )) : dispatch(getApplyJobRequest(user.user.name))}
                         </tbody>
                     </table>
+                    </div>
 
                 </>
             )}

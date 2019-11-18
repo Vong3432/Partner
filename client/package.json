@@ -39,5 +39,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "file-loader": "^4.2.0",
+    "url-loader": "^2.2.0"
+  }
 }

@@ -12,13 +12,11 @@ import PropTypes from 'prop-types'
 // import io from 'socket.io-client'
 // let socket
 
-const Profile = (props) => {
+const Profile = (props) => {    
 
-    const text = "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus."    
+    const dispatch = useDispatch()
 
-    const dispatch = useDispatch()    
-
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [isOwner, setIsOwner] = useState(false)
     const [isEmployer, setIsEmployer] = useState(false)
 
@@ -26,69 +24,37 @@ const Profile = (props) => {
     const profile = useSelector(state => state.profile.user)
     const posts = useSelector(state => state.post.posts)
     const user = useSelector(state => state.auth.user)
-
-    useEffect(() => {
-        const paramID = props.match.params.id  
-        dispatch(getPosts(paramID))
-        dispatch(showProfile(paramID))        
-        setIsLoading(true)
-    }, [])
-
-    useEffect(() => {
-        if(profile === null)
-        {
-            dispatch(showProfile(props.match.params.id))
-            dispatch(getPosts(props.match.params.id))
-        }        
-    })            
-
-    useEffect(() => {
-
-        const paramID = props.match.params.id               
-        //props.loadInitialDataSocket(socket, props.match.params.id)        
-
-        // socket = io.connect("http://localhost:5000")
-        // console.dir(socket)
-
-        // socket.on('postLoaded', res=>{
-        //     console.dir(res)
-        //     dispatch(getPosts(res))
-        // })
-        
-        dispatch(getPosts(paramID))
-                
-        console.log(user, profile)
-        if (profile.AccountType === "employer")
-            setIsEmployer(true)
-        else
-            setIsEmployer(false)
-
-        if (user) {
-            if (paramID === user.id)
-                setIsOwner(true)
-            else
-                setIsOwner(false)
-        }
-                
-        dispatch(showProfile(paramID))
-        // props.getPosts(paramID)
-        // return(() => socket.emit('disconnect'))
-    }, [profile.AccountType])        
     
-    // useEffect(() => {
-    //     const paramID = props.match.params.id        
-    //     props.getPosts(paramID)
-    // }, [props.post.loading])
+    const [src, setSrc] = useState(null)
 
+    // useEffect 
+    useEffect(() => {        
+        
+        if(isLoading === true)
+        {
+            console.log('rerender')
+            dispatch(getPosts(props.match.params.id));
+            dispatch(showProfile(props.match.params.id));          
+            user.category === "employer" ? setIsEmployer(true) : setIsEmployer(false);                     
+            user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false) ;               
+
+            setIsLoading(false)
+            setSrc(profile.ProfilePic)
+            // loadImage(profile.ProfilePic)
+        }
+        
+        return(()=>setIsLoading(true))
+    }, [])        
+            
     return (
         <>
 
-            {(!isEmployer || !isOwner) && (
+            {(!isEmployer || !isOwner && isLoading === false) && (
                 <section style={{ backgroundColor: "black" }} className="d-flex flex-column justify-content-center">
 
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
-                        <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
+                        <img src={ src ? '/uploads/profile/' + src :null} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
                         <h2 className="profile-username mt-2">{profile.Name}</h2>
                     </div>
 
@@ -106,7 +72,7 @@ const Profile = (props) => {
 
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
-                        <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" />
+                        <img src={profile.ProfilePic ? '/uploads/profile/' + src :null} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
                         <h2 className="profile-username mt-2">{profile.Name}</h2>
                     </div>
 
@@ -141,53 +107,52 @@ const Profile = (props) => {
                     <aside className="profile-grid-right">
 
                         {/* Contact */}
-                        {!isEmployer && (
-                            <div className="profile--contact-container">
 
-                                {/* Contact title bar */}
-                                <div className="d-flex flex-row row-wrap align-content-center">
-                                    <h5 className="header">contact and personal info</h5>
-                                    <i className="material-icons ml-auto" style={{ color: "var(--primary-color)", lineHeight: "29.25px" }}>&#xe88f;</i>
-                                </div>
+                        <div className="profile--contact-container">
 
-                                {/* Email */}
-                                <div className="d-flex flex-row mt-3">
-                                    <img className="small-icon" src={require('../../images/email.svg')} alt="email" />
-                                    <div className="d-flex flex-column ml-2">
-                                        <h6 className="small-header">Email</h6>
-                                        <small>johndoe@gmail.com</small>
-                                    </div>
-                                </div>
-
-                                {/* Availability */}
-                                <div className="d-flex flex-row mt-4">
-                                    <img className="small-icon" src={require('../../images/availability.svg')} alt="availability" />
-                                    <div className="d-flex flex-column ml-2">
-                                        <h6 className="small-header">Availability</h6>
-                                        <small>Full-Time/Part-Time</small>
-                                    </div>
-                                </div>
-
-                                {/* Age */}
-                                <div className="d-flex flex-row mt-4">
-                                    <img className="small-icon" src={require('../../images/age.svg')} alt="age" />
-                                    <div className="d-flex flex-column ml-2">
-                                        <h6 className="small-header">Age</h6>
-                                        <small>30</small>
-                                    </div>
-                                </div>
-
-                                {/* Location */}
-                                <div className="d-flex flex-row mt-4">
-                                    <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
-                                    <div className="d-flex flex-column ml-2">
-                                        <h6 className="small-header">Location</h6>
-                                        <small>Los Angeles</small>
-                                    </div>
-                                </div>
-
+                            {/* Contact title bar */}
+                            <div className="d-flex flex-row row-wrap align-content-center">
+                                <h5 className="header">contact and personal info</h5>
+                                <i className="material-icons ml-auto" style={{ color: "var(--primary-color)", lineHeight: "29.25px" }}>&#xe88f;</i>
                             </div>
-                        )}
+
+                            {/* Email */}
+                            <div className="d-flex flex-row mt-3">
+                                <img className="small-icon" src={require('../../images/email.svg')} alt="email" />
+                                <div className="d-flex flex-column ml-2">
+                                    <h6 className="small-header">Email</h6>
+                                    <small>{profile.Email}</small>
+                                </div>
+                            </div>
+                            {!isEmployer && (
+                                <>
+                                    <div className="d-flex flex-row mt-4">
+                                        <img className="small-icon" src={require('../../images/availability.svg')} alt="availability" />
+                                        <div className="d-flex flex-column ml-2">
+                                            <h6 className="small-header">Availability</h6>
+                                            <small>{profile.Availability}</small>
+                                        </div>
+                                    </div>
+
+                                    <div className="d-flex flex-row mt-4">
+                                        <img className="small-icon" src={require('../../images/age.svg')} alt="age" />
+                                        <div className="d-flex flex-column ml-2">
+                                            <h6 className="small-header">Age</h6>
+                                            <small>{profile.Age}</small>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                            {/* Location */}
+                            <div className="d-flex flex-row mt-4">
+                                <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
+                                <div className="d-flex flex-column ml-2">
+                                    <h6 className="small-header">Location</h6>
+                                    <small>{profile.Location}</small>
+                                </div>
+                            </div>
+
+                        </div>
 
                         {isEmployer && (
                             <div className="profile--contact-container">
@@ -244,15 +209,15 @@ const Profile = (props) => {
                     {/* Article */}
                     <div className="profile--article-container">
                         {(isOwner) && (
-                            <CreatePost routeProps={props} auth={user} />
+                            <CreatePost routeProps={props} auth={user} avatar={profile.ProfilePic ? profile.ProfilePic : null} />
                         )}
                         {/* {props.post.posts.map((item,index) => (
                             <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={props.profile.name} />
                         ))} */}
-                        { posts ? posts.map((item,index) => (
-                            <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
+                        {posts ? posts.map((item, index) => (
+                            <Article key={index} avatar={profile.ProfilePic ? profile.ProfilePic : null} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
                         )) : null}
-                                                                        
+
                     </div>
 
                 </div>

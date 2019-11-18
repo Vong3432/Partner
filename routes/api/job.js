@@ -17,7 +17,7 @@ var multer = require('multer')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
     // cb(null, 'client/public/uploads/posts')
-    cb(null, 'client/src/uploads/jobs')
+    cb(null, 'client/public/uploads/jobs')
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname )
@@ -76,7 +76,7 @@ router.post('/', (req, res) => {
 router.get('/displayjobs', (req, res) => {    
 
     // define sql query
-    const sql = 'SELECT * FROM Job';
+    const sql = 'SELECT j.*, p.ProfilePic FROM Job j LEFT JOIN Profile p ON j.EmployerID = p.ProfileID';
     
     // run sql
     conn.query(sql, (err, results) => {   
@@ -159,7 +159,7 @@ router.put('/updatejob/:postjobid', (req, res) => {
     /*const sql = `UPDATE job 
                 SET upload_date = ${upload_date}, title = ${title}, category = ${category}, description = ${description}, duration = ${duration}, requirement = ${requirement}, salary = ${salary}
                 WHERE job_id = ${id}`;*/
-    const sql = `UPDATE Job SET Title=?, Salary=?, Location=?, Description=(?), Requirement=(?), Status=? WHERE JobID = ?`;    
+    const sql = `UPDATE Job SET Title=?, Salary=?, Location=?, Description=?, Requirement=?, Status=? WHERE JobID = ?`;    
     // run sql
     
     

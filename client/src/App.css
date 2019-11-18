@@ -196,7 +196,7 @@ h1,h2,h3,h4,h5,h6{
 {    
   max-width: inherit;
   border: none !important;  
-  padding: .35em 1em;
+  padding: 0em 1em;
 }
 
 .card-shadow
@@ -222,6 +222,7 @@ h1,h2,h3,h4,h5,h6{
 .card-companyName
 {
   font-size: .9rem;
+  color: gray;
 }
 
 .card-title
@@ -230,7 +231,7 @@ h1,h2,h3,h4,h5,h6{
   text-transform: capitalize;
   font-size: 1.1rem;
 
-  margin: 1em 0;
+  margin-top: .5em;
 }
 
 .card-sub-title
@@ -403,23 +404,24 @@ h1,h2,h3,h4,h5,h6{
 {    
   
   width: auto;
-  padding: .5em .75em !important;
+  padding: .5em 1.25em !important;
 
   font-family: helveticaMedium;
   /* text-align: center; */
   color: var(--primary-color) !important;
 
   border: 1px solid var(--primary-color);
-  border-radius: 7px;
+  border-radius: 3px;
 }
 
 .primary-bg-button
 {
-  max-width: 140px !important;
-  width: 100%;
+  min-width: 120px !important;
+  /* width: 100%; */
+  width: auto;
 
   margin: 0 .5em;
-  padding: .5em .75em !important;
+  padding: .5em 1.25em !important;
 
   font-family: helveticaMedium;  
   text-align: center;
@@ -428,16 +430,16 @@ h1,h2,h3,h4,h5,h6{
   color: var(--white-color) !important;
   
   border: none;
-  border-radius: 7px;
+  border-radius: 3px;
 }
 
 .danger-bg-button
 {
-  max-width: 140px !important;
-  width: 100%;
+  max-width: 120px !important;
+  /* width: 100%; */
 
   margin: 0 .5em;
-  padding: .5em .75em !important;
+  padding: .5em 1.25em !important;
 
   font-family: helveticaMedium;  
   text-align: center;
@@ -446,7 +448,7 @@ h1,h2,h3,h4,h5,h6{
   color: var(--white-color) !important;
   
   border: none;
-  border-radius: 7px;
+  border-radius: 3px;
 }
 
 .primary-bg-button--small
@@ -481,9 +483,27 @@ h1,h2,h3,h4,h5,h6{
   animation: whenLeaveFocus 200ms ease-in forwards;
 }
 
-.primary-button:hover,.primary-bg-button:hover,.no-styling-button:hover,.danger-bg-button:hover
+.primary-button:hover,.no-styling-button:hover
 {  
-  animation: whenFocus 200ms ease-in forwards;
+  /* animation: whenFocus 200ms ease-in forwards; */
+}
+
+.primary-bg-button:hover
+{
+  transition: all 200ms ease-in 50ms;
+  transform: translateY(-2px);
+  color: var(--primary-color) !important;
+  background: rgba(36, 100, 228, 0.1);
+  border: none !important;  
+}
+
+.danger-bg-button:hover
+{
+  transition: all 200ms ease-in 50ms;
+  transform: translateY(-2px);
+  color: var(--danger) !important;
+  background: rgba(254, 60, 60, 0.1);
+  border: none !important;  
 }
 
 @keyframes whenFocus
@@ -644,7 +664,7 @@ input[type="text"], input[type="email"], input[type="password"], select
   color: gray;
   background-color: rgb(240, 240, 240);  
   padding: .75em !important; 
-  margin: 1em 0 .25em 0 !important;
+  margin: 0em 0 .25em 0 !important;
   font-size: .7rem !important;
 }
 
@@ -849,13 +869,13 @@ input[type="text"], input[type="email"], input[type="password"], select
   display: grid;
   gap: 15px;  
   grid-template-areas: 'c c c';
-  grid-auto-columns: minmax(auto, 1fr) minmax(auto, 1fr) minmax(auto, 1fr);
-  grid-auto-rows: minmax(200px,1fr);
+  grid-auto-columns: minmax(auto, 200px) minmax(auto, 200px) minmax(auto, 200px);
+  grid-auto-rows: minmax(auto,200px);
 }
 
 .gallery-tab-item
 {
-  background: gray;
+  /* background: gray; */
 }
 
 .profile--article-container

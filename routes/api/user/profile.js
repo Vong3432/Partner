@@ -2,6 +2,8 @@ const express = require('express')
 const mysql = require('mysql')
 const router = express.Router()
 const uuid = require('uuid');
+const mkdir = require('mkdir')
+const multer = require('multer')
 
 // Create table
 const conn = mysql.createConnection({
@@ -13,23 +15,66 @@ const conn = mysql.createConnection({
     multipleStatements: true
 })
 
-/////////////////// not need at all ///////////////////
+let CURRENT_PROFILE_OWNER_ID='';
 
-// // @route   POST api/user
-// // @desc    Post a new profile
-// // @access  Private
-// router.post('/', (req, res) => {
 
-//     // destrucutre all submitted data from body
-//     const ProfileID = uuid();
+router.post('/upload', function (req, res) {
 
-//     const { ProfileID, ProfilePic, BackgroupPic, Username, Description, Resume, Email, Availability, Age, Location, FacebookLink, LinkedLink, WhatsappLink } = req.body;
+    var storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            // cb(null, 'client/public/uploads/posts')
+            var dest = `client/public/uploads/profile/`;
+            // mkdir.sync(dest)
+            cb(null, dest)
+        },
+        filename: function (req, file, cb) {
+            // console.log(req)
+            cb(null, CURRENT_PROFILE_OWNER_ID + "-" + file.originalname)
+        }
+    })
+    
+    var upload = multer({ storage: storage }).array('file')    
+    
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+        return res.status(200).send(req.file)    
 
-//     const option = [ProfileID, ProfilePic, BackgroupPic, Username, Description, Resume, Email, Availability, Age, Location, FacebookLink, LinkedLink, WhatsappLink]
+    })
 
-//     checkConnection(sql, results, option)
+});
 
-// })
+router.post('/uploadProfileImage', function (req, res) {
+    console.log(CURRENT_PROFILE_OWNER_ID+"sss")
+    var storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            // cb(null, 'client/public/uploads/posts')
+            var dest = `client/public/uploads/profile/`;
+            // mkdir.sync(dest)
+            cb(null, dest)
+        },
+        filename: function (req, file, cb) {
+            // console.log(req)
+            cb(null, CURRENT_PROFILE_OWNER_ID + "-" + file.originalname)
+        }
+    })
+    
+    var upload = multer({ storage: storage }).single('profile')    
+    
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+        return res.status(200).send(req.file)    
+
+    })
+
+});
 
 // @route   GET api/user
 // @desc    Display user profile
@@ -51,12 +96,19 @@ router.get('/displayprofile', (req, res) => {
 // @desc    Display some searched unique profile
 // @access  Private
 router.get('/displayprofile/:id', (req, res) => {
-    
-    conn.query(`SELECT p.*, a.* FROM Profile AS p JOIN Account AS a ON a.AccountID = p.AccountID WHERE p.AccountID = ?`, [req.params.id], (error, results) => {
-        
-        if (results.length > 0) {                         
+
+
+    conn.query(`SELECT p.*, a.*, g.GalleryName FROM Profile AS p 
+    LEFT JOIN Account AS a ON a.AccountID = p.AccountID 
+    LEFT JOIN Gallery As g ON g.ProfileID = p.ProfileID
+    WHERE p.AccountID = (?)`, [req.params.id], (error, results) => {
+
+        if (results.length > 0) {
+            console.log(results[0])    
+            CURRENT_PROFILE_OWNER_ID = req.params.id                  
             return res.json(results[0])
-        } else {            
+        } else {
+            console.log('no result')
             return res.status(400).json({ msg: 'User not found.' })
         }
     })
@@ -89,18 +141,33 @@ router.put('/updateprofile/:profileid', (req, res) => {
 
     // get id from url parameter
     const id = req.params.profileid
-
+    CURRENT_PROFILE_OWNER_ID = id;
+    
     // destrucutre all submitted data from body
-    const { ProfileID, ProfilePic, BackgroupPic, Username, Description, Resume, Email, Availability, Age, Location, FacebookLink, LinkedLink, WhatsappLink } = req.body;
-
+    const { Address, BackgroundPic, ProfilePic, About, Email, Availability, Age, Location, FacebookLink, LinkedLink, WhatsappLink } = req.body;            
+    
     // define sql query
-    const sql = `UPDATE Profile 
-                SET ProfileID=${ProfileID}, ProfilePic=${ProfilePic}, BackgroupPic=${BackgroupPic}, Username=${Username}, Description=${Description}, Resume=${Resume}, Email=${Email}, Availability=${Availability}, Age=${Age}, Location=${Location}, FacebookLink=${FacebookLink}, LinkedLink=${LinkedLink}, WhatsappLink=${WhatsappLink}
-                WHERE ProfileID = ${id}`
+    const sql = `UPDATE Profile SET ProfilePic = ?, Address = ?, About = ?, Email = ?, Availability = ?, Age = ?, Location = ?, FacebookLink =?, LinkedLink = ?, WhatsappLink = ? WHERE ProfileID = ?;
+                UPDATE Account SET Email = ? WHERE ProfileID = ?; `                    
 
-    if (err) throw err
-    conn.query(sql, (err, results) => {
-        err ? res.send(err) : res.json(results[0])
+    conn.query(sql, [ProfilePic, Address, About, Email, Availability, Age, Location, FacebookLink, LinkedLink, WhatsappLink, id, Email, id], (err, results) => {
+        console.log(err)
+        if (err)
+            res.status(400).json({ msg: err })
+        else {
+            if(BackgroundPic)
+            {
+                BackgroundPic.map(i=>{
+                    // console.log(i)
+                    let GalleryID = uuid()
+                    conn.query(`INSERT INTO Gallery(GalleryID, ProfileID, GalleryName) VALUES(?)`, [[GalleryID, id, i]], (err,results)=>{
+                        if(err) throw err;                                
+                    })            
+                })            
+            }   
+            console.log(ProfilePic +"final")         
+            res.status(200).json({ Address, About, Email, Availability, Age, Location, Availability, FacebookLink, LinkedLink, WhatsappLink })
+        }
     })
 
 })

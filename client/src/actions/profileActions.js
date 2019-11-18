@@ -26,7 +26,7 @@ export const showProfile = id => (dispatch, getState) => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 
-export const editProfile = id => (dispatch, getState) => {
+export const editProfile = (id, info) => (dispatch, getState) => {
     axios
         /*
             Tasks:
@@ -34,13 +34,13 @@ export const editProfile = id => (dispatch, getState) => {
             2. inside the api, UPDATE everything on `profile` WHERE `profile.id` = `id`
             3. res.json(results) if success
         */
-        .put(`/api/profile/updateprofile/${id}`, tokenConfig(getState))
+        .put(`/api/profile/updateprofile/${id}`, info, tokenConfig(getState))
         .then(res => 
                 dispatch({
-                    type: EDIT_PROFILE,
-                    payload: res.data, id                 
+                    type: EDIT_PROFILE                              
                 }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+        // .then(dispatch(showProfile(id)))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "UPDATE_FAIL")))
 }
 
 export const deactiveProfile = id => (dispatch, getState) => {

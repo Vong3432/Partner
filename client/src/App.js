@@ -27,6 +27,8 @@ import axios from 'axios'
 import EmployerTable from './components/user/EmployerTable';
 import { Messages } from './components/user/Messages';
 import EditProfile from './pages/user/EditProfile';
+import Admin from './pages/admin/Admin';
+import AdminDashboard from './components/admin/AdminDashboard';
 
 function App() {  
 
@@ -75,11 +77,13 @@ function App() {
               <Route path="/editProfile/:id" exact component={EditProfile} />  
               <Route path="/profile/employertable/:id" exact component={EmployerTable} />  
               <Route path="/profile/messages" exact component={Messages} />  
-              <Route path="/resume" exact component={Resume} />
+              <Route path="/resume" exact component={Resume} />       
+              <Route path="/admin" exact component={Admin} />   
+              <Route path="/admin/dashboard" exact component={AdminDashboard} />        
             </Container>          
             </>
           </Switch>        
-        </Router>       
+        </Router>        
       </div>
     </Provider>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { login } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
@@ -13,6 +13,10 @@ const LoginForm = (props) => {
         clearErrors: PropTypes.func.isRequired
     }    
 
+    const error = useSelector( state => state.error)
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+    const dispatch = useDispatch()
+
     const [ userInfo, setUserInfo ] = useState({        
         email: '',
         password: '',        
@@ -20,11 +24,15 @@ const LoginForm = (props) => {
 
     const [errMsg, setErrMsg] = useState("")
 
+    useEffect(() => {
+        dispatch(clearErrors())  
+    }, [userInfo])
+
     const onSubmit = e => {
         e.preventDefault();        
         setErrMsg('')
 
-        if(props.isAuthenticated)
+        if(isAuthenticated)
             alert('You are logged in!')
 
         else
@@ -37,7 +45,8 @@ const LoginForm = (props) => {
                 }
     
                  // Attempt to login
-                props.login(User)                                                                
+                dispatch(login(User))                                                           
+
                 // window.location.href = '/'                
             }
             else
@@ -45,9 +54,25 @@ const LoginForm = (props) => {
         }                
 
         
-    }
+    }   
 
-    const handleChange = e => {       
+    useEffect(() => {
+        if(error.id === "LOGIN_FAIL")
+        {
+            setErrMsg('Login fail')                                      
+        }
+        
+        else if(isAuthenticated === true)
+        {                    
+            alert('login successfully')
+        }
+        return(() => dispatch(clearErrors()))
+    }, [error.id])
+    
+
+    const handleChange = e => {      
+        
+        setErrMsg('')
         const { name, value }  = e.target;        
         
         setUserInfo({
@@ -90,12 +115,4 @@ const LoginForm = (props) => {
     )
 }
 
-function mapStateToProps(state)
-{    
-    return{
-        isAuthenticated: state.auth.isAuthenticated,
-        error: state.error
-    }
-}
-
-export default connect(mapStateToProps, { login, clearErrors })(LoginForm)
+export default LoginForm

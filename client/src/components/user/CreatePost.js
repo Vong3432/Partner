@@ -15,7 +15,7 @@ const CreatePost = (props) => {
 
     const [file, setFile] = useState("")
     const [name, setImgName] = useState("")
-    const [img, setImg] = useState(null)
+    const [img, setImg] = useState(null)    
 
     const error = useSelector(state => state.error)
     const dispatch = useDispatch()
@@ -73,7 +73,15 @@ const CreatePost = (props) => {
             }
             // console.log(newPost.Picture)
             dispatch(addPost(newPost))
-            setContent("")
+            if(error.id === "POST_FAIL")
+            {
+                alert('Something went wrong, please try again.')                
+            }
+            else
+            {
+                alert('Post successfully.')                
+            }            
+            setContent("")                        
             // props.getPosts(props.routeProps.match.params.id)    
             
             // props.addNewItemSocket(socket, newPost)
@@ -85,8 +93,7 @@ const CreatePost = (props) => {
             alert('Please enter text...')
     }
 
-    useEffect(() => {
-        console.log('rerender')
+    useEffect(() => {        
         return (()=>console.log('exit'))
     },[])
 
@@ -104,11 +111,11 @@ const CreatePost = (props) => {
             {/* post */}
             <article className="profile-article">
                 <div className="media">
-                    <img id="avatar--small" src={require('../../images/person.jpg')} className="mr-3" alt="..." />
+                    <img id="avatar--small" src={props.avatar? '/uploads/profile/' + props.avatar : null} className="mr-3" alt="..." />
                     <div className="media-body">
                         <h5 className="mt-0 header">{props.auth.name}</h5>
                         <form encType="multipart/form-data" style={{ maxWidth: "100%" }} className="d-flex flex-column">
-                            <textarea onChange={e => handleChange(e)} placeholder="Enter something ..." name="content" id="newPostField"></textarea>
+                            <textarea onChange={e => handleChange(e)} placeholder="Enter something ..." name="content" id="newPostField" value={content}></textarea>
                             <img src={img} style={{ maxWidth: "300px", maxHeight: "300px", width: "100%", height: "100%", objectFit: "cover" }} />
                             <div className="d-flex flex-row mt-3 align-items-center">
                                 <input accept='image/*' style={{ maxWidth: "100px" }} type="file" name="imgPath" onChange={(e) => handleChange(e)} />

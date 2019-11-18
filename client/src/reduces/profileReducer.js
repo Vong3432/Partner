@@ -17,12 +17,7 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 user: state.user.filter( user => user.id !== action.payload)
-            }
-        case EDIT_PROFILE:
-            return {
-                ...state,
-                user: [action.payload]                
-            }
+            }                    
         case PROFILE_LOADING:
             return {
                 ...state,
