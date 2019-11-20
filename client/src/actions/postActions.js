@@ -28,39 +28,22 @@ export const addPost = item => (dispatch, getState) => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"POST_FAIL")))
 }
 
-// export const getPosts = data => ({
-//     type:GET_POSTS,
-//     payload: data
-// })
-
-// export const addPost = item => ({
-//     type:ADD_POST,
-//     payload: item
-// })
-
-// not
-export const editPost = id => (dispatch, getState) => {
-    console.log(id)
-    axios.delete(`/api/job/deletejob/${id}`, tokenConfig(getState))
-        .then(res => {
-            dispatch({
-                type: EDIT_POST,
-                payload: id
-            })
-        })
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+export const editPost = (id, info) => (dispatch, getState) => {    
+    axios
+        .put(`/api/post/editpost/${id}`, info, tokenConfig(getState))        
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"EDIT_FAIL")))
 }
 
 export const deletePost = id => (dispatch, getState) => {
     console.log(id)
-    axios.delete(`/api/job/deletejob/${id}`, tokenConfig(getState))
+    axios.delete(`/api/post/deleteposting/${id}`, tokenConfig(getState))
         .then(res => {
             dispatch({
                 type: DELETE_POST,
                 payload: id
             })
         })
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"DELETE_FAIL")))
 }
 
 export const setPostLoading = () => {

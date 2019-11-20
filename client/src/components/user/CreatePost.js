@@ -13,7 +13,7 @@ const CreatePost = (props) => {
     const [content, setContent] = useState("")
     const [msg, setMsg] = useState("")
 
-    const [file, setFile] = useState("")
+    const [file, setFile] = useState("")    
     const [name, setImgName] = useState("")
     const [img, setImg] = useState(null)    
 
@@ -35,7 +35,7 @@ const CreatePost = (props) => {
         if (e.target.name === "imgPath") {
             setImg(URL.createObjectURL(e.target.files[0]))
             setFile(e.target.files[0])
-            setImgName(e.target.files[0].name)
+            setImgName(props.auth.id + "-" + e.target.files[0].name)
         }
         else
             setContent(e.target.value)
@@ -119,7 +119,7 @@ const CreatePost = (props) => {
                             <img src={img} style={{ maxWidth: "300px", maxHeight: "300px", width: "100%", height: "100%", objectFit: "cover" }} />
                             <div className="d-flex flex-row mt-3 align-items-center">
                                 <input accept='image/*' style={{ maxWidth: "100px" }} type="file" name="imgPath" onChange={(e) => handleChange(e)} />
-                                <button onClick={e => onSubmit(e)} className="primary-bg-button--small ml-auto mr-0">Post</button>
+                                <button onClick={e => onSubmit(e)} className="primary-bg-button ml-auto mr-0">Post</button>
                             </div>
                         </form>
                     </div>

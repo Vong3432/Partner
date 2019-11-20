@@ -16,7 +16,7 @@ const conn = mysql.createConnection({
 })
 
 
-
+let CURRENT_PROFILE_OWNER_ID='';
 
 var multer = require('multer')
 var storage = multer.diskStorage({
@@ -25,7 +25,7 @@ var storage = multer.diskStorage({
     cb(null, 'client/public/uploads/posts')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname )
+    cb(null, CURRENT_PROFILE_OWNER_ID + "-" + file.originalname )
   }
 })
 var upload = multer({ storage: storage }).single('file')
@@ -61,7 +61,7 @@ router.post('/', (req, res) => {
     
 
     let str = "";
-    console.log(req.body, PostingID, UploadTime)
+    // console.log(req.body, PostingID, UploadTime)
 
     // ???
     // for(key in type) {
@@ -78,36 +78,7 @@ router.post('/', (req, res) => {
         (err) ? res.status(400).json({ msg: 'Failed to post' }) : res.json(results)
     })    
 
-
-
-
-    /*const { title, description } = req.body;
-    console.log(title, description)*/
-
-})
-
-// @route   GET api/posting
-// @desc    Display all postings
-// @access  Private
-// router.get('/PostList', (req, res) => {    
-
-//     // define sql query
-//     /*const sql = `SELECT j.job_id, j.employer_id, j.title, j.upload_date, j.content, j.description, j.duration, j.requirement, j.salary, j.status 
-//                 FROM pendinglist p JOIN job j ON (p.job_id = j.job_id)
-//                 WHERE j.status = 'pending';`;*/
-//     const sql = 'SELECT * FROM posting'
-
-//     // run sql
-//     conn.query(sql, (err, results) => {   
-
-//         // for each result, display the title of it (debug purpose)
-//         results.map(result => console.log(result)) 
-
-//         // if err, send err 
-//         // else send results to front-end
-//         err ? res.send(err) : res.send(results)        
-//     }) 
-// })
+});
 
 // @route   GET api/posting
 // @desc    Display all posting
@@ -127,7 +98,7 @@ router.get('/displayposting', (req, res) => {
         // else send results to front-end
         err ? res.send(err) : res.json(results)
     })
-})
+});
 
 // @route   GET api/posting
 // @desc    Display some searched posting
@@ -136,6 +107,7 @@ router.get('/displayposting/:id', (req, res) => {
 
     // get input from url parameter
     const ID = req.params.id
+    CURRENT_PROFILE_OWNER_ID = ID;
 
     // define sql query
     const sql = `SELECT * FROM Posting WHERE ProfileID = '${ID}' ORDER BY UploadTime DESC`;
@@ -150,7 +122,28 @@ router.get('/displayposting/:id', (req, res) => {
         // else send results to front-end
         err ? res.send(err) : res.send(results)
     })
-})
+});
+
+// @route   UPDATE api/posting
+// @desc    update a posting
+// @access  Private
+router.put('/editpost/:postingid', (req, res) => {
+
+    // get id from url parameter
+    const id = req.params.postingid
+
+    // destrucutre all submitted data from body 
+    const { Description } = req.body;    
+
+    // define sql query
+    const sql = `UPDATE Posting SET Description = ? WHERE PostingID = (?)`;
+
+    // run sql
+    conn.query(sql, [Description, id], (err, results) => {         
+        err ? res.status(400).json('err') : res.status(200).json('Update success')
+    })
+
+});
 
 // @route   DELETE api/posting
 // @desc    Delete a posting
@@ -160,40 +153,17 @@ router.delete('/deleteposting/:postingid', (req, res) => {
     // get id from url parameter
     const id = req.params.postingid
 
+    console.log('deleting...')
+
     // define sql query
-    const sql = `DELETE FROM Posting WHERE PostingID = ${id}`;
+    const sql = `DELETE FROM Posting WHERE PostingID = (?)`;
 
     // run sql
-    conn.query(sql, (err, results) => {
+    conn.query(sql, [[id]],(err, results) => {
         // if err, send err 
         // else send results to front-end                        
-        err ? res.send(err) : res.send('Current post has been deleted successfully.')
+        err ? res.status(400).json('delete fail') : res.status(200).json(id)
     })
-})
-
-// @route   UPDATE api/posting
-// @desc    update a posting
-// @access  Private
-router.put('/updatejob/:postingid', (req, res) => {
-
-    // get id from url parameter
-    const id = req.params.postingid
-
-    // destrucutre all submitted data from body
-    const { description, picture } = req.body
-
-    // define sql query
-    const sql = `UPDATE Posting
-                SET Description = ${Description}, Picture = ${Picture}
-                WHERE PostingID = ${id}`;
-
-    // run sql
-    conn.query(sql, (err, results) => {
-        // if err, send err 
-        // else send results to front-end   
-        err ? res.send(err) : res.send("Update posting successfully")
-    })
-
-})
+});
 
 module.exports = router;

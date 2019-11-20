@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom'
 
-import { deleteJob, updateJob, getApplyJobRequest, getJobs } from '../../actions/jobActions'
+import { deleteJob, updateJob, getApplyJobRequest, getJobs, getSelfJobs } from '../../actions/jobActions'
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Spinner from '../Spinner'
 import { showProfile } from '../../actions/profileActions';
+import { clearErrors } from '../../actions/errorActions';
 
 const EmployerTable = (props) => {
 
@@ -21,7 +22,7 @@ const EmployerTable = (props) => {
 
     const [modal, setModal] = useState(false)
     const [isOwner, setIsOwner] = useState(true)
-    const [index, setIndex] = useState(0)
+    const [index, setIndex] = useState(0)    
     const [isEmployer, setIsEmployer] = useState(true)
     const [isLoading, setIsLoading] = useState(true)
     const [currentJob, setCurrentJob] = useState({
@@ -31,7 +32,7 @@ const EmployerTable = (props) => {
         Requirement:"",
         Description:"",
         Status:""
-    })
+    })    
 
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth)
@@ -50,17 +51,22 @@ const EmployerTable = (props) => {
         console.log(index)       
         setIndex(index)             
     }
-    
+    // dispatch(getSelfJobs(props.match.params.id))
     
     useEffect(() => {        
         // dispatch(getApplyJobRequest(user.user.name))   
         // setCurrentJob(job.jobs)
         // console.log(job.jobs)
+        
+        
         if (user.user.category === "employer" && user.isAuthenticated === true) {
             if (isLoading === true)
             {                
                 dispatch(showProfile(props.match.params.id))
-                dispatch(getJobs())       
+                // dispatch(getJobs())                       
+                dispatch(getSelfJobs(props.match.params.id))
+                dispatch(getApplyJobRequest(props.match.params.id))
+                console.log(user, job.selfJobs)
                 setSrc(profile.ProfilePic)
                 setIsLoading(false)
             }                                 
@@ -77,8 +83,7 @@ const EmployerTable = (props) => {
     useEffect(() => {        
         if(job.jobs.length > 0)
             setCurrentJob(job.jobs[index])
-    },[index])
-
+    },[index])    
 
     const onEdit = (e) => {
         e.persist()
@@ -89,7 +94,8 @@ const EmployerTable = (props) => {
     const onSubmit = (e) => {
         e.preventDefault()
         dispatch(updateJob(job.jobs[index].JobID, currentJob))
-        dispatch(getJobs())
+        console.log(job)
+        dispatch(getSelfJobs(props.match.params.id))
     }
 
     const onDelete = (e, id) => {
@@ -102,7 +108,7 @@ const EmployerTable = (props) => {
         <>
             {(isEmployer && isOwner ) && (
                 <>
-                    {job.jobs && (
+                    {job.selfJobs && (
                         <Modal isOpen={modal} toggle={toggle}>
                         <ModalHeader toggle={toggle}>Modal title</ModalHeader>
                         <ModalBody>
@@ -160,7 +166,13 @@ const EmployerTable = (props) => {
                                         <div className="d-flex flex-column mx-auto w-100">
                                             <label htmlFor="requirement" className="mb-0">Status</label>
                                             {/* <strong className="mb-3" style={{color:"var(--danger)", fontSize:".9rem"}}> *Put {"<next>"} as next line</strong> */}
-                                            <input type="text" name="Status" onChange={(e) => onEdit(e)} id="" value={currentJob.Status} placeholder="Some description ..." />
+                                            {/* <input type="text" name="Status" onChange={(e) => onEdit(e)} id="" value={currentJob.Status} placeholder="Some description ..." /> */}
+                                            <select name="Status" onChange={(e) => onEdit(e)}>
+                                                <option value disabled selected>Please select status:</option>
+                                                <option value="1">Open</option>
+                                                <option value="0">Pending</option>
+                                                <option value="-1">Closed</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -208,19 +220,21 @@ const EmployerTable = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {job.jobs ? job.jobs.map((item, index) => (
+                            {job.selfJobs ? job.selfJobs.map((item, index) => (
                                 <tr>
-                                    <th scope="row"><button onClick={(e) => onDelete(e, item.JobID)} className="danger-bg-button" style={{ width: "initial", fontSize: ".7rem" }}>X</button></th>
+                                    <th scope="row"><button onClick={(e) => {onDelete(e, item.JobID); dispatch(getSelfJobs(props.match.params.id))}} className="danger-bg-button" style={{ width: "initial", fontSize: ".7rem" }}>X</button></th>
                                     <td>{item.Title}</td>
                                     <td>RM{item.Salary}</td>
                                     <td>{item.Location}</td>
-                                    <td>{item.candidates} Candidates</td>
+                                    <td>{item.TotalCandidates} Candidate</td>
                                     <td>{item.View}</td>
                                     <td>{item.DueDate}</td>
-                                    <td>{item.Status}</td>
+                                    {item.Status === "1" && (<td>Open</td>)}
+                                    {item.Status === "0" && (<td>Pending</td>)}
+                                    {item.Status === "-1" && (<td>Closed</td>)}
                                     <td><i onClick={e=>{toggle(); displayModal(index)}} style={{ fontSize: ".7rem", cursor: "pointer" }} class='fas'>&#xf044;</i></td>
                                 </tr>
-                            )) : dispatch(getApplyJobRequest(user.user.name))}
+                            )) : dispatch(getSelfJobs(props.match.params.id))}
                         </tbody>
                     </table>
                     </div>

@@ -104,7 +104,7 @@ router.get('/displayprofile/:id', (req, res) => {
     WHERE p.AccountID = (?)`, [req.params.id], (error, results) => {
 
         if (results.length > 0) {
-            console.log(results[0])    
+            // console.log(results[0])    
             CURRENT_PROFILE_OWNER_ID = req.params.id                  
             return res.json(results[0])
         } else {

@@ -27,6 +27,8 @@ const SearchField = ({ handleChange }) => {
             dispatch(getCategory())
         }
         setIsLoading(false)
+
+        return(() => setIsLoading(true))
     }, [])
 
     function handleBlockquote() {

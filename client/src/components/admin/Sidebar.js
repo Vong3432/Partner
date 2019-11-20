@@ -1,6 +1,7 @@
 import React from 'react'
 import { logout } from '../../actions/authActions'
 import { useDispatch } from 'react-redux'
+import { NavLink } from 'react-router-dom'
 
 const Sidebar = ({toggle, show}) => {
     
@@ -13,19 +14,19 @@ const Sidebar = ({toggle, show}) => {
 
             {show ? (
                 <>
-                    <span className="dashboard-sidebar-tab sidebar-active">
+                    <NavLink activeClassName="sidebar-active" className="dashboard-sidebar-tab text-white" to="/admin/main">
                         Main
-                    </span>
-                    <span className="dashboard-sidebar-tab">
-                        Jobs
-                    </span>
-                    <span className="dashboard-sidebar-tab">
-                        Users
-                    </span>
-                    <span className="dashboard-sidebar-tab">
-                        Feedbacks
-                    </span>
-                    <span className="dashboard-sidebar-tab" style={{ background: "none" }}>
+                    </NavLink>
+                    <NavLink activeClassName="sidebar-active" className="dashboard-sidebar-tab text-white" to="/admin/jobs">
+                        Jobs                        
+                    </NavLink>                    
+                    <NavLink activeClassName="sidebar-active" className="dashboard-sidebar-tab text-white" to="/admin/users">
+                        Users                        
+                    </NavLink>          
+                    <NavLink activeClassName="sidebar-active" className="dashboard-sidebar-tab text-white" to="/admin/feedbacks">
+                        Feedbacks                        
+                    </NavLink>          
+                    <span activeClassName="sidebar-active" className="dashboard-sidebar-tab" style={{ background: "none" }}>
                         <a onClick={e => dispatch(logout())}>Logout</a>
                     </span>
                 </>

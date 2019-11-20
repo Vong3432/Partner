@@ -22,14 +22,15 @@ const Card = ({job: {EmployerID, JobID, Title, ProfilePic, CandidateListID, Comp
         >
             {/* <img src="..." className="card-img-top" alt="..." /> */}
             <div className="card-body">
+            <small>Due date until {mydate.toDateString()}</small>
                 <div className="media align-items-start">                    
                     <div className="media-body">
-                        <p className="mt-0 mb-1 card-companyName">{CompanyName}</p>                        
+                        <h5 className="card-title mb-0">{Title}</h5>
                     </div>
-                    <img style={{ maxWidth: "50px", maxHeight: "50px", objectFit: "contain" }} src={ProfilePic ? './uploads/profile/' + ProfilePic :null} className="mr-3" alt="..." />
-                </div>                
-                <h5 className="card-title mb-1 mt-2">{Title}</h5>
-                <div className="d-flex flex-row mb-4">
+                    {/* <img style={{ maxWidth: "50px", maxHeight: "50px", objectFit: "contain" }} src={ProfilePic ? './uploads/profile/' + ProfilePic :null} className="ml-auto mr-3" alt="..." /> */}
+                </div>                                                
+                <div className="d-flex flex-row mb-2 ">
+                            <p className="card-companyName mr-auto">{CompanyName}</p> 
                             <div className="d-flex flex-row">
                                 <img className="small-icon mr-2"src={require('../../images/color-location.svg')} alt="color-location"/>
                                 <small className="card-sub-title">{Location}</small>
@@ -44,7 +45,7 @@ const Card = ({job: {EmployerID, JobID, Title, ProfilePic, CandidateListID, Comp
                 <div className="d-flex flex-row">
                     {typeArr.map(item => (<span className="mr-1 badge tag">{item}</span>))}
                 </div>                
-                <small>Due date until {mydate.toDateString()}</small>
+                
                 
             </div>
         </div>

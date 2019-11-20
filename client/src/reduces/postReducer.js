@@ -23,11 +23,11 @@ export default function (state = initialState, action) {
                 ...state,
                 posts: [action.payload, ...state.posts]
             }
-        case EDIT_POST:
-            return {
-                ...state,
-                posts: [action.payload, ...state.posts]
-            }
+        // case EDIT_POST:
+        //     return {
+        //         ...state,
+        //         posts: [action.payload, ...state.posts]
+        //     }
         case POST_LOADING:
             return {
                 ...state,

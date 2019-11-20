@@ -18,13 +18,14 @@ const CardList = ({ jobCallbackFunction }) => {
     })    
 
     useEffect(() => {        
-        dispatch(getJobs())    
-        if(job !== null)
-            setFetchJob(job)        
-            
-        setIsLoading(false)        
+        if(isLoading === true)
+        {
+            dispatch(getJobs())    
+            setFetchJob(job) 
+            setIsLoading(false)               
+        }                                    
         return(()=>setIsLoading(true))
-    }, [job])
+    }, [])
 
     // useEffect(() => {
     //     dispatch(getJobs())            
@@ -38,9 +39,10 @@ const CardList = ({ jobCallbackFunction }) => {
     }, [jobCallbackFunction])    
 
     
-    const filterFunction = (input, i) => {     
+    const filterFunction = (input, i) => { 
+        console.log(i, filterSearch)            
         if(i)           
-            return ((i.title||'').toLocaleLowerCase().search(input.jobTitle.toLocaleLowerCase()) !== -1 ) && ((i.Category || "").search(filterSearch.category) !== -1 || "")
+            return ((i.Title||'').toLocaleLowerCase().search(input.jobTitle.toLocaleLowerCase()) !== -1 ) && ((i.Category || "").search(filterSearch.category) !== -1 || "")
         else 
             return null
     }
@@ -50,8 +52,8 @@ const CardList = ({ jobCallbackFunction }) => {
             {          
                 (fetchJob && isLoading === false) ? (
                     fetchJob
-                    .filter(item => filterSearch ? filterFunction(filterSearch, item) : item)                    
-                    .map((item, index) => <Card index={index} job={item} />)
+                        .filter(item => filterSearch ? filterFunction(filterSearch, item) : item)                    
+                        .map((item, index) => <Card index={index} job={item} />)
                 ) : null
                     
             }

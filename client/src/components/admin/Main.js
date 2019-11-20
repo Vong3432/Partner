@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 
-const Main = ({show}) => {
-    
+const Main = ({ show }) => {    
+
     return (
         <main className="dashboard-content" style={show ? {marginLeft:"300px"} : {marginLeft:"50px"}}>
             <h5 className="dashboard-content-header">General Information</h5>

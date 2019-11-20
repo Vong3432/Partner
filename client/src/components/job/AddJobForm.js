@@ -65,7 +65,7 @@ const AddJob = (props) => {
         if (name === "image") {            
             setImg(URL.createObjectURL(e.target.files[0]))
             setFile(e.target.files[0])
-            setImgName(e.target.files[0].name)
+            setImgName(user.id + "-" + e.target.files[0].name)
             console.log("is image")
         }
         else {
@@ -73,9 +73,7 @@ const AddJob = (props) => {
                 ...job,
                 [name]: value
             })
-        }
-
-        console.log(job)
+        }        
 
     }
 
@@ -95,9 +93,9 @@ const AddJob = (props) => {
                     setImg(null)
                     setImgName("")
                 })
-        }
+        }        
 
-        if (job.title && job.description && job.location && job.duration && job.requirement && job.type && job.category && job.salary) {
+        if (job.title && job.description && job.location && job.duration >= 0 && job.requirement && job.type && job.category && job.salary >= 0) {
             const newJob = {
                 employer_id: user.id,
                 name: user.name,
@@ -123,8 +121,9 @@ const AddJob = (props) => {
                 window.location.href = "/"
             }                
         }
-        else
-            alert('Please fill in all information.')
+        else {            
+            alert('Please fill in valid information.')
+        }            
     }
 
     useEffect(() => {
@@ -289,6 +288,7 @@ const AddJob = (props) => {
                 {(step >= 1) && step1}
                 {(step >= 2) && step2}
                 {(step >= 3) && step3}
+                { errMsg ? errMsg : null}
             </form>
         </>
     )

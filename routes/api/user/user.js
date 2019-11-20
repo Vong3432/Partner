@@ -105,7 +105,7 @@ router.post('/register', (req, res) => {
                     })
                 }
 
-                conn.query(`INSERT INTO account(AccountID, UserID, ProfileID, Name, Email, Password, AccountType) VALUES (?)`, [[AccountUUID, AccountUUID, AccountUUID, name, email, password, userType]], (err, results) => {
+                conn.query(`INSERT INTO account(AccountID, UserID, ProfileID, Name, Email, Password, AccountType, Status) VALUES (?)`, [[AccountUUID, AccountUUID, AccountUUID, name, email, password, userType, 1]], (err, results) => {
                     if (err) {
                         // console.log('has err')
                         return res.send(err)
@@ -165,5 +165,60 @@ router.get('/user', auth, (req, res) => {
     })
 
 })
+
+router.get('/alluser', (req, res) => {
+    conn.query(`SELECT * FROM account`, (err, results) => {
+        err ? res.status(400).json({msg:'error'}) : res.status(200).json(results)
+    })
+})
+
+// @route   UPDATE api/user
+// @desc    Suspend User
+// @access  Private
+router.put('/suspend/:id', (req, res) => {
+
+    // get id from url parameter
+    const id = req.params.id
+    
+    // define sql query
+    // const sql = `DELETE FROM Account WHERE AccountID = ?;
+    //              DELETE FROM Profile WHERE ProfileID = ?;
+    //              DELETE FROM candidaterequest WHERE CandidateListID = ?;
+    //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
+
+    const sql = `UPDATE Account SET Status = -1 WHERE AccountID = ?`;
+    
+    // run sql
+    conn.query(sql, [id],(err, results) => {           
+        // if err, send err 
+        // else send results to front-end                        
+        err ? res.status(400).json({msg:'Suspend fail'}) : res.status(200).json(id)
+    }) 
+})
+
+// @route   UPDATE api/user
+// @desc    Reactive User
+// @access  Private
+router.put('/reactive/:id', (req, res) => {
+
+    // get id from url parameter
+    const id = req.params.id
+    
+    // define sql query
+    // const sql = `DELETE FROM Account WHERE AccountID = ?;
+    //              DELETE FROM Profile WHERE ProfileID = ?;
+    //              DELETE FROM candidaterequest WHERE CandidateListID = ?;
+    //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
+
+    const sql = `UPDATE Account SET Status = 1 WHERE AccountID = ?`;
+    
+    // run sql
+    conn.query(sql, [id],(err, results) => {           
+        // if err, send err 
+        // else send results to front-end                        
+        err ? res.status(400).json({msg:'Suspend fail'}) : res.status(200).json(id)
+    }) 
+})
+
 
 module.exports = router;

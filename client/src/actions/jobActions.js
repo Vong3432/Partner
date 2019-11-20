@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GET_JOBS, GET_JOB_CATEGORY, GET_APPLYJOB_REQUEST,APPLY_JOB,ADD_JOB, DELETE_JOB, UPDATE_JOB, JOBS_LOADING, GET_APPLYJOBS } from './types'
+import { GET_JOBS, GET_SELF_JOBS, GET_JOB_CATEGORY, GET_APPLYJOB_REQUEST,APPLY_JOB,ADD_JOB, DELETE_JOB, UPDATE_JOB, JOBS_LOADING, GET_APPLYJOBS } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
@@ -26,6 +26,18 @@ export const getJobs = () => dispatch => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 
+export const getSelfJobs = (id) => dispatch => {
+    dispatch(setJobsLoading());
+    axios
+        .get(`/api/job/displayjobs/${id}`)
+        .then( res => 
+            dispatch({
+                type: GET_SELF_JOBS,
+                payload: res.data
+            }))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+}
+
 export const getApplyJobs = () => dispatch => {    
     axios
         .get('/api/job/displayapplyjobs')
@@ -37,9 +49,9 @@ export const getApplyJobs = () => dispatch => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 
-export const getApplyJobRequest = (name) => dispatch => {    
+export const getApplyJobRequest = (id) => dispatch => {    
     axios
-        .get(`/api/job/displayapplyjobsrequest/${name}`)
+        .get(`/api/job/displayapplyjobsrequest/${id}`)
         .then( res => 
             dispatch({
                 type: GET_APPLYJOB_REQUEST,
@@ -83,8 +95,7 @@ export const updateJob = (id, currentJob) => (dispatch, getState) => {
     console.log(id)
     axios.put(`/api/job/updatejob/${id}`,currentJob, tokenConfig(getState))
         .then(res => {console.log(res.data)
-        })        
-        .then(dispatch(getJobs()))
+        })                
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "UPDATE_FAIL")))
 }
 

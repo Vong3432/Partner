@@ -48,6 +48,7 @@
 {
     background: var(--green-color);    
     cursor: pointer;
+    text-decoration: none;
     border-left: 10px solid var(--white-color);
     transition: border,background 200ms ease-in 80ms;
 }
@@ -58,6 +59,10 @@
     grid-area: content;
     padding: 3rem 4em;
     margin-left: 300px;
+    height: 100%;
+
+    display: flex;
+    flex-flow: column;
 }
 
 .dashboard-content-header

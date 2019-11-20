@@ -9,6 +9,7 @@ import { getPosts } from '../../actions/postActions'
 import CreatePost from '../../components/user/CreatePost'
 
 import PropTypes from 'prop-types'
+import { getSelfJobs } from '../../actions/jobActions';
 // import io from 'socket.io-client'
 // let socket
 
@@ -19,32 +20,75 @@ const Profile = (props) => {
     const [isLoading, setIsLoading] = useState(true)
     const [isOwner, setIsOwner] = useState(false)
     const [isEmployer, setIsEmployer] = useState(false)
+    const [countOpened, setCountOpened] = useState(0)
+    const [countPaused, setCountPaused] = useState(0)
+    const [countClosed, setCountClosed] = useState(0)
 
     const auth = useSelector(state => state.auth)
     const profile = useSelector(state => state.profile.user)
     const posts = useSelector(state => state.post.posts)
     const user = useSelector(state => state.auth.user)
+    const job = useSelector(state => state.job)
     
     const [src, setSrc] = useState(null)
 
     // useEffect 
     useEffect(() => {        
         
-        if(isLoading === true)
+        if(isLoading === true)        
         {
-            console.log('rerender')
             dispatch(getPosts(props.match.params.id));
-            dispatch(showProfile(props.match.params.id));          
-            user.category === "employer" ? setIsEmployer(true) : setIsEmployer(false);                     
-            user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false) ;               
-
-            setIsLoading(false)
+            dispatch(showProfile(props.match.params.id));  
+            dispatch(getSelfJobs(props.match.params.id))  
+            job.selfJobs.forEach(element => {
+                if(element.Status === "1") setCountOpened(countOpened => countOpened + 1)
+                if(element.Status === "0") setCountPaused(countPaused => countPaused + 1)
+                if(element.Status === "-1") setCountClosed(countClosed => countClosed + 1)
+            });            
             setSrc(profile.ProfilePic)
-            // loadImage(profile.ProfilePic)
-        }
-        
-        return(()=>setIsLoading(true))
+            setIsLoading(false)                                
+        }            
+                
+        return(()=>{setIsLoading(true);console.log('profile exit')})
     }, [])        
+
+    useEffect(() => {        
+        user && user.category === "employer" ? setIsEmployer(true) : setIsEmployer(false);                     
+        user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false) ;                                                       
+        setSrc(profile.ProfilePic)
+    },[isLoading])
+
+    // useEffect(() => {
+    //     if(isOwner === true && isEmployer === true)
+    //     {
+    //         const loadJobs = new Promise((res, rej) => {
+    //             dispatch(getSelfJobs(props.match.params.id))
+    //             res(job)
+
+                
+                
+
+                
+    //             // ************** SQL For counting candidate, status for job.js ******************************
+
+
+
+
+
+    //         })
+
+    //         loadJobs.then(res => console.log(res))
+    //         // const loadJobs = dispatch(getSelfJobs(props.match.params.id));
+    //         // console.log(job.selfJobs+"sad")
+    //         // job.selfJobs.foreach(item => {
+    //         //     console.log(item)
+    //         //     if(item.Status === "1")
+    //         //         setCountOpened(countOpened+1);
+    //         // })
+    //     }            
+    //     else    
+    //         console.log('hoho')
+    // }, [isEmployer, isOwner])
             
     return (
         <>
@@ -165,20 +209,20 @@ const Profile = (props) => {
 
                                 {/* Open */}
                                 <div className="d-flex flex-row mt-2">
-                                    <p>Open</p>
-                                    <h5 className="ml-auto">1</h5>
+                                    <p className="paragraph">Open</p>
+                                    <h5 className="ml-auto paragraph">{countOpened}</h5>
                                 </div>
 
                                 {/* Paused */}
                                 <div className="d-flex flex-row mt-1">
-                                    <p>Paused</p>
-                                    <h5 className="ml-auto">1</h5>
+                                    <p className="paragraph">Paused</p>
+                                    <h5 className="paragraph ml-auto">{countPaused}</h5>
                                 </div>
 
                                 {/* Closed */}
                                 <div className="d-flex flex-row mt-1">
-                                    <p>Closed</p>
-                                    <h5 className="ml-auto">1</h5>
+                                    <p className="paragraph">Closed</p>
+                                    <h5 className="paragraph ml-auto">{countClosed}</h5>
                                 </div>
 
                             </div>
@@ -215,7 +259,7 @@ const Profile = (props) => {
                             <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={props.profile.name} />
                         ))} */}
                         {posts ? posts.map((item, index) => (
-                            <Article key={index} avatar={profile.ProfilePic ? profile.ProfilePic : null} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
+                            <Article key={index} PostingID={item.PostingID} ProfileID = {props.match.params.id} avatar={profile.ProfilePic ? profile.ProfilePic : null} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
                         )) : null}
 
                     </div>

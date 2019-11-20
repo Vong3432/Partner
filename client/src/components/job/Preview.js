@@ -80,10 +80,10 @@ const Preview = (props) => {
             {(selectedJob.Title) && (
                 !isLoading ?
                 <>
-                    <div className="media align-items-start">
-                        <img style={{ maxWidth: "100px", maxHeight: "60px", objectFit: "contain" }} src={selectedJob.ProfilePic ? './uploads/profile/' + selectedJob.ProfilePic :null} className="mr-3" alt="..." />
+                    <h3 className="mb-2" style={{textTransform:"capitalize"}}>{selectedJob.Title}</h3>
+                    <div className="media my-4 align-items-start">                        
                         <div className="media-body">
-                            <h6 className="mt-0 card-companyName">{selectedJob.CompanyName}</h6>
+                            <p className="mt-0 card-companyName mb-1">{selectedJob.CompanyName}</p>
                             <div className="d-flex flex-row">
                                 <div className="d-flex flex-row">
                                     <img className="small-icon mr-2" src={require('../../images/color-location.svg')} alt="color-location" />
@@ -95,23 +95,25 @@ const Preview = (props) => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <h3 className="my-3" style={{textTransform:"capitalize"}}>{selectedJob.Title}</h3>
+                        <img style={{ maxWidth: "100px", maxHeight: "60px", objectFit: "contain" }} src={selectedJob.ProfilePic ? './uploads/profile/' + selectedJob.ProfilePic :null} className="mr-3" alt="..." />
+                    </div>                    
 
-                    <h5 className="mt-4">Description</h5> 
-                    <div id="divider" className="mb-2"></div>
+                    <img style={{maxHeight:"500px", maxWidth:"100%",objectFit:"cover"}} src={"./uploads/jobs/" + selectedJob.Picture} alt=""/>
+
+                    <h5 className="mt-4 mb-3">Description</h5> 
+                    {/* <div id="divider" className="mb-2"></div> */}
                     {/* {multipleDescription.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}                                        */}
-                    <p style={{textAlign:"justify"}} className="paragraph my-2">{nlb2r(selectedJob.Description)}</p>                    
+                    <p style={{textAlign:"justify"}} className="paragraph">{nlb2r(selectedJob.Description)}</p>                    
                     
-                    <h5 className="mt-4">Requirement</h5>
-                    <div id="divider" className="mb-2"></div>
+                    <h5 className="mt-4 mb-3">Requirement</h5>
+                    {/* <div id="divider" className="mb-2"></div> */}
                     {/* {multipleRequirement.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}  */}
-                    <p style={{textAlign:"justify"}} className="paragraph my-2">{nlb2r(selectedJob.Requirement)}</p>
+                    <p style={{textAlign:"justify"}} className="paragraph">{nlb2r(selectedJob.Requirement)}</p>
 
-                    <h5 className="mt-4">Job Type</h5>
-                    <div id="divider" className="mb-2"></div>
+                    <h5 className="mt-4 mb-3">Job Type</h5>
+                    {/* <div id="divider" className="mb-2"></div> */}
                     <div className="d-flex flex-row">
-                        <p className="paragraph my-2">{selectedJob.Type.substring(0, selectedJob.Type.length - 1)}</p>
+                        <p className="paragraph">{selectedJob.Type.substring(0, selectedJob.Type.length - 1)}</p>
                     </div>                    
 
                     {/* {applyJobList.filter(i => i.)} */}

@@ -4,8 +4,6 @@ import { NavLink } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom'
 
 import { showProfile, editProfile } from '../../actions/profileActions'
-import { getPosts } from '../../actions/postActions'
-import Profile from './Profile';
 import { clearErrors } from '../../actions/errorActions';
 import axios from 'axios';
 import Spinner from '../../components/Spinner';
@@ -151,7 +149,7 @@ const EditProfile = (props) => {
 
                     {/* user avatar and name */}
                     <div className="text-center mt-auto d-flex flex-column align-items-center">
-                        <img src={ profileImg ? profileImg : '/uploads/profile/' + src} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
+                        <img alt="avatar" src={ profileImg ? profileImg : '/uploads/profile/' + src} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
                         <div className="d-flex flex-row">
                             <h2 className="profile-username mt-2">{user.name}</h2>
                             <div className="image-upload ml-2 my-3">
@@ -180,12 +178,12 @@ const EditProfile = (props) => {
                     {/* user avatar and name */}
                     <div className="text-center mt-auto d-flex flex-column align-items-center">
                         {/* <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" /> */}
-                        <img src={ profileImg ? profileImg : '/uploads/profile/' + src} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
+                        <img alt="avatar" src={ profileImg ? profileImg : '/uploads/profile/' + src} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
                         <div className="d-flex flex-row">
                             <h2 className="profile-username mt-2">{user.name}</h2>
                             <div className="image-upload ml-2 my-3">
                                 <label htmlFor="ProfilePic">
-                                    <img style={{ width: "2em", height: "2em" }} src={require('../../images/photo.svg')} />
+                                    <img alt="avatar" style={{ width: "2em", height: "2em" }} src={require('../../images/photo.svg')} />
                                 </label>
 
                                 <input id="ProfilePic" accept="image/*" name="ProfilePic" type="file" style={{ display: "none" }} onChange={e => onEdit(e)} />
@@ -288,7 +286,7 @@ const EditProfile = (props) => {
 
                     <div className="image-upload ml-1 my-3">
                         <label htmlFor="BackgroundPic">
-                            <img style={{ width: "3em", height: "3em" }} src={require('../../images/photo.svg')} />
+                            <img alt="bg" style={{ width: "3em", height: "3em" }} src={require('../../images/photo.svg')} />
                         </label>
 
                         <input id="BackgroundPic" multiple accept="image/*" name="BackgroundPic" type="file" style={{ display: "none" }} onChange={e => onEdit(e)} />

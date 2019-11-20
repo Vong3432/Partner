@@ -1,4 +1,5 @@
- @import url('https://fonts.googleapis.com/css?family=Poppins:300, 500, 700, 900');
+ @import url('https://fonts.googleapis.com/css?family=Poppins:300, 500, 700, 900|Public+Sans|Libre+Baskerville&display=swap');
+ 
 @font-face
 {
   font-family: helveticaThin;
@@ -43,7 +44,8 @@
   
   font-size: 16px;       
   /* font-family: 'Roboto', sans-serif;   */  
-  font-family: helveticaLight;  
+  /* font-family: helveticaLight;  */
+  font-family: 'Public Sans', sans-serif;
   -webkit-font-smoothing: subpixel-antialiased;
   letter-spacing: .2px;  
 
@@ -156,7 +158,9 @@ h1,h2,h3,h4,h5,h6{
   padding-top: 0 !important;
 
   font-size: 1.5rem !important;
-  font-family: helveticaBold;
+  /* font-family: helveticaBold; */
+  font-family: 'Public Sans', sans-serif;
+  font-weight: bold;
 }
 
 .nav-link
@@ -228,17 +232,21 @@ h1,h2,h3,h4,h5,h6{
 
 .card-title
 {
-  font-family: helveticaBold;
+  /* font-family: helveticaBold; */
+  font-family: 'Public Sans', sans-serif;
   text-transform: capitalize;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
 
-  margin-top: .5em;
+  padding: .5em 0;
 }
 
 .card-sub-title
 {
-  font-weight: bold;
-  color: var(--light-grey);  
+  /* font-weight: bold; */
+  /* font-weight: normal; */
+  font-size: .9rem;
+  /* color: var(--light-grey);   */
+  /* color: var(--danger); */
 }
 
 .card-text
@@ -479,6 +487,24 @@ h1,h2,h3,h4,h5,h6{
   padding: .5em .75em !important;  
 }
 
+.success-bg-button
+{
+  max-width: 120px !important;
+  /* width: 100%; */
+
+  margin: 0 .5em;
+  padding: .5em 1.25em !important;
+
+  font-family: helveticaMedium;  
+  text-align: center;
+
+  background: var(--green-color);
+  color: var(--white-color);
+  
+  border: none;
+  border-radius: 3px;
+}
+
 .primary-bg-button,.primary-button,.no-styling-button,.danger-bg-button
 {
   animation: whenLeaveFocus 200ms ease-in forwards;
@@ -504,6 +530,15 @@ h1,h2,h3,h4,h5,h6{
   transform: translateY(-2px);
   color: var(--danger) !important;
   background: rgba(254, 60, 60, 0.1);
+  border: none !important;  
+}
+
+.success-bg-button:hover
+{
+  transition: all 200ms ease-in 50ms;
+  transform: translateY(-2px);
+  color: var(--green-color) !important;
+  background: rgba(88, 197, 124, 0.13) !important;
   border: none !important;  
 }
 
@@ -538,6 +573,7 @@ h1,h2,h3,h4,h5,h6{
 
 .paragraph
 {
+  
   font-size: 1rem;
 }
 
@@ -708,8 +744,20 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 .posts-grid-right-content .paragraph
 {
-  color: gray;
-  line-height: 26px;
+  /* color: gray; */
+  line-height: 23px;
+  font-size: .96rem;  
+  /* font-family: 'Libre Baskerville', serif; */
+  font-family: 'Public Sans', sans-serif;
+  font-weight: 100;
+}
+
+.posts-grid-right-content h4
+{
+  /* color: rgb(76, 40, 206); */
+  /* font-family: 'Libre Baskerville', serif !important; */
+  font-family: 'Public Sans', sans-serif;
+  /* color: var(--primary-color); */
 }
 
 #scrollTopBtn
@@ -809,12 +857,12 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 .small-icon
 {
-  max-width: 1.2rem;
-  max-height: 1.2rem;
+  max-width: 1.4rem;
+  max-height: 1.4rem;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: .5;
+  opacity: .8;
 }
 
 .profile-grid .paragraph

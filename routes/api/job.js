@@ -13,6 +13,8 @@ const conn = mysql.createConnection({
     multipleStatements: true
 })
 
+let CURRENT_PROFILE_OWNER_ID='';
+
 var multer = require('multer')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -20,7 +22,7 @@ var storage = multer.diskStorage({
     cb(null, 'client/public/uploads/jobs')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname )
+    cb(null, CURRENT_PROFILE_OWNER_ID + "-" +file.originalname )
   }
 })
 var upload = multer({ storage: storage }).single('file')
@@ -64,7 +66,7 @@ router.post('/', (req, res) => {
     const sql = `
     INSERT INTO job(JobID, EmployerID, ActivityLogID, BillID, CandidateListID, Title, UploadDate, DueDate, Status, CompanyName, Location, Type, Salary, HireCount, Description, Picture, View, Requirement, Category) VALUES(?)`        
     
-    conn.query(sql, [[jobID, employer_id, jobID, jobID, jobID, title, upload_date, due_date, "open", name, location, str, salary, 0, description, image, 0, requirement, category]], (err, results) => {        
+    conn.query(sql, [[jobID, employer_id, jobID, jobID, jobID, title, upload_date, due_date, 1, name, location, str, salary, 0, description, image, 0, requirement, category]], (err, results) => {        
         (err) ? res.status(500).json({msg:'Please make sure you have fill in all field.'}) : res.json([jobID, employer_id, jobID, jobID, jobID, title, upload_date, due_date, "open", name, location, str, salary, 0, description, image, 0, requirement, category])
     })    
 
@@ -76,7 +78,7 @@ router.post('/', (req, res) => {
 router.get('/displayjobs', (req, res) => {    
 
     // define sql query
-    const sql = 'SELECT j.*, p.ProfilePic FROM Job j LEFT JOIN Profile p ON j.EmployerID = p.ProfileID';
+    const sql = 'SELECT j.*, p.ProfilePic FROM Job j LEFT JOIN Profile p ON j.EmployerID = p.ProfileID ORDER BY UploadDate DESC';
     
     // run sql
     conn.query(sql, (err, results) => {   
@@ -106,23 +108,33 @@ router.get('/getCategory', (req, res) => {
 // @route   GET api/postjob
 // @desc    Display some searched postjobs
 // @access  Public
-router.get('/displayjobs/:input', (req, res) => {
+router.get('/displayjobs/:id', (req, res) => {
     
     // get input from url parameter
-    const usersInput = req.params.input
+    const id = req.params.id
+    CURRENT_PROFILE_OWNER_ID=id;
 
     // define sql query
-    const sql = `SELECT * FROM job WHERE title LIKE %${usersInput}%`;
-    
+    // const sql = `SELECT j.*, p.ProfilePic, COUNT(cr.CandidateListID) As TotalCandidate
+    //             FROM Job j 
+    //             JOIN Profile p ON j.EmployerID = p.ProfileID 
+    //             JOIN candidaterequest cr ON j.JobID = cr.CandidateListID
+    //             WHERE j.EmployerID = (?)`;
+    const sql = `SELECT j.*, p.ProfilePic
+                FROM Job j 
+                LEFT JOIN Profile p ON j.EmployerID = p.ProfileID                 
+                WHERE j.EmployerID = (?)`;
+
     // run sql
-    conn.query(sql, (err, results) => {   
+    conn.query(sql, [[id]] ,(err, results) => {   
         
         // for each result, display the title of it (debug purpose)
-        results.map(result => console.log(result.title)) 
+        // results.map(result => console.log(result.title)) 
         
         // if err, send err 
         // else send results to front-end
-        err ? res.send(err) : res.send(results)        
+        // console.log(results)
+        err ? res.send(err) : res.json(results)        
     }) 
 })
 
@@ -135,10 +147,12 @@ router.delete('/deletejob/:postjobid', (req, res) => {
     const id = req.params.postjobid
     console.log(id)
     // define sql query
-    const sql = `DELETE FROM Job WHERE JobID = ?`; 
+    const sql = `DELETE FROM Job WHERE JobID = ?;
+                 DELETE FROM candidatelist WHERE CandidateListID = ?;
+                 DELETE FROM candidaterequest WHERE CandidateListID = ?`; 
     
     // run sql
-    conn.query(sql, [id],(err, results) => {           
+    conn.query(sql, [id, id, id],(err, results) => {           
         // if err, send err 
         // else send results to front-end                        
         err ? res.status(400).json({msg:'Delete fail'}) : res.status(200).json(id)
@@ -160,9 +174,8 @@ router.put('/updatejob/:postjobid', (req, res) => {
                 SET upload_date = ${upload_date}, title = ${title}, category = ${category}, description = ${description}, duration = ${duration}, requirement = ${requirement}, salary = ${salary}
                 WHERE job_id = ${id}`;*/
     const sql = `UPDATE Job SET Title=?, Salary=?, Location=?, Description=?, Requirement=?, Status=? WHERE JobID = ?`;    
-    // run sql
     
-    
+    // run sql    
     conn.query(sql, [Title, Salary, Location, Description, Requirement, Status, JobID],(err, results) => {                        
         // if err, send err 
         // else send results to front-end   w
@@ -188,13 +201,14 @@ router.post('/applyjob', (req, res) => {
         if(results.length < 1)
         {
             const INSERT_TO_REQUEST = `INSERT INTO candidaterequest(RequestID, ApplicantID, CandidateListID, ActivityLogID, Name, Email ) VALUES (?)`
-            const INSERT_TO_LIST = `INSERT INTO candidatelist(CandidateListID, JobID, RequestID, CandidateStatus, UserID) VALUES (?)`
+            const INSERT_TO_LIST = `INSERT INTO candidatelist(CandidateListID, JobID, RequestID, CandidateStatus, UserID) VALUES (?);
+                                    UPDATE job SET TotalCandidates = TotalCandidates + 1 WHERE JobID = (?);`            
         
             conn.query(INSERT_TO_REQUEST, [[RequestID, ApplicantID, CandidateListID, JobID, Name, Email]], (err, results) => {                        
                 if(err) res.status(400).json({msg: 'Something went wrong. Please apply again.'})
                 else
                 {
-                    conn.query(INSERT_TO_LIST, [[CandidateListID, JobID, RequestID,'pending', ApplicantID]], (err, results) => {                        
+                    conn.query(INSERT_TO_LIST, [[CandidateListID, JobID, RequestID,'pending', ApplicantID],[[JobID]]], (err, results) => {                        
                         if(err) res.status(400).json({msg: 'Something went wrong. Please apply again.'})
                         else
                         {
@@ -230,15 +244,15 @@ router.get('/displayapplyjobs', (req, res) => {
 // @route   GET api/job
 // @desc    Display apply job request
 // @access  Private
-router.get('/displayapplyjobsrequest/:name', (req, res) => {            
+router.get('/displayapplyjobsrequest/:id', (req, res) => {            
 
     // get id from url parameter
-    const name = req.params.name
+    const id = req.params.id
 
     // define sql query
-    const sql = `SELECT * FROM job j JOIN candidaterequest cr ON j.CandidateListID = cr.CandidateListID WHERE j.CompanyName = ?`
+    const sql = `SELECT * FROM job j JOIN candidaterequest cr ON j.CandidateListID = cr.CandidateListID WHERE j.EmployerID = ?`
 
-    conn.query(sql, [[name]],(err, results) => {                        
+    conn.query(sql, [[id]],(err, results) => {                        
         err ? res.status(400).json('No results') : res.status(200).json(results)
     })
 

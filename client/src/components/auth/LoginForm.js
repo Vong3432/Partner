@@ -59,7 +59,7 @@ const LoginForm = (props) => {
 
     useEffect(() => {
         if(user && user.category === "ADMIN")
-            window.location.href = "/admin/dashboard";
+            window.location.href = "/admin/dashboard/main";
     }, [user])
 
     useEffect(() => {

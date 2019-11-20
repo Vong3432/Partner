@@ -98,42 +98,43 @@ export const logout = () => {
     }
 }
 
-// admin login
-export const adminLogin = ({ AdminID, Password }) => dispatch => {
+// // admin login
+// export const adminLogin = ({ AdminID, Password }) => dispatch => {
     
-    // Headers
-    const config = {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }    
+//     // Headers
+//     const config = {
+//         headers: {
+//             'Content-Type': 'application/json'
+//         }
+//     }    
 
-    // Request body
-    // const body = JSON.stringify({ email, password })
-    const body = ({ AdminID, Password })    
+//     // Request body
+//     // const body = JSON.stringify({ email, password })
+//     const body = ({ AdminID, Password })    
     
-    axios.post('/api/admin/login', body, config)
-        .then(res => dispatch({
-            type: ADMIN_LOGIN_SUCCESS,
-            payload: res.data                
-        }))    
-        .catch(err => {
-            console.log(err)
-            dispatch(returnErrors(err.response.data, err.response.status, "ADMIN_LOGIN_FAIL"))
-            dispatch({
-                type: ADMIN_LOGIN_FAIL
-            })
-            throw err
-        })
+//     axios.post('/api/admin/login', body, config)
+//         .then(res => dispatch({
+//             type: ADMIN_LOGIN_SUCCESS,
+//             payload: res.data                
+//         }))    
+//         .catch(err => {
+//             console.log(err)
+//             dispatch(returnErrors(err.response.data, err.response.status, "ADMIN_LOGIN_FAIL"))
+//             dispatch({
+//                 type: ADMIN_LOGIN_FAIL
+//             })
+//             throw err
+//         })
 
-}
+// }
+
 
 // logout admin
-export const adminLogout = () => {
-    return{
-        type: ADMIN_LOGOUT_SUCCESS
-    }
-}
+// export const adminLogout = () => {
+//     return{
+//         type: ADMIN_LOGOUT_SUCCESS
+//     }
+// }
 
 // Setup config/headers and token
 export const tokenConfig = getState => {
@@ -143,7 +144,8 @@ export const tokenConfig = getState => {
     // Headers
     const config = {
         headers: {
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            'Accept': 'application/json'
         }
     }
 
