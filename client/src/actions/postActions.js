@@ -1,7 +1,17 @@
 import axios from 'axios'
-import { GET_POSTS, ADD_POST, DELETE_POST, EDIT_POST, POST_LOADING } from './types'
+import { GET_POSTS, ADD_POST, DELETE_POST, EDIT_POST, POST_LOADING, GET_ALL_POSTS } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
+
+export const getAllPosts = id => dispatch => {
+    axios
+        .get('/api/post/displayposting')
+        .then(res => dispatch({
+            type: GET_ALL_POSTS,
+            payload: res.data
+        }))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "GET_ALL_POSTS_FAIL")))
+}
 
 export const getPosts = id => dispatch => {
     dispatch(setPostLoading());

@@ -18,7 +18,8 @@ const SearchField = ({ handleChange }) => {
     // advance search styling
     const advanceSearchStyling = {
         cursor: "pointer",
-        textDecoration: "underline"
+        textDecoration: "underline",
+        color:"var(--light-grey)"
     }
 
     useEffect(() => {
@@ -47,22 +48,21 @@ const SearchField = ({ handleChange }) => {
     return (
         <>
             {/* hidden blockquote if advance search is clicked */}
-            <p className={`blockquote ${blockquoteClass}`}>It is never too late to be what you might have been. <span className="blockquote-footer">George Eliot</span></p>
+            <p className={`blockquote ${blockquoteClass}`}>Start Exploring Jobs on Partner.</p>
 
-            <div className="d-flex flex-column flex-md-row row-md-nowrap justify-content-between align-items-center" style={{transition: "height 300ms ease-in-out"}}>
+            <div className="d-flex flex-column flex-md-column justify-content-between align-items-center" style={{transition: "height 300ms ease-in-out"}}>
 
                 {/* SearchBar */}
                 <input
                     type="text"
                     name="jobTitle"
                     id="jobTitle"
-                    className={show ? `mw-70 shadow my-3 mr-auto` : `shadow my-3 ml-auto`}
+                    className={show ? `mw-100 shadow my-3 mr-auto` : `shadow my-3 ml-lg-0 `}
                     onChange={handleChange}
                     placeholder="Search Position, Title or ..."
-                />
-                <a className="mr-auto ml-lg-4" onClick={() => setShow(!show)} style={advanceSearchStyling}>Advance Search</a>
-                
+                />                                
             </div>
+            <a className={ show ? "py-3 text-left" : "py-3 text-center"}  onClick={() => setShow(!show)} style={advanceSearchStyling}>Advance Search</a>
 
             {/* Display advance search content if show is true */}
             <div className={`align-self-start flex-row row-wrap advanceSearchContent ${advSearchClass}`}>

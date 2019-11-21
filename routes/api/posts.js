@@ -86,7 +86,7 @@ router.post('/', (req, res) => {
 router.get('/displayposting', (req, res) => {
 
     // define sql query
-    const sql = 'SELECT * FROM Posting';
+    const sql = `SELECT * FROM Posting LEFT JOIN Profile ON Posting.ProfileID = Profile.ProfileID ORDER BY UploadTime DESC`;
 
     // run sql
     conn.query(sql, (err, results) => {

@@ -1,4 +1,4 @@
- @import url('https://fonts.googleapis.com/css?family=Poppins:300, 500, 700, 900|Public+Sans|Libre+Baskerville&display=swap');
+ @import url('https://fonts.googleapis.com/css?family=Lato:700,900|Libre+Baskerville&display=swap');
  
 @font-face
 {
@@ -44,8 +44,10 @@
   
   font-size: 16px;       
   /* font-family: 'Roboto', sans-serif;   */  
-  /* font-family: helveticaLight;  */
-  font-family: 'Public Sans', sans-serif;
+  font-family: helveticaLight; 
+  /* font-family: 'Libre Baskerville', serif; */
+  /* letter-spacing: -.25px; */
+  /* font-family: 'Public Sans', sans-serif; */
   -webkit-font-smoothing: subpixel-antialiased;
   letter-spacing: .2px;  
 
@@ -67,7 +69,7 @@
 ::placeholder
 {
   color: var(--light-grey);
-  opacity: .5;  
+  /* opacity: .5;   */
 }
 
 .mw-70
@@ -127,8 +129,10 @@ p
 }
 
 h1,h2,h3,h4,h5,h6{  
-  font-family: "Poppins", sans-serif !important;   
-  font-weight: 700 !important;
+  /* font-family: "Poppins", sans-serif !important;    */
+  /* font-family: helveticaBold; */
+  font-family: 'Lato', sans-serif !important;
+  font-weight: 900 !important;
 }
 
 /* 2. Bootstrap component settings */
@@ -158,9 +162,9 @@ h1,h2,h3,h4,h5,h6{
   padding-top: 0 !important;
 
   font-size: 1.5rem !important;
-  /* font-family: helveticaBold; */
-  font-family: 'Public Sans', sans-serif;
-  font-weight: bold;
+  font-family: 'Lato', sans-serif;  
+  /* font-family: 'Public Sans', sans-serif; */
+  font-weight: 900;
 }
 
 .nav-link
@@ -226,18 +230,20 @@ h1,h2,h3,h4,h5,h6{
 
 .card-companyName
 {
-  font-size: .9rem;
-  color: gray;
+  font-size: .85rem;
+  /* color: gray; */
+  font-family: 'Lato', sans-serif;
+  color:#696868;
 }
 
 .card-title
 {
   /* font-family: helveticaBold; */
-  font-family: 'Public Sans', sans-serif;
+  /* font-family: 'Public Sans', sans-serif; */
   text-transform: capitalize;
   font-size: 1.5rem;
 
-  padding: .5em 0;
+  padding: .3em 0;
 }
 
 .card-sub-title
@@ -288,7 +294,7 @@ h1,h2,h3,h4,h5,h6{
 {
   content: '';  
   /* background:linear-gradient(180deg, #5B41FF 0%, #5135FB 100%);   */
-  background-color: rgba(0, 0, 0, .9);
+  background-color: rgba(0, 0, 0, .8);
   background-blend-mode: overlay;
 
   position: absolute;
@@ -303,6 +309,7 @@ h1,h2,h3,h4,h5,h6{
 {
   content: '';  
   /* opacity: .05;   */
+  /* opacity: .025; */
   background-image: url(./images/jobbg.jpg);  
   background-position: center;
   background-size: cover;
@@ -314,9 +321,11 @@ h1,h2,h3,h4,h5,h6{
   bottom: 0;
   z-index: -2;
   
-  max-width: 100% !important;  
+  max-width: 100% !important; 
   width: 100% !important;
   height: 100% !important;
+  /* width: 700px !important;
+  height: 500px !important; */
 }
 
 .hero-section, section
@@ -333,19 +342,24 @@ h1,h2,h3,h4,h5,h6{
 
 .hero-section .blockquote
 {
-  font-family: "Poppins", sans-serif;    
-  font-weight: 800;
+  font-family: 'Lato', sans-serif; 
+  font-weight: 900;
   font-style: normal;
-  font-size: 2rem;
-  letter-spacing: -.5px;
+  font-size: 2.5rem;  
+  /* text-align: left; */
+  /* letter-spacing: 1px; */
+  /* width: 80%; */
   line-height: 1.3;
+  color: var(--white-color);
 }
+
 
 .hero-section .blockquote-footer
 {
   font-size: 1rem;
   font-weight: normal;
-  color: rgb(224, 224, 224);
+  /* color: rgb(224, 224, 224); */
+  color: var(--light-grey);
 }
 
 .posts-section
@@ -415,7 +429,8 @@ h1,h2,h3,h4,h5,h6{
   width: auto;
   padding: .5em 1.25em !important;
 
-  font-family: helveticaMedium;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
   /* text-align: center; */
   color: var(--primary-color) !important;
 
@@ -432,7 +447,7 @@ h1,h2,h3,h4,h5,h6{
   margin: 0 .5em;
   padding: .5em 1.25em !important;
 
-  font-family: helveticaMedium;  
+  font-family: 'Lato', sans-serif;
   text-align: center;
 
   background: var(--primary-color);
@@ -462,11 +477,13 @@ h1,h2,h3,h4,h5,h6{
 
 .primary-bg-button--small
 {
-  max-width: 100px !important;
-  width: 100%;
-
+  font-size: .7rem;
+  min-width: 100px !important;
+  width: auto;
+  cursor: pointer;
+  height: 30px;
   margin: 0 .5em;
-  padding: .5em .5em !important;
+  padding: .5em 1em !important;
 
   font-family: helveticaMedium;  
   text-align: center;
@@ -515,7 +532,7 @@ h1,h2,h3,h4,h5,h6{
   /* animation: whenFocus 200ms ease-in forwards; */
 }
 
-.primary-bg-button:hover
+.primary-bg-button:hover, .primary-bg-button--small:hover
 {
   transition: all 200ms ease-in 50ms;
   transform: translateY(-2px);
@@ -634,20 +651,29 @@ input[type="text"], input[type="email"], input[type="password"], select
   padding: .25em .5em;
 }
 
+.forum-section
+{
+  margin-top: 5em;
+  display: flex;  
+  flex-flow: column;
+}
+
 #jobTitle
 {  
   padding: .5em .75em;  
   max-width: 50%;  
   width: 100%;
-  height: 50px;
+  height: 60px;
 
   border: none;
   border-radius: 0;  
-  background: #fff !important;
+  /* background: #fff !important; */
+  color: var(--primary-color) !important;
   outline: none;
-  color: var(--dark-color);
+  background: var(--white-color) !important;
   font-family: helveticaMedium;
-  font-size: 1.25rem;  
+  font-size: 1rem;  
+  /* font-weight: normal; */
 
   transition: max-width 600ms ease-in-out 200ms;
 }
@@ -698,10 +724,11 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 .tag
 {  
-  color: gray;
+  /* color: gray; */
   background-color: rgb(240, 240, 240);  
   padding: .75em !important; 
   margin: 0em 0 .25em 0 !important;
+  font-family: 'Lato', sans-serif !important;
   font-size: .7rem !important;
 }
 
@@ -745,19 +772,22 @@ input[type="text"], input[type="email"], input[type="password"], select
 .posts-grid-right-content .paragraph
 {
   /* color: gray; */
-  line-height: 23px;
-  font-size: .96rem;  
-  /* font-family: 'Libre Baskerville', serif; */
-  font-family: 'Public Sans', sans-serif;
+  line-height: 25px;
+  font-size: 1rem;    
+  
+  /* font-family: 'Public Sans', sans-serif; */
+  color: rgb(56, 56, 56);
   font-weight: 100;
+  letter-spacing: .8px;
 }
 
 .posts-grid-right-content h4
 {
   /* color: rgb(76, 40, 206); */
   /* font-family: 'Libre Baskerville', serif !important; */
-  font-family: 'Public Sans', sans-serif;
+  /* font-family: 'Public Sans', sans-serif; */
   /* color: var(--primary-color); */
+  
 }
 
 #scrollTopBtn
@@ -867,8 +897,8 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 .profile-grid .paragraph
 {  
-  font-size: .9rem;
-  line-height: 24.375px;
+  font-size: 1rem;
+  line-height: 27px;
 }
 
 .profile--about-container
@@ -954,6 +984,11 @@ input[type="text"], input[type="email"], input[type="password"], select
   min-height: 10vh;
   margin: 20px 0 10px 0;
   padding: 1.5em 2em;
+}
+
+.profile-article .header
+{
+  font-size: .9rem;
 }
 
 .resume-bg
@@ -1111,6 +1146,11 @@ input[type="text"], input[type="email"], input[type="password"], select
   {
     max-width: 100%;
   }
+
+  /* #jobTitle
+  {
+    max-width: 100%;
+  } */
 
   .posts-grid
   {

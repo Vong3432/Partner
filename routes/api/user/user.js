@@ -111,7 +111,7 @@ router.post('/register', (req, res) => {
                         return res.send(err)
                     }
 
-                    conn.query(`INSERT INTO Profile(ProfileID, AccountID) VALUES (?);`, [[AccountUUID, AccountUUID]], (errors, profile) => {
+                    conn.query(`INSERT INTO Profile(ProfileID, AccountID, Username) VALUES (?);`, [[AccountUUID, AccountUUID, name]], (errors, profile) => {
                         if (err) return res.send(err)
 
                         else {

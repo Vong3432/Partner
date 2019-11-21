@@ -22,7 +22,7 @@ const Article = ({ PostingID, ProfileID, text, author, image, avatar }) => {
         setEdit(!isEdit)
     }
 
-    useEffect(() => {
+    useEffect(() => {        
         if(text)
         {
             setContent((prevState) => ({...prevState, content: text}))
@@ -40,15 +40,21 @@ const Article = ({ PostingID, ProfileID, text, author, image, avatar }) => {
                             <h5 className="mt-0 header">{author}</h5>
                             { user && ProfileID === user.id ? (
                             <>
-                                <small className="ml-auto mr-1" onClick={() => setEdit(!isEdit)} >Edit</small>
-                                <small onClick={(e) => {dispatch(deletePost(PostingID)); dispatch(getPosts(ProfileID))}}>Delete</small>
+                                <img className="small-icon ml-auto mr-2" style={{width:"20px", height:"20px", cursor:"pointer"}} onClick={() => setEdit(!isEdit)} src={require('../../images/edit.svg')} alt="edit"/>
+                                <img className="small-icon"  style={{width:"20px", height:"20px", cursor:"pointer"}} onClick={(e) => {dispatch(deletePost(PostingID)); dispatch(getPosts(ProfileID))}} src={require('../../images/delete.svg')} alt="delete"/>                                
                             </>
-                            ): null}                            
+                            ): (
+                            <>
+                                <a href={`/profile/${ProfileID}`} className="primary-bg-button--small ml-auto">View Profile</a>
+                            </>
+                            )}                                                        
                         </div>                        
                         {isEdit ? (
                             <>
-                                <textarea name="newDescription" id="newPostField" onChange={(e) => setContent(e.target.value)} value={content.content}></textarea>
-                                <input type="submit" name="edit" className="ml-auto primary-bg-button" onClick={e => onSubmit(e)} value="Edit" />
+                                <div className="d-flex flex-row flex-wrap">
+                                    <textarea name="newDescription" id="newPostField" onChange={(e) => setContent(e.target.value)} value={content.content}></textarea>
+                                    <input type="submit" name="edit" className="ml-auto mr-0 mt-2 primary-bg-button" onClick={e => onSubmit(e)} value="Edit" />
+                                </div>                                
                             </>
                         ) : (
                             <>
@@ -57,7 +63,7 @@ const Article = ({ PostingID, ProfileID, text, author, image, avatar }) => {
                                 </p>
                             </>
                         )}                        
-                        {image? <img style={{maxWidth:"100%", maxHeight:"400px", objectFit:"contain"}} src={image?'/uploads/posts/' + image :null} alt="img"/> : null}
+                        {image? <img style={{width:"100%", maxHeight:"500px", objectFit:"cover"}} src={image?'/uploads/posts/' + image :null} alt="img"/> : null}
                     </div>
                 </div>
             </article>

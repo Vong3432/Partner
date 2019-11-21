@@ -34,7 +34,7 @@ const Profile = (props) => {
 
     // useEffect 
     useEffect(() => {        
-        
+        console.log(props)
         if(isLoading === true)        
         {
             dispatch(getPosts(props.match.params.id));
@@ -45,18 +45,26 @@ const Profile = (props) => {
                 if(element.Status === "0") setCountPaused(countPaused => countPaused + 1)
                 if(element.Status === "-1") setCountClosed(countClosed => countClosed + 1)
             });            
-            setSrc(profile.ProfilePic)
+            // setSrc(profile.ProfilePic)
             setIsLoading(false)                                
         }            
                 
-        return(()=>{setIsLoading(true);console.log('profile exit')})
+        return(()=>{setIsLoading(true);console.log('profile exit'); setSrc(null);console.log(src+"nu")})
     }, [])        
 
+    useEffect(() => {
+        dispatch(showProfile(props.match.params.id));    
+        dispatch(getPosts(props.match.params.id));    
+        dispatch(getSelfJobs(props.match.params.id))    
+    }, [props.location.pathname])
+
     useEffect(() => {        
+        setIsLoading(true)
         user && user.category === "employer" ? setIsEmployer(true) : setIsEmployer(false);                     
         user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false) ;                                                       
-        setSrc(profile.ProfilePic)
-    },[isLoading])
+        setSrc(profile.ProfilePic)        
+        // dispatch(getPosts(props.match.params.id));
+    },[profile])
 
     // useEffect(() => {
     //     if(isOwner === true && isEmployer === true)

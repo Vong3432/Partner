@@ -110,7 +110,7 @@ const TopNavbar = (props) => {
                                         <NavLink to="/employee" tag={RRNavLink} activeClassName="active">Find jobs</NavLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavLink to="/employer" tag={RRNavLink} activeClassName="active">Hire employee</NavLink>
+                                        <NavLink to="/forum" tag={RRNavLink} activeClassName="active">Forum</NavLink>
                                     </NavItem>
                                 </Nav>
                                 <Nav navbar className="ml-auto">

@@ -30,6 +30,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 import axios from 'axios'
 import AdminRouter from './components/admin/AdminRouter';
+import Forum from './pages/Forum';
 
 function App() {
 
@@ -70,6 +71,7 @@ function App() {
                 <Route path="/" exact component={Main} />
                 <Route path="/about" exact component={About} />
                 <Route path="/employee" exact component={Job} />
+                <Route path="/forum" exact component={Forum} />
                 <Route path="/register" exact component={SignUpLayout} />
                 <Route path="/login" exact component={SignInLayout} />
                 <Route path="/addJob" exact component={AddJobPage} />

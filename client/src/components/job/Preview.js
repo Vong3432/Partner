@@ -100,17 +100,17 @@ const Preview = (props) => {
 
                     <img style={{maxHeight:"500px", maxWidth:"100%",objectFit:"cover"}} src={"./uploads/jobs/" + selectedJob.Picture} alt=""/>
 
-                    <h5 className="mt-4 mb-3">Description</h5> 
+                    <h5 className="mt-4 mb-2">Description</h5> 
                     {/* <div id="divider" className="mb-2"></div> */}
                     {/* {multipleDescription.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}                                        */}
                     <p style={{textAlign:"justify"}} className="paragraph">{nlb2r(selectedJob.Description)}</p>                    
                     
-                    <h5 className="mt-4 mb-3">Requirement</h5>
+                    <h5 className="mt-4 mb-2">Requirement</h5>
                     {/* <div id="divider" className="mb-2"></div> */}
                     {/* {multipleRequirement.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}  */}
                     <p style={{textAlign:"justify"}} className="paragraph">{nlb2r(selectedJob.Requirement)}</p>
 
-                    <h5 className="mt-4 mb-3">Job Type</h5>
+                    <h5 className="mt-4 mb-2">Job Type</h5>
                     {/* <div id="divider" className="mb-2"></div> */}
                     <div className="d-flex flex-row">
                         <p className="paragraph">{selectedJob.Type.substring(0, selectedJob.Type.length - 1)}</p>
