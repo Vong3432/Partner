@@ -26,7 +26,7 @@ const Forum = () => {
     return (
         <>
             <section className="forum-section container">
-                <div className="mx-auto" style={{maxWidth:"60%"}}>
+                <div className="mr-auto" style={{maxWidth:"60%"}}>
                     {allposts ? allposts.map((item, index) => (                                          
                         // <Article key={index} PostingID={item.PostingID} ProfileID={props.match.params.id} avatar={profile.ProfilePic ? profile.ProfilePic : null} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
                         <Article key={index} PostingID={item.PostingID} ProfileID={item.ProfileID} image={item.Picture ? item.Picture : null} avatar={item.ProfilePic} author={item.Username} text={item.Description} />

@@ -95,7 +95,8 @@ export const updateJob = (id, currentJob) => (dispatch, getState) => {
     console.log(id)
     axios.put(`/api/job/updatejob/${id}`,currentJob, tokenConfig(getState))
         .then(res => {console.log(res.data)
-        })                
+        })
+        .then(dispatch(getJobs()))                        
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "UPDATE_FAIL")))
 }
 

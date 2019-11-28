@@ -166,6 +166,16 @@ router.get('/user', auth, (req, res) => {
 
 })
 
+router.get('/jobrequests/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = `SELECT j.Title, j.JobID, j.CompanyName, cl.CandidateStatus, cl.JobID FROM Job j
+                 LEFT JOIN candidatelist cl ON j.JobID = cl.JobID
+                 WHERE cl.UserID = (?)`;    
+    conn.query(sql, [[id]], (err, results) => {        
+        (err) ? res.status(400).json('error') : res.status(200).json(results)
+    })
+})
+
 router.get('/alluser', (req, res) => {
     conn.query(`SELECT * FROM account`, (err, results) => {
         err ? res.status(400).json({msg:'error'}) : res.status(200).json(results)

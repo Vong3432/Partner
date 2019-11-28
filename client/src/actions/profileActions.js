@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { SHOW_PROFILE, EDIT_PROFILE, DEACTIVE_PROFILE, PROFILE_LOADED, PROFILE_LOADING } from './types'
+import { SHOW_PROFILE, EDIT_PROFILE, DEACTIVE_PROFILE, PROFILE_LOADED, PROFILE_LOADING, ADD_EDUCATION, GET_EDUCATION, DELETE_EDUCATION, ADD_EXPERIENCE, GET_EXPERIENCE, DELETE_EXPERIENCE } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
@@ -59,7 +59,74 @@ export const deactiveProfile = id => (dispatch, getState) => {
         })
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
+
+export const addEducationInfo = (data, id) => (dispatch, getState) => {
+    axios
+        .post(`/api/profile/addEducation/${id}`, data)
+        .then(res => {
+            dispatch({
+                type: ADD_EDUCATION,
+                payload: res.data
+            })
+        })
+        .then(dispatch(getEducationInfo(id)))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"ADD_EDUCATION_FAIL")))
+}
       
+export const getEducationInfo = id => (dispatch, getState) => {
+    axios.
+        get(`/api/profile/getEducation/${id}`)
+        .then(res => {
+            dispatch({
+                type: GET_EDUCATION,
+                payload: res.data
+            })
+        })
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"GET_EDUCATION_FAIL")))
+}
+
+export const deleteEducation = id => (dispatch, getState) => {
+    axios
+        .delete(`/api/profile/deleteEducation/${id}`)
+        .then(res => {
+            dispatch({
+                type: DELETE_EDUCATION,
+                payload: res.data
+            })
+        })        
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"DELETE_EDUCATION_FAIL")))
+}
+
+export const addExperienceInfo = (data, id) => (dispatch, getState) => {
+    axios
+        .post(`/api/profile/addExperience/${id}`, data)        
+        .then(dispatch(getExperienceInfo(id)))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"ADD_EDUCATION_FAIL")))
+}
+      
+export const getExperienceInfo = id => (dispatch, getState) => {
+    axios.
+        get(`/api/profile/getExperience/${id}`)
+        .then(res => {
+            dispatch({
+                type: GET_EXPERIENCE,
+                payload: res.data
+            })
+        })
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"GET_EXPERIENCE_FAIL")))
+}
+
+export const deleteExperience = id => (dispatch, getState) => {
+    axios
+        .delete(`/api/profile/deleteExperience/${id}`)
+        .then(res => {
+            dispatch({
+                type: DELETE_EXPERIENCE,
+                payload: res.data
+            })
+        })        
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"DELETE_EXPERIENCE_FAIL")))
+}
 
 export const setProfileLoading = () => {
     return {

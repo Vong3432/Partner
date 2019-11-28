@@ -123,7 +123,7 @@ router.get('/displayjobs/:id', (req, res) => {
     const sql = `SELECT j.*, p.ProfilePic
                 FROM Job j 
                 LEFT JOIN Profile p ON j.EmployerID = p.ProfileID                 
-                WHERE j.EmployerID = (?)`;
+                WHERE j.EmployerID = (?) ORDER BY UploadDate DESC`;
 
     // run sql
     conn.query(sql, [[id]] ,(err, results) => {   
@@ -168,20 +168,46 @@ router.put('/updatejob/:postjobid', (req, res) => {
     const id = req.params.postjobid
 
     // destrucutre all submitted data from body
-    const { JobID, Title, Salary, Location, Description, Requirement, Status } = req.body        
-    // define sql query
-    /*const sql = `UPDATE job 
-                SET upload_date = ${upload_date}, title = ${title}, category = ${category}, description = ${description}, duration = ${duration}, requirement = ${requirement}, salary = ${salary}
-                WHERE job_id = ${id}`;*/
-    const sql = `UPDATE Job SET Title=?, Salary=?, Location=?, Description=?, Requirement=?, Status=? WHERE JobID = ?`;    
+    const { JobID, Title, Salary, Location, Description, Requirement, Status, duration} = req.body              
     
-    // run sql    
-    conn.query(sql, [Title, Salary, Location, Description, Requirement, Status, JobID],(err, results) => {                        
-        // if err, send err 
-        // else send results to front-end   w
-        // console.log(err)
-        err ? res.status(400).json({msg:'Update fail'}) : res.status(200).json([JobID, Title, Salary, Location, Description, Requirement, Status])        
-    }) 
+    function addDays(theDate, days) {
+        return new Date(theDate.getTime() + days*24*60*60*1000);
+    }
+
+    // due_date.setDate(due_date.getDate() + duration);
+    let upload_date, due_date;
+
+    if(duration) 
+    {
+        upload_date = new Date(); 
+        due_date = addDays(new Date(), duration)  
+
+        console.log('has duration')
+        
+        const sql = `UPDATE Job SET UploadDate=?, DueDate=?, Title=?, Salary=?, Location=?, Description=?, Requirement=?, Status=? WHERE JobID = ?`;    
+    
+        // run sql    
+        conn.query(sql, [upload_date, due_date, Title, Salary, Location, Description, Requirement, Status, JobID],(err, results) => {                        
+            // if err, send err 
+            // else send results to front-end   w
+            // console.log(err)
+            err ? res.status(400).json({msg:'Update fail'}) : res.status(200).json(JobID, Title, Salary, Location, Description, Requirement, Status)        
+        }) 
+    }    
+
+    else
+    {
+        const sql = `UPDATE Job SET Title=?, Salary=?, Location=?, Description=?, Requirement=?, Status=? WHERE JobID = ?`;    
+        console.log('no duration')
+        // run sql    
+        conn.query(sql, [Title, Salary, Location, Description, Requirement, Status, JobID],(err, results) => {                        
+            // if err, send err 
+            // else send results to front-end   w
+            console.log(err)
+            err ? res.status(400).json({msg:'Update fail'}) : res.status(200).json('success')        
+        }) 
+    }
+
     
 })
 

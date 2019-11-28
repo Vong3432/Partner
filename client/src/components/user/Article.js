@@ -58,7 +58,7 @@ const Article = ({ PostingID, ProfileID, text, author, image, avatar }) => {
                             </>
                         ) : (
                             <>
-                                <p className="paragraph">
+                                <p className="mt-2 paragraph">
                                     {text}
                                 </p>
                             </>

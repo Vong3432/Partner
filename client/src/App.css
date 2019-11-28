@@ -366,7 +366,7 @@ h1,h2,h3,h4,h5,h6{
 {
   position: relative;  
   /* margin-top: 75vh; */
-  margin-top: 90vh;  
+  margin-top: 15vh;  
 }
 
 /* 4. Own component settings */
@@ -658,10 +658,17 @@ input[type="text"], input[type="email"], input[type="password"], select
   flex-flow: column;
 }
 
+.editprofile-header
+{
+  font-size: 15px !important;
+  font-family: 'Lato', sans-serif !important;
+  font-weight: 300 !important;
+}
+
 #jobTitle
 {  
   padding: .5em .75em;  
-  max-width: 50%;  
+  /* max-width: 50%;   */
   width: 100%;
   height: 60px;
 
@@ -674,8 +681,6 @@ input[type="text"], input[type="email"], input[type="password"], select
   font-family: helveticaMedium;
   font-size: 1rem;  
   /* font-weight: normal; */
-
-  transition: max-width 600ms ease-in-out 200ms;
 }
 
 .advanceSearchContent
@@ -683,28 +688,27 @@ input[type="text"], input[type="email"], input[type="password"], select
   position: relative;
   width: 100%;
   
-  margin-top: 1.5em;
-  padding: 1em;
+  margin-top: .5em;
+  padding: 2em;  
 
-  border-top: .5px solid rgba(255,255,255,.5);
-
-  background-color: transparent;  
+  background-color: var(--white-color);  
+  box-shadow: 0px 4px 10px rgba(63, 88, 146, 0.1); 
 }
 
 .advanceSearchContent label
 {
-  color: var(--white-color);
+  color: var(--dark-color);
 }
 
 .posts-grid
 {
   position: relative;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 
-  display: grid;
+  display: grid; 
   grid-template-areas: 'left right';
   gap: 30px 15px;
-  grid-auto-columns: minmax(30%,1fr) minmax(50%, 1fr);
+  grid-auto-columns: 700px minmax(auto, 1fr);
   grid-auto-rows: minmax(70vh, 1fr);
 
   margin-bottom: 2em;
@@ -714,12 +718,16 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 .posts-grid-left
 {
-  grid-area: left;
-  max-height: 80vh;
+  grid-area: left;  
   
-  background: #FBFBFB;
-  overflow-y: scroll;
+  background: #FBFBFB;  
   padding: 0 1em;
+  display: flex;
+  flex-flow: column;
+  
+  /* max-width: 600px; */
+  width: 100%;  
+  margin-right: auto;
 }
 
 .tag
@@ -743,18 +751,22 @@ input[type="text"], input[type="email"], input[type="password"], select
   grid-area: right;
   background: var(--white-color);
   /* min-height: 100vh;   */
+  max-width: 550px;
+  width: 100%;
   max-height: 100vh;
   height: auto;
   position: absolute;
+  margin-top: 4rem;
   top: 0;
   bottom: 0;
   right: 0;
-  left: 0;
+  /* left: 0; */
   
   overflow-y: scroll;
   padding: 2em 1.5em;
-  border: 1px solid rgba(51, 93, 192, 0.15);
-  /* box-shadow: 0px 4px 10px rgba(63, 88, 146, 0.1);  */
+  /* border: 1px solid rgba(51, 93, 192, 0.15); */
+  box-shadow: 0px 4px 10px rgba(63, 88, 146, 0.1); 
+
 }
 
 .posts-grid-right::-webkit-scrollbar
@@ -788,6 +800,18 @@ input[type="text"], input[type="email"], input[type="password"], select
   /* font-family: 'Public Sans', sans-serif; */
   /* color: var(--primary-color); */
   
+}
+
+.preview-all
+{
+  margin: 5rem 0 2rem 0;
+  margin-right: auto;
+  padding: 2em;
+  max-width: 700px;
+
+  background: var(--white-color);  
+  border-radius: 0;
+  box-shadow: 0px 4px 7px rgba(63, 88, 146, 0.1); 
 }
 
 #scrollTopBtn
@@ -991,6 +1015,11 @@ input[type="text"], input[type="email"], input[type="password"], select
   font-size: .9rem;
 }
 
+.employee-request-section
+{
+  margin-top: 6em;
+}
+
 .resume-bg
 {
   position: absolute;;
@@ -1036,8 +1065,7 @@ input[type="text"], input[type="email"], input[type="password"], select
 .resume-form label, .addjob-form--part label
 {
   font-size: 1.2rem;
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
+  font-family: helveticaMedium;  
   color: var(--dark-color);
   
 }
@@ -1058,7 +1086,8 @@ input[type="text"], input[type="email"], input[type="password"], select
 .resume-form--header
 {
   color: var(--primary-color);  
-  font-size: 2rem;  
+  font-size: 1.2rem;  
+  font-family: helveticaBold;
 }
 
 .addjob-form--part
@@ -1067,7 +1096,7 @@ input[type="text"], input[type="email"], input[type="password"], select
   width: 100%;
   padding: 2em 3em;  
   background: var(--white-color);  
-  box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.05); 
+  /* box-shadow: 0px 7px 25px rgba(63, 88, 146, 0.05);  */
   display: flex;
   flex-flow: column;
 }
@@ -1083,6 +1112,30 @@ input[type="text"], input[type="email"], input[type="password"], select
   border: .5px solid rgba(0, 0, 0, .25);
   min-height: 20vh;
   border-radius: 5px;
+}
+
+.paypal-subtotal-section
+{  
+  display: flex;
+  flex-flow: column;
+  margin-left: auto !important;
+}
+
+.paypal-subtotal--description
+{
+  color: #313131 !important;
+}
+
+.paypal-subtotal--duration
+{
+  border: .5px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: .5em !important;
+
+  margin: 1em 0;
+  
+  color: #313131;
+  background-color: var(--white-color) !important;
 }
 
 .decision--box-container

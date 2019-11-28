@@ -24,6 +24,7 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const GET_JOB_REQUESTS = 'GET_JOB_REQUESTS';
 
 // Profile
 export const SHOW_PROFILE ='SHOW_PROFILE';
@@ -31,6 +32,14 @@ export const EDIT_PROFILE ='EDIT_PROFILE';
 export const DEACTIVE_PROFILE ='DEACTIVE_PROFILE';
 export const PROFILE_LOADING = 'PROFILE_LOADING';
 export const PROFILE_LOADED = 'PROFILE_LOADED';
+
+// Resume
+export const ADD_EDUCATION = 'ADD_EDUCATION';
+export const GET_EDUCATION = 'GET_EDUCATION';
+export const DELETE_EDUCATION = 'DELETE_EDUCATION';
+export const ADD_EXPERIENCE = 'ADD_EXPERIENCE';
+export const GET_EXPERIENCE = 'GET_EXPERIENCE';
+export const DELETE_EXPERIENCE = 'DELETE_EXPERIENCE';
 
 // Post
 export const GET_POSTS = 'GET_POSTS';

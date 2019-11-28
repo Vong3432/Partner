@@ -1,41 +1,70 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink } from 'reactstrap';
+import { NavLink, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { NavLink as RRNavLink } from 'react-router-dom'
 
-import { showProfile, editProfile } from '../../actions/profileActions'
+import { showProfile, editProfile, addEducationInfo, getEducationInfo, deleteEducation, addExperienceInfo, getExperienceInfo, deleteExperience } from '../../actions/profileActions'
 import { clearErrors } from '../../actions/errorActions';
 import axios from 'axios';
 import Spinner from '../../components/Spinner';
+import { useAlert } from 'react-alert'
 
-const EditProfile = (props) => {
+const EditProfile = (props) => {    
+    const alert = useAlert()
 
+    // css
     const part = {
         backgroundColor: "var(--white-color)",
         borderRadius: 0
     }
 
+    // setting months
+    const allMonths = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+    let minOffset = 0, maxOffset = 40;
+    let thisYear = (new Date()).getFullYear() + 6;
+    let allYears = [];
+    for (let x = 0; x <= maxOffset; x++) {
+        allYears.push(thisYear - x)
+    }
+
+    // state from reduces
     const auth = useSelector(state => state.auth)
-    const profile = useSelector(state => state.profile.user)
-    // const posts = useSelector(state => state.post.posts)
+    const profile = useSelector(state => state.profile.user)    
     const error = useSelector(state => state.error)
     const user = useSelector(state => state.auth.user)
+    const educationInfo = useSelector(state => state.profile.educationInfo)
+    const experienceInfo = useSelector(state => state.profile.experienceInfo)
 
+    // dispatch
     const dispatch = useDispatch()
 
+    // states
     const [isOwner, setIsOwner] = useState()
     const [isEmployer, setIsEmployer] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
+
+    // holds current data when user inputing
     const [currentProfileInfo, setCurrentProfileInfo] = useState({
         BackgroundPic: [],
         ProfilePic: ""
     })
+    const [currentEducationInfo, setCurrentEducationInfo] = useState({})
+    const [currentExperienceInfo, setCurrentExperienceInfo] = useState({})
+
+    // detect error
     const [errMsg, setErrMsg] = useState("")
+
+    // control modals
+    const [showEducationModal, setEducationModal] = useState(false)
+    const [showExperienceModal, setExperienceModal] = useState(false)
+
+    // gallery
     const [file, setFile] = useState("")
     const [name, setImgName] = useState([])
     const [img, setImg] = useState(null)
     const [src, setSrc] = useState(null)
 
+    // profile
     const [profileImgFile, setProfileImgFile] = useState("")
     const [profileImgName, setProfileImgName] = useState("")
     const [profileImg, setProfileImg] = useState(null)
@@ -43,26 +72,26 @@ const EditProfile = (props) => {
     // default render
     useEffect(() => {
 
-        if(isLoading === true)
-        {
+        if (isLoading === true) {
             dispatch(showProfile(props.match.params.id))
             user.category === "employer" ? setIsEmployer(true) : setIsEmployer(false)
             user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false)
 
-            if(isOwner === false)
-            {
+            if (isOwner === false) {
                 alert('You dont have the authority to access this page');
-                window.location.href="/";
+                window.location.href = "/";
             }
-
+            
             setCurrentProfileInfo(profile)
             setSrc(profile.ProfilePic)
+            dispatch(getExperienceInfo(props.match.params.id))
+            dispatch(getEducationInfo(props.match.params.id))
             setIsLoading(false)
         }
 
         return (() => setIsLoading(true))
     }, [])
-    
+
     const onEdit = (e) => {
         e.persist()
         dispatch(clearErrors())
@@ -76,19 +105,75 @@ const EditProfile = (props) => {
             setFile(e.target.files)
 
             for (let x = 0; x < e.target.files.length; x++)
-                setCurrentProfileInfo((prevState) => ({ ...prevState, BackgroundPic: [...prevState.BackgroundPic, (user.id + "-") +e.target.files[x].name] }))
+                setCurrentProfileInfo((prevState) => ({ ...prevState, BackgroundPic: [...prevState.BackgroundPic, (user.id + "-") + e.target.files[x].name] }))
         }
 
         if (e.target.name === "ProfilePic") {
             setCurrentProfileInfo((prevState) => ({ ...prevState, ProfilePic: "" }))
             setProfileImgFile(e.target.files[0])
             setProfileImg(URL.createObjectURL(e.target.files[0]))
-            setCurrentProfileInfo((prevState) => ({ ...prevState, ProfilePic:( user.id + "-") + e.target.files[0].name }))
+            setCurrentProfileInfo((prevState) => ({ ...prevState, ProfilePic: (user.id + "-") + e.target.files[0].name }))
         }
 
     }
 
+    // education
+    const toggleEducationModal = e => {
+        setEducationModal(!showEducationModal)
+    }
 
+    const handleEducationChange = e => {
+        e.persist()
+        setCurrentEducationInfo((prevState) => ({ ...prevState, [e.target.name]: e.target.value}))
+    }
+
+    const confirmCurrentEducationInfo = e => {
+        // axios.post()
+        
+        const newEducationInfo = {
+            Degree: currentEducationInfo.Degree,
+            School: currentEducationInfo.School,
+            StartYear: currentEducationInfo.StartYear,
+            EndYear: currentEducationInfo.EndYear
+        }
+        dispatch(addEducationInfo(newEducationInfo, props.match.params.id));                
+        alert.success('New education info added.')   
+    }
+
+    const deleteInfo = (e, id) => {
+        dispatch(deleteEducation(id)); 
+        alert.success('Deleted.')                                       
+    }
+
+    // experience
+    const toggleExperienceModal = e => {
+        setExperienceModal(!showExperienceModal)
+    }
+
+    const handleExperienceChange = e => {
+        e.persist()
+        setCurrentExperienceInfo((prevState) => ({ ...prevState, [e.target.name]: e.target.value}))
+    }
+
+    const confirmCurrentExperienceChange = e => {
+        
+        console.log(currentExperienceInfo)
+        const newExperienceInfo = {
+            JobTitle: currentExperienceInfo.JobTitle,
+            Company: currentExperienceInfo.Company,
+            StartYear: currentExperienceInfo.StartYear,
+            EndYear: currentExperienceInfo.EndYear
+        }
+        dispatch(addExperienceInfo(newExperienceInfo, props.match.params.id));                
+        alert.success('New working experience info added.')  
+        // axios.post()
+    }
+
+    const deleteExperienceInfo = (e, id) => {
+        // axios.delete()
+        dispatch(deleteExperience(id))
+        alert.success('Deleted.')   
+    }
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -110,7 +195,7 @@ const EditProfile = (props) => {
 
             setCurrentProfileInfo((prevState) => ({ ...prevState, BackgroundPic: [name] }))
         }
-        
+
 
         if (profileImgFile) {
 
@@ -123,10 +208,10 @@ const EditProfile = (props) => {
                 .post("/api/profile/uploadProfileImage", data)
                 .then(res => console.log(res.statusText))
                 .catch(err => console.log(err))
-            
+
             setCurrentProfileInfo((prevState) => ({ ...prevState, ProfilePic: profileImgName }))
         }
-        
+
         console.log(currentProfileInfo)
         dispatch(editProfile(props.match.params.id, currentProfileInfo))
 
@@ -142,14 +227,114 @@ const EditProfile = (props) => {
 
     return (
         <>
-            
+
+            <Modal isOpen={showEducationModal} toggle={toggleEducationModal}>
+                <ModalHeader toggle={toggleEducationModal}>Education</ModalHeader>
+                <ModalBody>
+                    <div className="addjob-form--part mb-3">
+                        <div className="d-flex flex-column w-100">
+                            {/* <h4 className="title">Education Information</h4>
+                            <div id="divider"></div> */}
+
+                            <div className="d-flex flex-row mt-2 my-3 w-100">                               
+                                <div className="d-flex flex-column w-100">
+                                    <label htmlFor="Degree">Degree</label>
+                                    <input name="Degree" type="text" onChange={e => handleEducationChange(e)} id="" placeholder="e.g Diploma in Computer Science" />
+                                </div>
+                            </div>       
+
+                            <div className="d-flex flex-row mt-2 my-3 w-100">                                
+                                <div className="d-flex flex-column w-100">
+                                    <label htmlFor="School">School</label>
+                                    <input name="School" type="text" onChange={e => handleEducationChange(e)} id="" placeholder="e.g SUC" />
+                                </div>
+                            </div>                      
+
+                            <div className="d-flex flex-row mt-2 my-3 w-100">                                
+                                <div className="d-flex flex-row w-100">
+                                    <div className="d-flex flex-column w-50 mr-1">
+                                        <label htmlFor="StartYear">Start Year</label>
+                                        <select onChange={e => handleEducationChange(e)} name="StartYear">
+                                            <option value="" selected disabled>Select Start Year</option>
+                                            {allYears.map((year, index) => <option key={index} value={year}>{year}</option>)}                                            
+                                        </select>
+                                    </div> 
+                                    <div className="d-flex flex-column w-50 ml-1">
+                                        <label htmlFor="EndYear">End Year</label>
+                                        <select onChange={e => handleEducationChange(e)} name="EndYear">
+                                            <option value="" selected disabled>Select End Year</option>
+                                            {allYears.map((year, index) => <option key={index} value={year}>{year}</option>)}                                            
+                                        </select>
+                                    </div>                                    
+                                </div>
+                            </div>                      
+
+                        </div>
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={e => { toggleEducationModal(); confirmCurrentEducationInfo(e) }}>Add</Button>{' '}
+                    <Button color="secondary" onClick={toggleEducationModal}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+
+            <Modal isOpen={showExperienceModal} toggle={toggleExperienceModal}>
+                <ModalHeader toggle={toggleExperienceModal}>Experience</ModalHeader>
+                <ModalBody>
+                    <div className="addjob-form--part mb-3">
+                        <div className="d-flex flex-column w-100">
+                            {/* <h4 className="title">Education Information</h4>
+                            <div id="divider"></div> */}
+
+                            <div className="d-flex flex-row mt-2 my-3 w-100">                               
+                                <div className="d-flex flex-column w-100">
+                                    <label htmlFor="JobTitle">Job Title</label>
+                                    <input name="JobTitle" type="text" onChange={e => handleExperienceChange(e)} id="" placeholder="e.g Programmer" />
+                                </div>
+                            </div>       
+
+                            <div className="d-flex flex-row mt-2 my-3 w-100">                                
+                                <div className="d-flex flex-column w-100">
+                                    <label htmlFor="Company">Company</label>
+                                    <input name="Company" type="text" onChange={e => handleExperienceChange(e)} id="" placeholder="e.g Apple" />
+                                </div>
+                            </div>                      
+
+                            <div className="d-flex flex-row mt-2 my-3 w-100">                                
+                                <div className="d-flex flex-row w-100">
+                                    <div className="d-flex flex-column w-50 mr-1">
+                                        <label htmlFor="StartYear">Start Year</label>
+                                        <select onChange={e => handleExperienceChange(e)} name="StartYear">
+                                            <option value="" selected disabled>Select Start Year</option>
+                                            {allYears.map((year, index) => <option key={index} value={year}>{year}</option>)}                                            
+                                        </select>
+                                    </div> 
+                                    <div className="d-flex flex-column w-50 ml-1">
+                                        <label htmlFor="EndYear">End Year</label>
+                                        <select onChange={e => handleExperienceChange(e)} name="EndYear">
+                                            <option value="" selected disabled>Select End Year</option>
+                                            {allYears.map((year, index) => <option key={index} value={year}>{year}</option>)}                                            
+                                        </select>
+                                    </div>                                    
+                                </div>
+                            </div>                      
+
+                        </div>
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={e => { toggleExperienceModal(); confirmCurrentExperienceChange(e) }}>Add</Button>{' '}
+                    <Button color="secondary" onClick={toggleExperienceModal}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+
 
             {((!isEmployer && isOwner) && isLoading === false) && (
                 <section style={{ backgroundColor: "black" }} className="d-flex flex-column justify-content-center">
 
                     {/* user avatar and name */}
                     <div className="text-center mt-auto d-flex flex-column align-items-center">
-                        <img alt="avatar" src={ profileImg ? profileImg : '/uploads/profile/' + src} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
+                        <img alt="avatar" src={profileImg ? profileImg : '/uploads/profile/' + src} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
                         <div className="d-flex flex-row">
                             <h2 className="profile-username mt-2">{user.name}</h2>
                             <div className="image-upload ml-2 my-3">
@@ -178,7 +363,7 @@ const EditProfile = (props) => {
                     {/* user avatar and name */}
                     <div className="text-center mt-auto d-flex flex-column align-items-center">
                         {/* <img id="avatar" src={require('../../images/person.jpg')} alt="avatar" /> */}
-                        <img alt="avatar" src={ profileImg ? profileImg : '/uploads/profile/' + src} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
+                        <img alt="avatar" src={profileImg ? profileImg : '/uploads/profile/' + src} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
                         <div className="d-flex flex-row">
                             <h2 className="profile-username mt-2">{user.name}</h2>
                             <div className="image-upload ml-2 my-3">
@@ -203,21 +388,59 @@ const EditProfile = (props) => {
                 </section>
             )}
 
-            <section className="profile-section">
+            <section className="profile-section mx-auto" style={{maxWidth:"900px"}}>
 
                 {/* About */}
                 <div className="p-5 card-shadow profile--about-container" style={part}>
                     <h5 className="header">About</h5>
-                    <textarea name="About" onChange={e => onEdit(e)} style={{ maxWidth: "100%", width: "100%", height: "10em", border: ".25px solid rgba(0,0,0,0.1)" }} className="paragraph" id="" value={isLoading === false ? currentProfileInfo.About : null}></textarea>
-                    {/* <p className="paragraph">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </p> */}
-
-                    {(!isEmployer && isLoading === false) && (
-                        <h5 className="mt-5 header">CV/Resume</h5>
-                    )}
-
+                    <textarea name="About" onChange={e => onEdit(e)} style={{ maxWidth: "100%", width: "100%", height: "10em", border: ".25px solid rgba(0,0,0,0.1)" }} className="paragraph" id="" value={currentProfileInfo.About}></textarea>                    
+                    <div className="d-flex flex-row mt-3">
+                        <h5 className="header">Social Media Links</h5>
+                        <img className="small-icon ml-auto mr-2" style={{ width: "20px", height: "20px", cursor: "pointer" }} src={require('../../images/edit.svg')} alt="edit" />
+                    </div>
                 </div>
+
+                {/* Education */}
+                {(!isEmployer && isLoading === false) && (
+                    <div className="p-5 my-3 card-shadow profile--about-container" style={part}>
+                        {/* Education title bar */}
+                        <div className="d-flex flex-row row-wrap align-content-center">
+                            <h5 className="header" style={{ textTransform: "uppercase" }}>Education</h5>
+                            <img className="small-icon ml-auto" onClick={toggleEducationModal} style={{ width: "20px", height: "20px", cursor: "pointer" }} src={require('../../images/plus.svg')} alt="add" />
+                        </div>
+
+                        {educationInfo ? educationInfo.map((info, index) => (
+                            <div key={index} className="d-flex flex-column mt-4">
+                                <div className="d-flex flex">
+                                    <h6 className="editprofile-header">{info.Degree}</h6>
+                                    <img className="small-icon ml-auto" onClick={e => deleteInfo(e, info.EducationID)} style={{ width: "20px", height: "20px", cursor: "pointer" }} src={require('../../images/delete.svg')} alt="delete" />
+                                </div>                                
+                                <small>{info.StartYear}-{info.EndYear}</small>
+                            </div>
+                        )) : null}                        
+                    </div>
+                )}
+
+                {/* Working experience */}
+                {(!isEmployer && isLoading === false) && (
+                    <div className="p-5 my-3 card-shadow profile--about-container" style={part}>
+                        {/* Working experience title bar */}
+                        <div className="d-flex flex-row row-wrap align-content-center">
+                            <h5 className="header" style={{ textTransform: "uppercase" }}>Working Experience</h5>
+                            <img className="small-icon ml-auto" onClick={toggleExperienceModal} style={{ width: "20px", height: "20px", cursor: "pointer" }} src={require('../../images/plus.svg')} alt="add" />
+                        </div>
+
+                        {experienceInfo ? experienceInfo.map((info, index) => (
+                            <div key={index} className="d-flex flex-column mt-4">
+                                <div className="d-flex flex">
+                                    <h6 className="editprofile-header">{info.JobTitle}</h6>
+                                    <img className="small-icon ml-auto" onClick={e => deleteExperienceInfo(e, info.WorkExperienceID)} style={{ width: "20px", height: "20px", cursor: "pointer" }} src={require('../../images/delete.svg')} alt="delete" />
+                                </div>                                
+                                <small>{info.StartYear}-{info.EndYear}</small>
+                            </div>
+                        )) : null}
+                    </div>
+                )}
 
                 <div className="profile--contact-container my-3 card-shadow p-5" style={part}>
 
@@ -231,8 +454,8 @@ const EditProfile = (props) => {
                     <div className="d-flex flex-row mt-3">
                         <img className="small-icon" src={require('../../images/email.svg')} alt="email" />
                         <div className="d-flex flex-column ml-2">
-                            <h6 className="small-header">Email</h6>
-                            <input type="email" name="Email" id="" onChange={e => onEdit(e)} value={isLoading === false ? currentProfileInfo.Email : null} />
+                            <h6 className="editprofile-header">Email</h6>
+                            <input type="email" name="Email" id="" onChange={e => onEdit(e)} value={currentProfileInfo.Email} />
                         </div>
                     </div>
 
@@ -242,7 +465,7 @@ const EditProfile = (props) => {
                             <div className="d-flex flex-row mt-4">
                                 <img className="small-icon" src={require('../../images/availability.svg')} alt="availability" />
                                 <div className="d-flex flex-column ml-2">
-                                    <h6 className="small-header">Availability</h6>
+                                    <h6 className="editprofile-header">Availability</h6>
                                     <input type="text" name="Availability" id="" onChange={e => onEdit(e)} value={currentProfileInfo.Availability} />
                                 </div>
                             </div>
@@ -250,7 +473,7 @@ const EditProfile = (props) => {
                             <div className="d-flex flex-row mt-4">
                                 <img className="small-icon" src={require('../../images/age.svg')} alt="age" />
                                 <div className="d-flex flex-column ml-2">
-                                    <h6 className="small-header">Age</h6>
+                                    <h6 className="editprofile-header">Age</h6>
                                     <input type="text" name="Age" id="" onChange={e => onEdit(e)} value={currentProfileInfo.Age} />
                                 </div>
                             </div>
@@ -261,8 +484,8 @@ const EditProfile = (props) => {
                     <div className="d-flex flex-row mt-4">
                         <img className="small-icon" src={require('../../images/location.svg')} alt="location" />
                         <div className="d-flex flex-column ml-2">
-                            <h6 className="small-header">Location</h6>
-                            <input type="text" name="Location" id="" onChange={e => onEdit(e)} value={isLoading === false ? currentProfileInfo.Location : null} />
+                            <h6 className="editprofile-header">Location</h6>
+                            <input type="text" name="Location" id="" onChange={e => onEdit(e)} value={currentProfileInfo.Location} />
                         </div>
                     </div>
 

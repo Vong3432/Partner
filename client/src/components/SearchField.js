@@ -50,19 +50,19 @@ const SearchField = ({ handleChange }) => {
             {/* hidden blockquote if advance search is clicked */}
             <p className={`blockquote ${blockquoteClass}`}>Start Exploring Jobs on Partner.</p>
 
-            <div className="d-flex flex-column flex-md-column justify-content-between align-items-center" style={{transition: "height 300ms ease-in-out"}}>
+            <div className="d-flex flex-column flex-md-column justify-content-between align-items-start" style={{transition: "height 300ms ease-in-out"}}>
 
                 {/* SearchBar */}
                 <input
                     type="text"
                     name="jobTitle"
                     id="jobTitle"
-                    className={show ? `mw-100 shadow my-3 mr-auto` : `shadow my-3 ml-lg-0 `}
+                    className={show ? `shadow my-3 mr-auto` : `shadow my-3 ml-lg-0 `}
                     onChange={handleChange}
                     placeholder="Search Position, Title or ..."
                 />                                
             </div>
-            <a className={ show ? "py-3 text-left" : "py-3 text-center"}  onClick={() => setShow(!show)} style={advanceSearchStyling}>Advance Search</a>
+            <a className="py-2"  onClick={() => setShow(!show)} style={advanceSearchStyling}>Advance Search</a>
 
             {/* Display advance search content if show is true */}
             <div className={`align-self-start flex-row row-wrap advanceSearchContent ${advSearchClass}`}>

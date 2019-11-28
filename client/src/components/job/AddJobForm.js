@@ -5,8 +5,12 @@ import { addJob, getCategory } from '../../actions/jobActions'
 import { clearErrors } from '../../actions/errorActions'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+import { PayPalButton } from "react-paypal-button-v2";
+import { useAlert } from 'react-alert'
 
 const AddJob = (props) => {
+    const alert = useAlert()
+
     AddJob.propTypes = {
         job: PropTypes.object.isRequired,
         user: PropTypes.object.isRequired,
@@ -20,6 +24,8 @@ const AddJob = (props) => {
     const jobs = useSelector(state => state.job.jobs)
     const categories = useSelector(state => state.job.category)
     const [isLoading, setIsLoading] = useState(true)
+    const [isPayed, setIsPayed] = useState(false)
+    const PRICE_PER_DAY = 1;
 
     useEffect(() => {
 
@@ -62,7 +68,7 @@ const AddJob = (props) => {
         const { name, value } = e.target;
         dispatch(clearErrors())
 
-        if (name === "image") {            
+        if (name === "image") {
             setImg(URL.createObjectURL(e.target.files[0]))
             setFile(e.target.files[0])
             setImgName(user.id + "-" + e.target.files[0].name)
@@ -73,12 +79,12 @@ const AddJob = (props) => {
                 ...job,
                 [name]: value
             })
-        }        
+        }
 
     }
 
-    const onSubmit = e => {
-        e.preventDefault()
+    const onSubmit = () => {
+        // e.preventDefault()
         setErrMsg('')        
 
         if (file) {
@@ -109,20 +115,23 @@ const AddJob = (props) => {
                 duration: job.duration,
                 image: name || ""
             }
+
+
             dispatch(addJob(newJob))
 
+
             if (error.id === "ADD_FAIL") {
-                alert('Please make sure you have fill in all information.')
+                alert.error('Please make sure you have fill in all information.')
             }
 
             else
             {
-                window.alert('Added successfully.')
-                window.location.href = "/"
+                alert.success('Added successfully.')
+                setTimeout(() => window.location.href = "/", 1500)                
             }                
         }
         else {            
-            alert('Please fill in valid information.')
+            alert.error('Please fill in valid information.')
         }            
     }
 
@@ -209,17 +218,17 @@ const AddJob = (props) => {
                         </select>
                     </div>
                 </div>
-                
+
                 <img src={img} style={{ maxWidth: "100%", maxHeight: "100%", width: "100%", height: "100%", objectFit: "cover" }} />
-                
+
                 <div className="image-upload ml-1 my-3">
                     <label htmlFor="image">
-                        <img style={{width:"3em", height:"3em"}} src={require('../../images/photo.svg')} />
+                        <img style={{ width: "3em", height: "3em" }} src={require('../../images/photo.svg')} />
                     </label>
 
-                    <input id="image" accept="image/*" name="image" type="file" style={{display:"none"}} onChange={e => handleChange(e)} />
+                    <input id="image" accept="image/*" name="image" type="file" style={{ display: "none" }} onChange={e => handleChange(e)} />
                     <small className="ml-2 paragraph">Feel free to upload an image</small>
-                </div>                
+                </div>
 
                 {(job.title && job.description && job.location && job.category && job.requirement) && (
                     <button onClick={(e) => { e.preventDefault(); setStep(step + 1) }} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
@@ -272,13 +281,50 @@ const AddJob = (props) => {
                     <input style={{ maxWidth: "80px" }} className="mr-3" type="number" id="" onChange={e => handleChange(e)} name="duration" placeholder="7" />
                     <h6>Days</h6>
                 </div>
-
+            </div>
 
                 {(job.duration) ? (
-                    <button onClick={(e) => onSubmit(e)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Post</button>
-                ) : ""}
+                    <>
+                        <small style={{color:"var(--danger)"}}>USD {PRICE_PER_DAY} Per Day</small>
+                        <p>Checkout: USD {job.duration * PRICE_PER_DAY}</p>
+                        <PayPalButton
+                            createOrder={(data, actions) => {
+                                return actions.order.create({
+                                    purchase_units: [{
+                                        amount: {
+                                            currency_code: "USD",
+                                            value: job.duration * PRICE_PER_DAY
+                                        }
+                                    }],
+                                    // application_context: {
+                                    //   shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
+                                    // }
+                                });
+                            }}
+                            options={{
+                                clientId: "AX8ba9UcodHNg-W76ybWHYam3ocKe4J8ZcMaSq1xYzHF9t5XHn57CqTLnx-L2pq_IvIT_uvF6XiDilUf"
+                            }}
+                            onApprove={(data, actions) => {
+                                // Capture the funds from the transaction
+                                return actions.order.capture().then(function (details) {
+                                    // Show a success message to your buyer
+                                    alert.success("Transaction completed by " + details.payer.name.given_name);
+                                    onSubmit()
+                                    // OPTIONAL: Call your server to save the transaction
+                                    return fetch("/paypal-transaction-complete", {
+                                        method: "post",
+                                        body: JSON.stringify({
+                                            orderID: data.orderID
+                                        })
+                                    });
+                                });
+                            }}
+                        />
+                        {/* {isPayed ? <button onClick={(e) => onSubmit(e)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Post</button> : null} */}
+                    </>
 
-            </div>
+                ) : ""}
+            
         </div>
     )
 
@@ -288,7 +334,7 @@ const AddJob = (props) => {
                 {(step >= 1) && step1}
                 {(step >= 2) && step2}
                 {(step >= 3) && step3}
-                { errMsg ? errMsg : null}
+                {errMsg ? errMsg : null}
             </form>
         </>
     )

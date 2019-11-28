@@ -9,9 +9,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getApplyJobs } from '../../actions/jobActions'
 // import { clearErrors } from '../../actions/errorActions'
 
-const Preview = (props) => {    
+const AllPagePreview = (props) => {    
 
     const [selectedJob, setSelectedJob] = useContext(PreviewContext)
+    const [currentJob, setCurrentJob] = useState()
     // const [multipleDescription, setMultipleDescription] = useState([])
     // const [multipleRequirement, setMultipleRequirement] = useState([])
 
@@ -32,13 +33,16 @@ const Preview = (props) => {
         if(selectedJob.Title)
             {
                 setIsLoading(false)
+                if(selectedJob)
+                    setCurrentJob(selectedJob)
+                console.log(currentJob)
                 // setMultimeDescription(selectedJob.description.split("<next>")) 
                 // setMultipleRequirement(selectedJob.requirement.split("<next>"))                                           
             }
         return (() => setIsLoading(true))
     }, [selectedJob])           
 
-    Preview.propTypes = {        
+    AllPagePreview.propTypes = {        
         user: PropTypes.object.isRequired,   
         isAuthenticated: PropTypes.bool.isRequired
     }
@@ -80,9 +84,9 @@ const Preview = (props) => {
             {/* {isLoading ? <Spinner />} */}
             {(selectedJob.Title) && (
                 !isLoading ?
-                <>
+                <div className="preview-all">
                     <h3 className="mb-2" style={{textTransform:"capitalize"}}>{selectedJob.Title}</h3>
-                    <Link to="/previewall">View in all page</Link>
+                    {/* <Link to="/previewall">View in all page</Link> */}
                     <div className="media my-4 align-items-start">                        
                         <div className="media-body">
                             <p className="mt-0 card-companyName mb-1">{selectedJob.CompanyName}</p>
@@ -100,7 +104,7 @@ const Preview = (props) => {
                         <img style={{ maxWidth: "100px", maxHeight: "60px", objectFit: "contain" }} src={selectedJob.ProfilePic ? './uploads/profile/' + selectedJob.ProfilePic :null} className="mr-3" alt="..." />
                     </div>                    
 
-                    <img style={{maxHeight:"500px", maxWidth:"100%",objectFit:"cover"}} src={"./uploads/jobs/" + selectedJob.Picture} alt=""/>
+                    <img className="my-2" style={{maxHeight:"100%", width:"100%",objectFit:"cover"}} src={"./uploads/jobs/" + selectedJob.Picture} alt=""/>
 
                     <h5 className="mt-4 mb-2">Description</h5> 
                     {/* <div id="divider" className="mb-2"></div> */}
@@ -119,12 +123,12 @@ const Preview = (props) => {
                     </div>                    
 
                     {/* {applyJobList.filter(i => i.)} */}
-                    <button onClick={e => onApply(e)} className="primary-bg-button ml-0 mt-5 mw-100">Apply</button>
-                </> : <Spinner />
+                    <button onClick={e => onApply(e)} className="primary-bg-button ml-0 mt-5 mw-100 w-100">Apply</button>
+                </div> : <Spinner />
             )}
             {!selectedJob.Title ? <h2>{msg}</h2> : ""}
         </>
     )
 }
 
-export default Preview;
+export default AllPagePreview;

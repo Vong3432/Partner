@@ -61,9 +61,14 @@ const TopNavbar = (props) => {
                                 {/* <DropdownItem header>Header</DropdownItem> */}
                                 <DropdownItem>
                                     {user && (
-                                        <NavLink tag={RRNavLink} className="px-0" style={{ opacity: "1" }} to={`/editProfile/${user.id}`} >
+                                        <NavLink tag={RRNavLink} className="px-0 text-black-50" style={{ opacity: "1" }} to={`/editProfile/${user.id}`} >
                                             Edit profile
                                 </NavLink>
+                                    )}
+                                </DropdownItem>                                
+                                <DropdownItem>
+                                    {user && user.category === "employee" && (
+                                        <NavLink className="px-0 text-black-50" style={{ color: "var(--dark-color)", opacity: "1" }} to={`/jobrequests`} tag={RRNavLink} >Job Alerts</NavLink>
                                     )}
                                 </DropdownItem>
                                 <DropdownItem divider />

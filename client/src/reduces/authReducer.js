@@ -6,14 +6,16 @@ import {
     LOGIN_FAIL,
     LOGOUT_SUCCESS,
     REGISTER_SUCCESS,
-    REGISTER_FAIL    
+    REGISTER_FAIL,    
+    GET_JOB_REQUESTS
 } from '../actions/types'
 
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: null,
     isLoading: false,
-    user: null
+    user: null,
+    jobRequests: null
 }
 
 
@@ -25,6 +27,11 @@ export default function(state = initialState, action)
             return {
                 ...state,
                 isLoading: true
+            }
+        case GET_JOB_REQUESTS:
+            return{
+                ...state,
+                jobRequests: action.payload
             }
         case USER_LOADED:
             return {

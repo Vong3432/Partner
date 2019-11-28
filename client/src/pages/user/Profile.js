@@ -39,7 +39,7 @@ const Profile = (props) => {
         {
             dispatch(getPosts(props.match.params.id));
             dispatch(showProfile(props.match.params.id));  
-            dispatch(getSelfJobs(props.match.params.id))  
+            dispatch(getSelfJobs(props.match.params.id));
             job.selfJobs.forEach(element => {
                 if(element.Status === "1") setCountOpened(countOpened => countOpened + 1)
                 if(element.Status === "0") setCountPaused(countPaused => countPaused + 1)
@@ -60,9 +60,11 @@ const Profile = (props) => {
 
     useEffect(() => {        
         setIsLoading(true)
-        user && user.category === "employer" ? setIsEmployer(true) : setIsEmployer(false);                     
+        profile && profile.AccountType === "employer" ? setIsEmployer(true) : setIsEmployer(false);                     
         user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false) ;                                                       
-        setSrc(profile.ProfilePic)        
+        dispatch(getSelfJobs(props.match.params.id));
+        setSrc(profile.ProfilePic)  
+        setIsLoading(false)      
         // dispatch(getPosts(props.match.params.id));
     },[profile])
 
@@ -176,7 +178,7 @@ const Profile = (props) => {
                                     <small>{profile.Email}</small>
                                 </div>
                             </div>
-                            {!isEmployer && (
+                            {!isEmployer && isLoading === false && (
                                 <>
                                     <div className="d-flex flex-row mt-4">
                                         <img className="small-icon" src={require('../../images/availability.svg')} alt="availability" />
@@ -206,7 +208,7 @@ const Profile = (props) => {
 
                         </div>
 
-                        {isEmployer && (
+                        {isEmployer && isLoading === false && (
                             <div className="profile--contact-container">
 
                                 {/* Contact title bar */}
@@ -252,9 +254,9 @@ const Profile = (props) => {
                         )}
 
                         {/* Gallery */}
-                        <div className="profile--gallery-container">
+                        {/* <div className="profile--gallery-container">
                             <h5 className="header">Gallery</h5>
-                        </div>
+                        </div> */}
 
                     </aside>
 

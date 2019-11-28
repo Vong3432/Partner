@@ -32,6 +32,13 @@ import axios from 'axios'
 import AdminRouter from './components/admin/AdminRouter';
 import Forum from './pages/Forum';
 
+// alert
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+import AllPagePreview from './components/job/AllPagePreview';
+import { PreviewProvider } from './PreviewContext';
+import Request from './pages/user/Request'
+
 function App() {
 
   const [isScrollingDown, setIsScrollDown] = useState(false);
@@ -60,33 +67,50 @@ function App() {
 
   }
 
+  // optional cofiguration
+  const options = {
+    // you can also just use 'bottom center'
+    position: positions.BOTTOM_CENTER,
+    timeout: 5000,
+    offset: '30px',
+    // you can also just use 'scale'
+    transition: transitions.SCALE
+  }
+
   return (
-    <Provider store={store}>
-      <div className="App">
-        <Router>
-          <TopNavbar scrolling={isScrollingDown} />
-          <Switch>
-            <>
-              <Container className="my-3">
-                <Route path="/" exact component={Main} />
-                <Route path="/about" exact component={About} />
-                <Route path="/employee" exact component={Job} />
-                <Route path="/forum" exact component={Forum} />
-                <Route path="/register" exact component={SignUpLayout} />
-                <Route path="/login" exact component={SignInLayout} />
-                <Route path="/addJob" exact component={AddJobPage} />
-                <Route path="/profile/:id" exact component={Profile} />
-                <Route path="/editProfile/:id" exact component={EditProfile} />
-                <Route path="/profile/employertable/:id" exact component={EmployerTable} />
-                <Route path="/profile/messages" exact component={Messages} />
-                <Route path="/resume" exact component={Resume} />
-                <Route path="/admin" component={AdminRouter} />                                
-              </Container>
-            </>
-          </Switch>
-        </Router>
-      </div>
-    </Provider>
+    <AlertProvider template={AlertTemplate} {...options}>
+      <Provider store={store}>
+        <div className="App">
+          <Router>
+            <TopNavbar scrolling={isScrollingDown} />
+            <Switch>
+              <>
+                <Container className="my-3">
+                  <Route path="/" exact component={Main} />
+                  <Route path="/about" exact component={About} />
+                  
+                  <Route path="/forum" exact component={Forum} />
+                  <Route path="/register" exact component={SignUpLayout} />
+                  <Route path="/login" exact component={SignInLayout} />
+                  <Route path="/addJob" exact component={AddJobPage} />
+                  <Route path="/profile/:id" exact component={Profile} />
+                  <Route path="/editProfile/:id" exact component={EditProfile} />
+                  <Route path="/profile/employertable/:id" exact component={EmployerTable} />
+                  <Route path="/profile/messages" exact component={Messages} />
+                  <Route path="/resume" exact component={Resume} />
+                  <Route path="/admin" component={AdminRouter} />
+                  <Route path="/jobrequests" exact component={Request}/>
+                  <PreviewProvider>
+                    <Route path="/employee" exact component={Job} />
+                    <Route path="/previewall" exact component={AllPagePreview} />
+                  </PreviewProvider>                  
+                </Container>
+              </>
+            </Switch>
+          </Router>
+        </div>
+      </Provider>
+    </AlertProvider>
   );
 }
 

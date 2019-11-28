@@ -76,7 +76,7 @@ router.post('/uploadProfileImage', function (req, res) {
 
 });
 
-// @route   GET api/user
+// @route   GET api/profile
 // @desc    Display user profile
 // @access  Private
 router.get('/displayprofile', (req, res) => {
@@ -92,7 +92,7 @@ router.get('/displayprofile', (req, res) => {
     })
 })
 
-// @route   GET api/user
+// @route   GET api/profile
 // @desc    Display some searched unique profile
 // @access  Private
 router.get('/displayprofile/:id', (req, res) => {
@@ -115,7 +115,7 @@ router.get('/displayprofile/:id', (req, res) => {
 
 })
 
-// @route   RESET api/user
+// @route   RESET api/profile
 // @desc    Reset a profile
 // @access  Private
 router.delete('/resetprofile/:profileid', (req, res) => {
@@ -134,7 +134,7 @@ router.delete('/resetprofile/:profileid', (req, res) => {
 
 })
 
-// @route   UPDATE api/user
+// @route   UPDATE api/profile
 // @desc    update a user profile
 // @access  Private
 router.put('/updateprofile/:profileid', (req, res) => {
@@ -170,6 +170,107 @@ router.put('/updateprofile/:profileid', (req, res) => {
         }
     })
 
+})
+
+// @route   POST api/profile
+// @desc    Add Education
+// @access  Private
+router.post('/addEducation/:id', (req, res) => {
+    
+    const { Degree, School, StartYear, EndYear } = req.body    
+    const EducationID = uuid();
+    const sql = `INSERT INTO Education(EducationID, ResumeID, Degree, School, StartYear, EndYear) VALUES (?)`;
+    
+    conn.query(sql, [[EducationID, req.params.id, Degree, School, StartYear, EndYear]], (err, results) => {
+        if(err)
+            res.status(400).json('add fail')
+        else
+        {
+            const CHECK_IF_USER_EXIST = `SELECT EmployeeID FROM Resume WHERE EmployeeID = ?`;
+            conn.query(CHECK_IF_USER_EXIST, [req.params.id], (err, results) => {
+                if(results.length > 0)
+                {
+                    const ADD_RESUME_BY_ID = `INSERT INTO Resume(EducationID, EmployeeID) VALUES(?) WHERE EmployeeID = ?`;
+                    conn.query(ADD_RESUME_BY_ID, [[EducationID, req.params.id],[req.params.id]], (err, results) => {
+                        if(err) res.status(400).json({msg:'Add fail'});
+                        else res.status(200).json(Degree, School, StartYear, EndYear);
+                    })
+                }
+                else
+                {
+                    const ADD_RESUME = `INSERT INTO Resume(EducationID, EmployeeID) VALUES (?)`;
+                    conn.query(ADD_RESUME, [[EducationID, req.params.id]], (err,results) => {
+                        if(err) throw err;
+                        res.status(200).json('Insert successfully.')
+                    })
+                }
+            })
+        }
+    })
+})
+
+// @route   GET api/profile
+// @desc    Add Education
+// @access  Private
+router.get('/getEducation/:id', (req, res) => {
+    const id = req.params.id;        
+    const sql = `SELECT EducationID, Degree, School, StartYear, EndYear FROM Education WHERE ResumeID = ?`;
+
+    conn.query(sql, [id], (err, results) => {
+        (err) ? res.status(400).json('Error') : res.status(200).json(results);
+    })
+})
+
+// @route   DELETE api/profile
+// @desc    Delete Education
+// @access  Private
+router.delete('/deleteEducation/:id', (req, res) => {
+    const id = req.params.id;        
+    const sql = `DELETE FROM Education WHERE EducationID = ?`;    
+    conn.query(sql, [id], (err, results) => {        
+        (err) ? res.status(400).json({msg:'Delete failed'}) : res.status(200).json(id);
+    })
+})
+
+// @route   POST api/profile
+// @desc    Add Experience
+// @access  Private
+router.post('/addExperience/:id', (req, res) => {
+    
+    const { JobTitle, Company, StartYear, EndYear } = req.body    
+    const WorkExperienceID = uuid();
+    console.log(req.body)
+    const sql = `INSERT INTO workexperience(WorkExperienceID, ResumeID, JobTitle, Company, StartYear, EndYear) VALUES (?)`;
+    
+    conn.query(sql, [[WorkExperienceID, req.params.id, JobTitle, Company, StartYear, EndYear]], (err, results) => {
+        console.log(err)
+        if(err)
+            res.status(400).json('add fail')
+        else res.status(200).json(JobTitle, Company, StartYear, EndYear)
+    })
+})
+
+// @route   GET api/profile
+// @desc    Add Education
+// @access  Private
+router.get('/getExperience/:id', (req, res) => {
+    const id = req.params.id;        
+    const sql = `SELECT WorkExperienceID, JobTitle, Company, StartYear, EndYear FROM workexperience WHERE ResumeID = ?`;
+
+    conn.query(sql, [id], (err, results) => {
+        (err) ? res.status(400).json('Error') : res.status(200).json(results);
+    })
+})
+
+// @route   DELETE api/profile
+// @desc    Delete Education
+// @access  Private
+router.delete('/deleteExperience/:id', (req, res) => {
+    const id = req.params.id;        
+    const sql = `DELETE FROM workexperience WHERE WorkExperienceID = ?`;    
+    conn.query(sql, [id], (err, results) => {        
+        (err) ? res.status(400).json({msg:'Delete failed'}) : res.status(200).json(id);
+    })
 })
 
 module.exports = router;
