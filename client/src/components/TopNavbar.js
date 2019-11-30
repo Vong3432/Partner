@@ -68,7 +68,7 @@ const TopNavbar = (props) => {
                                 </DropdownItem>                                
                                 <DropdownItem>
                                     {user && user.category === "employee" && (
-                                        <NavLink className="px-0 text-black-50" style={{ color: "var(--dark-color)", opacity: "1" }} to={`/jobrequests`} tag={RRNavLink} >Job Alerts</NavLink>
+                                        <NavLink className="px-0 text-black-50" style={{ color: "var(--dark-color)", opacity: "1" }} to={`/jobrequests`} tag={RRNavLink} >My Job Requests</NavLink>
                                     )}
                                 </DropdownItem>
                                 <DropdownItem divider />

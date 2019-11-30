@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GET_JOBS, GET_SELF_JOBS, GET_JOB_CATEGORY, GET_APPLYJOB_REQUEST,APPLY_JOB,ADD_JOB, DELETE_JOB, UPDATE_JOB, JOBS_LOADING, GET_APPLYJOBS } from './types'
+import { GET_JOBS, GET_SELF_JOBS, GET_JOB_CATEGORY, GET_APPLYJOB_REQUEST,APPLY_JOB,ADD_JOB, DELETE_JOB, UPDATE_JOB, JOBS_LOADING, GET_APPLYJOBS, DISPLAY_CURRENT_JOB } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
@@ -33,6 +33,17 @@ export const getSelfJobs = (id) => dispatch => {
         .then( res => 
             dispatch({
                 type: GET_SELF_JOBS,
+                payload: res.data
+            }))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+}
+
+export const displayCurrentJobDetail = (id) => (dispatch, getState) => {    
+    axios
+        .get(`/api/job/displayCurrentJob/${id}`)
+        .then( res => 
+            dispatch({
+                type: DISPLAY_CURRENT_JOB,
                 payload: res.data
             }))
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))

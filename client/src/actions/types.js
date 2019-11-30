@@ -1,5 +1,6 @@
 // Jobs
 export const GET_JOBS = 'GET_JOBS';
+export const DISPLAY_CURRENT_JOB = 'DISPLAY_CURRENT_JOB';
 export const GET_SELF_JOBS = 'GET_SELF_JOBS';
 export const GET_JOB_CATEGORY = 'GET_JOB_CATEGORY';
 export const ADD_JOB = 'ADD_JOB';
@@ -25,6 +26,7 @@ export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const GET_JOB_REQUESTS = 'GET_JOB_REQUESTS';
+export const CANCEL_JOB_REQUEST = 'CANCEL_JOB_REQUEST';
 
 // Profile
 export const SHOW_PROFILE ='SHOW_PROFILE';
@@ -49,6 +51,8 @@ export const EDIT_POST = 'EDIT_POST';
 export const DELETE_POST = 'DELETE_POST';
 export const POST_LOADING = 'POST_LOADING';
 export const POST_LOADED = 'POST_LOADED';
+export const LIKE_POST = 'LIKE_POST';
+export const GET_TOTAL_LIKES = 'GET_TOTAL_LIKES';
 
 // Admin
 export const GET_ALL_USERS = 'GET_ALL_USERS';

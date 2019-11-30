@@ -105,7 +105,7 @@ router.get('/getCategory', (req, res) => {
     }) 
 })
 
-// @route   GET api/postjob
+// @route   GET api/job
 // @desc    Display some searched postjobs
 // @access  Public
 router.get('/displayjobs/:id', (req, res) => {
@@ -130,6 +130,33 @@ router.get('/displayjobs/:id', (req, res) => {
         
         // for each result, display the title of it (debug purpose)
         // results.map(result => console.log(result.title)) 
+        
+        // if err, send err 
+        // else send results to front-end
+        // console.log(results)
+        err ? res.send(err) : res.json(results)        
+    }) 
+})
+
+// @route   GET api/job
+// @desc    Display current postjobs
+// @access  Public
+router.get('/displayCurrentJob/:id', (req, res) => {
+    
+    // get input from url parameter
+    const id = req.params.id
+    
+    const sql = `SELECT j.*, p.ProfilePic
+                FROM Job j 
+                LEFT JOIN Profile p ON j.EmployerID = p.ProfileID                 
+                WHERE j.JobID = (?)`;
+
+    // run sql
+    conn.query(sql, [[id]] ,(err, results) => {   
+        
+        console.log(id)
+        // for each result, display the title of it (debug purpose)
+        results.map(result => console.log(result)) 
         
         // if err, send err 
         // else send results to front-end

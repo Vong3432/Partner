@@ -7,7 +7,8 @@ import {
     LOGOUT_SUCCESS,
     REGISTER_SUCCESS,
     REGISTER_FAIL,    
-    GET_JOB_REQUESTS
+    GET_JOB_REQUESTS,
+    CANCEL_JOB_REQUEST
 } from '../actions/types'
 
 const initialState = {
@@ -33,6 +34,11 @@ export default function(state = initialState, action)
                 ...state,
                 jobRequests: action.payload
             }
+        case CANCEL_JOB_REQUEST:
+            return{
+                ...state,
+                jobRequests: state.jobRequests.filter(req => req.RequestID !== action.payload)
+            }            
         case USER_LOADED:
             return {
                 ...state,
@@ -62,6 +68,7 @@ export default function(state = initialState, action)
                 ...state,
                 token: null,
                 user: null,
+                jobRequests: null,
                 isAuthenticated: false,
                 isLoading: false
             }

@@ -1,11 +1,13 @@
 import axios from 'axios'
-import { GET_POSTS, ADD_POST, DELETE_POST, EDIT_POST, POST_LOADING, GET_ALL_POSTS } from './types'
+import { GET_POSTS, ADD_POST, DELETE_POST, EDIT_POST, POST_LOADING, GET_ALL_POSTS, LIKE_POST, GET_TOTAL_LIKES } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
+import InfiniteScroll from 'react-infinite-scroll-component';
 
-export const getAllPosts = id => dispatch => {
+
+export const getAllPosts = (length = 3) => dispatch => {
     axios
-        .get('/api/post/displayposting')
+        .get(`/api/post/displayallposting/${length}`)
         .then(res => dispatch({
             type: GET_ALL_POSTS,
             payload: res.data
@@ -25,8 +27,19 @@ export const getPosts = id => dispatch => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 
+export const likePost = (index, like) => (dispatch, getState) => {
+        
+}
+
+export const getPostLikes = (postingID) => (dispatch, getState) => {
+    axios.
+        get(`/api/post/getLikes/${postingID}`)
+        .then(res => res.data[0].TotalLikes)
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status,"GET_TOTAL_LIKES_FAIL")))
+}
+
 export const addPost = item => (dispatch, getState) => {
-    console.log(item+"asdasdasd")
+    
     axios
         .post('/api/post', item, tokenConfig(getState))
         .then(res => 

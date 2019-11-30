@@ -12,7 +12,8 @@ import {
     ADMIN_LOGOUT_SUCCESS,
     REGISTER_SUCCESS,
     REGISTER_FAIL,
-    GET_JOB_REQUESTS
+    GET_JOB_REQUESTS,
+    CANCEL_JOB_REQUEST
 } from '../actions/types'
 
 // Register User
@@ -81,6 +82,16 @@ export const getJobRequests = id => (dispatch, getState) => {
             payload: res.data
         }))
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "GET_JOB_REQUESTS_FAIL")))
+}
+
+export const cancelJobRequests = id => (dispatch, getState) => {
+    axios
+        .delete(`/api/user/canceljobrequest/${id}`)
+        .then(res => dispatch({
+            type: CANCEL_JOB_REQUEST,
+            payload: res.data
+        }))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "CANCEL_JOB_REQUESTS_FAIL")))
 }
 
 // logout user

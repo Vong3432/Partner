@@ -82,7 +82,7 @@ const Preview = (props) => {
                 !isLoading ?
                 <>
                     <h3 className="mb-2" style={{textTransform:"capitalize"}}>{selectedJob.Title}</h3>
-                    <Link to="/previewall">View in all page</Link>
+                    <Link to={`/job/previewall/${selectedJob.JobID}`}>View in all page</Link>
                     <div className="media my-4 align-items-start">                        
                         <div className="media-body">
                             <p className="mt-0 card-companyName mb-1">{selectedJob.CompanyName}</p>

@@ -1,8 +1,8 @@
-import { GET_POSTS, ADD_POST, DELETE_POST, EDIT_POST, POST_LOADING, GET_ALL_POSTS } from '../actions/types'
+import { GET_POSTS, ADD_POST, DELETE_POST, EDIT_POST, POST_LOADING, GET_ALL_POSTS, GET_TOTAL_LIKES } from '../actions/types'
 
 const initialState = {
     posts: null,
-    allposts: null,
+    allposts:null,
     loading: false
 }
 
@@ -14,6 +14,7 @@ export default function (state = initialState, action) {
                 posts: action.payload,
                 loading: false
             }
+                
         case GET_ALL_POSTS:
             return{
                 ...state,

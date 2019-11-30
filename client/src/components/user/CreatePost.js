@@ -6,9 +6,11 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import io from 'socket.io-client'
 import { resolve } from 'url'
+import { useAlert } from 'react-alert'
 let socket
 
 const CreatePost = (props) => {
+    const alert = useAlert()
 
     const [content, setContent] = useState("")
     const [msg, setMsg] = useState("")
@@ -75,11 +77,11 @@ const CreatePost = (props) => {
             dispatch(addPost(newPost))
             if(error.id === "POST_FAIL")
             {
-                alert('Something went wrong, please try again.')                
+                alert.error('Something went wrong, please try again.')                
             }
             else
             {
-                alert('Post successfully.')                
+                alert.success('Post successfully.')                
             }            
             setContent("")                        
             // props.getPosts(props.routeProps.match.params.id)    
@@ -90,7 +92,7 @@ const CreatePost = (props) => {
             // props.routeProps.history.push(`/profile/${props.routeProps.user.id}`)
         }
         else
-            alert('Please enter text...')
+            alert.error('Please enter text...')
     }
 
     useEffect(() => {        

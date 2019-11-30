@@ -1,7 +1,8 @@
-import { GET_JOBS, ADD_JOB, GET_SELF_JOBS , GET_APPLYJOBS, DELETE_JOB, UPDATE_JOB, JOBS_LOADING, GET_JOB_CATEGORY, APPLY_JOB, GET_APPLYJOB_REQUEST } from '../actions/types'
+import { GET_JOBS, ADD_JOB, GET_SELF_JOBS , GET_APPLYJOBS, DELETE_JOB, UPDATE_JOB, JOBS_LOADING, GET_JOB_CATEGORY, APPLY_JOB, GET_APPLYJOB_REQUEST, DISPLAY_CURRENT_JOB } from '../actions/types'
 
 const initialState = {
     jobs: [],
+    currentJob:null,
     selfJobs:[],
     category: [],
     applyJobList: [],
@@ -17,6 +18,11 @@ export default function (state = initialState, action) {
                 ...state,
                 jobs: action.payload,
                 loading: false
+            }
+        case DISPLAY_CURRENT_JOB:
+            return{
+                ...state,
+                currentJob: action.payload
             }
         case GET_SELF_JOBS:
             return{

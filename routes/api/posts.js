@@ -80,14 +80,24 @@ router.post('/', (req, res) => {
 
 });
 
-// @route   GET api/posting
+// @route   GET api/post
 // @desc    Display all posting
 // @access  Public
-router.get('/displayposting', (req, res) => {
+router.get('/displayallposting/:limiter', (req, res) => {
+
+    const limiter = req.params.limiter;    
 
     // define sql query
-    const sql = `SELECT * FROM Posting LEFT JOIN Profile ON Posting.ProfileID = Profile.ProfileID ORDER BY UploadTime DESC`;
-
+    let sql;
+    
+    // if(limiter != 3)
+    //     sql = `SELECT * FROM Posting LEFT OUTER JOIN Profile ON Posting.ProfileID = Profile.ProfileID ORDER BY UploadTime DESC LIMIT ${limiter} OFFSET ${limiter}`;
+    // else
+    sql = `
+          SELECT * FROM Posting 
+          LEFT OUTER JOIN Profile ON Posting.ProfileID = Profile.ProfileID           
+          ORDER BY UploadTime DESC LIMIT ${limiter};`                    
+    
     // run sql
     conn.query(sql, (err, results) => {
 
@@ -100,7 +110,7 @@ router.get('/displayposting', (req, res) => {
     })
 });
 
-// @route   GET api/posting
+// @route   GET api/post
 // @desc    Display some searched posting
 // @access  Public
 router.get('/displayposting/:id', (req, res) => {
@@ -122,6 +132,22 @@ router.get('/displayposting/:id', (req, res) => {
         // else send results to front-end
         err ? res.send(err) : res.send(results)
     })
+});
+
+// @route   Post api/post
+// @desc    Like a post
+// @access  Private
+router.post('/likePost/:postingID/:accountID', (req, res) => {
+    
+    
+});
+
+// @route   GET api/post
+// @desc    Get total likes of a post
+// @access  Public
+router.get('/getLikes/:postingID', (req, res) => {
+    
+    
 });
 
 // @route   UPDATE api/posting
@@ -151,9 +177,7 @@ router.put('/editpost/:postingid', (req, res) => {
 router.delete('/deleteposting/:postingid', (req, res) => {
 
     // get id from url parameter
-    const id = req.params.postingid
-
-    console.log('deleting...')
+    const id = req.params.postingid    
 
     // define sql query
     const sql = `DELETE FROM Posting WHERE PostingID = (?)`;

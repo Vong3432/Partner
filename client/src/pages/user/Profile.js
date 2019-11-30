@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'reactstrap';
 
 import Article from '../../components/user/Article'
-import { showProfile } from '../../actions/profileActions'
+import { showProfile, getExperienceInfo, getEducationInfo } from '../../actions/profileActions'
 import { getPosts } from '../../actions/postActions'
 import CreatePost from '../../components/user/CreatePost'
 
@@ -13,7 +13,7 @@ import { getSelfJobs } from '../../actions/jobActions';
 // import io from 'socket.io-client'
 // let socket
 
-const Profile = (props) => {    
+const Profile = (props) => {
 
     const dispatch = useDispatch()
 
@@ -27,46 +27,55 @@ const Profile = (props) => {
     const auth = useSelector(state => state.auth)
     const profile = useSelector(state => state.profile.user)
     const posts = useSelector(state => state.post.posts)
+    const educationInfo = useSelector(state => state.profile.educationInfo)
+    const experienceInfo = useSelector(state => state.profile.experienceInfo)
     const user = useSelector(state => state.auth.user)
     const job = useSelector(state => state.job)
-    
+
+    // css
+    const part = {
+        backgroundColor: "var(--white-color)",
+        borderRadius: 0
+    }
+
     const [src, setSrc] = useState(null)
 
     // useEffect 
-    useEffect(() => {        
+    useEffect(() => {
         console.log(props)
-        if(isLoading === true)        
-        {
+        if (isLoading === true) {
             dispatch(getPosts(props.match.params.id));
-            dispatch(showProfile(props.match.params.id));  
+            dispatch(showProfile(props.match.params.id));
             dispatch(getSelfJobs(props.match.params.id));
+            dispatch(getExperienceInfo(props.match.params.id))
+            dispatch(getEducationInfo(props.match.params.id))
             job.selfJobs.forEach(element => {
-                if(element.Status === "1") setCountOpened(countOpened => countOpened + 1)
-                if(element.Status === "0") setCountPaused(countPaused => countPaused + 1)
-                if(element.Status === "-1") setCountClosed(countClosed => countClosed + 1)
-            });            
+                if (element.Status === "1") setCountOpened(countOpened => countOpened + 1)
+                if (element.Status === "0") setCountPaused(countPaused => countPaused + 1)
+                if (element.Status === "-1") setCountClosed(countClosed => countClosed + 1)
+            });
             // setSrc(profile.ProfilePic)
-            setIsLoading(false)                                
-        }            
-                
-        return(()=>{setIsLoading(true);console.log('profile exit'); setSrc(null);console.log(src+"nu")})
-    }, [])        
+            setIsLoading(false)
+        }
+
+        return (() => { setIsLoading(true); console.log('profile exit'); setSrc(null); console.log(src + "nu") })
+    }, [])
 
     useEffect(() => {
-        dispatch(showProfile(props.match.params.id));    
-        dispatch(getPosts(props.match.params.id));    
-        dispatch(getSelfJobs(props.match.params.id))    
+        dispatch(showProfile(props.match.params.id));
+        dispatch(getPosts(props.match.params.id));
+        dispatch(getSelfJobs(props.match.params.id))
     }, [props.location.pathname])
 
-    useEffect(() => {        
+    useEffect(() => {
         setIsLoading(true)
-        profile && profile.AccountType === "employer" ? setIsEmployer(true) : setIsEmployer(false);                     
-        user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false) ;                                                       
+        profile && profile.AccountType === "employer" ? setIsEmployer(true) : setIsEmployer(false);
+        user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false);
         dispatch(getSelfJobs(props.match.params.id));
-        setSrc(profile.ProfilePic)  
-        setIsLoading(false)      
+        setSrc(profile.ProfilePic)
+        setIsLoading(false)
         // dispatch(getPosts(props.match.params.id));
-    },[profile])
+    }, [profile])
 
     // useEffect(() => {
     //     if(isOwner === true && isEmployer === true)
@@ -75,10 +84,10 @@ const Profile = (props) => {
     //             dispatch(getSelfJobs(props.match.params.id))
     //             res(job)
 
-                
-                
 
-                
+
+
+
     //             // ************** SQL For counting candidate, status for job.js ******************************
 
 
@@ -99,7 +108,7 @@ const Profile = (props) => {
     //     else    
     //         console.log('hoho')
     // }, [isEmployer, isOwner])
-            
+
     return (
         <>
 
@@ -108,7 +117,7 @@ const Profile = (props) => {
 
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
-                        <img src={ src ? '/uploads/profile/' + src :null} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
+                        <img src={src ? '/uploads/profile/' + src : null} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
                         <h2 className="profile-username mt-2">{profile.Name}</h2>
                     </div>
 
@@ -126,7 +135,7 @@ const Profile = (props) => {
 
                     {/* user avatar and name */}
                     <div className="text-center mt-auto">
-                        <img src={profile.ProfilePic ? '/uploads/profile/' + src :null} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
+                        <img src={profile.ProfilePic ? '/uploads/profile/' + src : null} id="avatar" style={{ backgroundColor: "grey", borderRadius: "200px", height: "200px", width: "200px" }} />
                         <h2 className="profile-username mt-2">{profile.Name}</h2>
                     </div>
 
@@ -152,7 +161,36 @@ const Profile = (props) => {
                         </p>
 
                         {!isEmployer && (
-                            <h5 className="mt-5 header">CV/Resume</h5>
+                            <>
+                                {/* <h5 className="mt-5 header">CV/Resume</h5> */}
+
+                                <div className="d-flex flex-row row-wrap align-content-center mt-4">
+                                    <h5 className="header" style={{ textTransform: "uppercase" }}>Working Experience</h5>                                    
+                                </div>
+
+                                {experienceInfo ? experienceInfo.map((info, index) => (
+                                    <div key={index} className="d-flex flex-column mt-1">
+                                        <div className="d-flex flex">
+                                            <h6 style={{color:"var(--primary-color)", opacity:".75"}} className="small-header">{info.JobTitle + " (" + info.Company + ")"}</h6>                                            
+                                        </div>
+                                        <small>{info.StartYear}-{info.EndYear}</small>
+                                    </div>
+                                )) : null}
+
+                                {/* Education title bar */}
+                                <div className="d-flex flex-row row-wrap align-content-center mt-4">
+                                    <h5 className="header" style={{ textTransform: "uppercase" }}>Education</h5>
+                                </div>
+
+                                {educationInfo ? educationInfo.map((info, index) => (
+                                    <div key={index} className="d-flex flex-column mt-1">
+                                        <div className="d-flex flex">
+                                            <h6 style={{color:"var(--primary-color)", opacity:".75"}} className="small-header">{info.Degree + " (" + info.School + ")"} </h6>
+                                        </div>
+                                        <small>{info.StartYear}-{info.EndYear}</small>
+                                    </div>
+                                )) : null}
+                            </>
                         )}
 
                     </div>
@@ -269,7 +307,7 @@ const Profile = (props) => {
                             <Article key={index} image={item.Picture ? item.Picture : null} text={item.Description} author={props.profile.name} />
                         ))} */}
                         {posts ? posts.map((item, index) => (
-                            <Article key={index} PostingID={item.PostingID} ProfileID = {props.match.params.id} avatar={profile.ProfilePic ? profile.ProfilePic : null} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
+                            <Article key={index} PostingID={item.PostingID} ProfileID={props.match.params.id} avatar={profile.ProfilePic ? profile.ProfilePic : null} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
                         )) : null}
 
                     </div>

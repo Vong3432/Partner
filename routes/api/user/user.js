@@ -168,11 +168,20 @@ router.get('/user', auth, (req, res) => {
 
 router.get('/jobrequests/:id', (req, res) => {
     const id = req.params.id;
-    const sql = `SELECT j.Title, j.JobID, j.CompanyName, cl.CandidateStatus, cl.JobID FROM Job j
+    const sql = `SELECT j.Title, j.JobID, j.CompanyName, cl.CandidateStatus, cl.JobID, cl.RequestID FROM Job j
                  LEFT JOIN candidatelist cl ON j.JobID = cl.JobID
                  WHERE cl.UserID = (?)`;    
     conn.query(sql, [[id]], (err, results) => {        
         (err) ? res.status(400).json('error') : res.status(200).json(results)
+    })
+})
+
+router.delete('/canceljobrequest/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = `DELETE FROM candidatelist WHERE RequestID = ?;
+                 DELETE FROM candidaterequest WHERE RequestID = ?`;    
+    conn.query(sql, [id, id], (err, results) => {        
+        (err) ? res.status(400).json('error') : res.status(200).json(id)
     })
 })
 

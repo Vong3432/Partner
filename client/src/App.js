@@ -102,7 +102,7 @@ function App() {
                   <Route path="/jobrequests" exact component={Request}/>
                   <PreviewProvider>
                     <Route path="/employee" exact component={Job} />
-                    <Route path="/previewall" exact component={AllPagePreview} />
+                    <Route path="/job/previewall/:jobid" exact component={AllPagePreview} />
                   </PreviewProvider>                  
                 </Container>
               </>

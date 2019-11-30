@@ -481,7 +481,8 @@ h1,h2,h3,h4,h5,h6{
   min-width: 100px !important;
   width: auto;
   cursor: pointer;
-  height: 30px;
+  height: 2.5em;
+  
   margin: 0 .5em;
   padding: .5em 1em !important;
 
@@ -658,6 +659,12 @@ input[type="text"], input[type="email"], input[type="password"], select
   flex-flow: column;
 }
 
+.forum-div
+{
+  max-width: 60%;
+  width: 100%;
+}
+
 .editprofile-header
 {
   font-size: 15px !important;
@@ -728,6 +735,25 @@ input[type="text"], input[type="email"], input[type="password"], select
   /* max-width: 600px; */
   width: 100%;  
   margin-right: auto;
+}
+
+.post-footer
+{
+  background: var(--white-color) !important;
+  border-top: .5px solid rgba(0, 0, 0, .125);
+  padding-top: 1em;
+}
+
+.post-footer-icon
+{
+  padding: 1em 1.5em;
+}
+
+.post-footer-icon:hover
+{
+  cursor: pointer;
+  background: rgb(240, 240, 240);
+  /* padding: 2em; */
 }
 
 .tag
@@ -1229,5 +1255,10 @@ input[type="text"], input[type="email"], input[type="password"], select
     display: grid;
     grid-template-areas: "title"
                         "c";    
+  }
+
+  .forum-div
+  {
+    max-width: 100%;
   }
 }
