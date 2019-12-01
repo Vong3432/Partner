@@ -71,6 +71,7 @@ const EmployerTable = (props) => {
                 dispatch(getSelfJobs(props.match.params.id))
                 dispatch(getApplyJobRequest(props.match.params.id))
                 // console.log(user, job.selfJobs)
+                console.log(job.applyRequestList)
                 // console.log(job)
                 setSrc(profile.ProfilePic)
                 setIsLoading(false)
@@ -267,14 +268,14 @@ const EmployerTable = (props) => {
                         <div className="nav employer-navbar mt-auto mb-5" style={{ minHeight: "initial" }}>
                             <NavLink exact={true} to={{ pathname: `/profile/${props.match.params.id}`, state: { user: props.user, profile: props.profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
                             <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state: { user: props.user, profile: props.profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
-                            <NavLink exact={true} to="/messages" tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>
+                            {/* <NavLink exact={true} to="/messages" tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink> */}
                             <NavLink exact={true} to={{ pathname: '/addJob' }} tag={RRNavLink} activeClassName="employer-navlink-active" className="ml-auto primary-bg-button">Post Job</NavLink>
                         </div>
 
                     </section>
 
                     <div className="table-responsive">
-                        <table className="table" style={{ marginTop: "90vh", marginBottom: "20vh" }}>
+                        <table className="table table-hover" style={{ marginTop: "90vh", marginBottom: "20vh" }}>
                             <thead>
                                 <tr>
                                     <th scope="col"></th>
@@ -290,9 +291,9 @@ const EmployerTable = (props) => {
                             </thead>
                             <tbody>
                                 {job.selfJobs ? job.selfJobs.map((item, index) => (
-                                    <tr>
+                                    <tr key={index} >
                                         <th scope="row"><button onClick={(e) => { onDelete(e, item.JobID); dispatch(getSelfJobs(props.match.params.id)) }} className="danger-bg-button" style={{ width: "initial", fontSize: ".7rem" }}>X</button></th>
-                                        <td>{item.Title}</td>
+                                        <td style={{cursor:"pointer", textDecoration:"underline", color:"var(--primary-color)"}} onClick={e => window.location.href=`/job/previewall/${item.JobID}`}>{item.Title}</td>
                                         <td>RM{item.Salary}</td>
                                         <td>{item.Location}</td>
                                         <td>{item.TotalCandidates} Candidate</td>

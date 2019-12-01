@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { SHOW_PROFILE, EDIT_PROFILE, DEACTIVE_PROFILE, PROFILE_LOADED, PROFILE_LOADING, ADD_EDUCATION, GET_EDUCATION, DELETE_EDUCATION, ADD_EXPERIENCE, GET_EXPERIENCE, DELETE_EXPERIENCE } from './types'
+import { SHOW_PROFILE, EDIT_PROFILE, DEACTIVE_PROFILE, PROFILE_LOADED, PROFILE_LOADING, ADD_EDUCATION, GET_EDUCATION, DELETE_EDUCATION, ADD_EXPERIENCE, GET_EXPERIENCE, DELETE_EXPERIENCE, SHOW_RESUMES, DELETE_RESUME } from './types'
 import { tokenConfig } from './authActions'
 import { returnErrors } from './errorActions'
 
@@ -58,6 +58,28 @@ export const deactiveProfile = id => (dispatch, getState) => {
             })
         })
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+}
+
+export const getResumes = id => (dispatch, getState) => {
+    axios
+        .get(`/api/profile/getResumes/${id}`)
+        .then(res => {
+            dispatch({
+                type: SHOW_RESUMES,
+                payload: res.data
+            })
+        })
+}
+
+export const deleteResume = id => (dispatch, getState) => {
+    axios
+        .delete(`/api/profile/deleteResume/${id}`)
+        .then(res => {
+            dispatch({
+                type: DELETE_RESUME,
+                payload: res.data
+            })
+        })        
 }
 
 export const addEducationInfo = (data, id) => (dispatch, getState) => {

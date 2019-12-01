@@ -17,6 +17,57 @@ const conn = mysql.createConnection({
 
 let CURRENT_PROFILE_OWNER_ID='';
 
+router.post('/uploadPDF', function(req, res){
+    
+    var storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            // cb(null, 'client/public/uploads/posts')
+            var dest = `client/public/uploads/profile/resume/`;
+            // mkdir.sync(dest)
+            cb(null, dest)
+        },
+        filename: function (req, file, cb) {
+            // console.log(req)
+            const ResumeID = uuid()
+            
+            const sql = `SELECT Name FROM Resume WHERE Name = ?`;
+
+            conn.query(sql, [CURRENT_PROFILE_OWNER_ID + "-" + file.originalname], (err, results) => {
+                if(results.length > 0)
+                {
+                    // const sql = `DELETE FROM Resume WHERE Name = ?`;
+                    // conn.query(sql, [CURRENT_PROFILE_OWNER_ID + "-" + file.originalname], (err, results) => {
+                    //     if(err) throw err;
+                    // })
+                }
+                else
+                {
+                    const sql = `INSERT INTO Resume(ResumeID, Name, ProfileID) VALUES (?)`;
+                    conn.query(sql, [[ResumeID, file.originalname, CURRENT_PROFILE_OWNER_ID]], (err, results) => {
+                        if(err) throw err;
+                    })
+                }
+            })            
+
+            cb(null, CURRENT_PROFILE_OWNER_ID + "-" + file.originalname)
+        }
+    })
+    
+    var upload = multer({ storage: storage }).array('file')    
+    
+    console.log(req.files)
+
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+                
+        return res.status(200).send(req.file)    
+
+    })
+})
 
 router.post('/upload', function (req, res) {
 
@@ -41,6 +92,7 @@ router.post('/upload', function (req, res) {
         } else if (err) {
             return res.status(500).json(err)
         }
+        
         return res.status(200).send(req.file)    
 
     })
@@ -115,6 +167,30 @@ router.get('/displayprofile/:id', (req, res) => {
 
 })
 
+router.get('/getResumes/:profileid', (req, res) => {
+    // get id from url parameter
+    const id = req.params.profileid
+
+    // define sql query
+    const sql = `SELECT Name, ResumeID FROM Resume WHERE ProfileID = ?`
+
+    conn.query(sql, [id], (err, results) => {
+        err ? res.send(err) : res.json(results)
+    })
+})
+
+router.delete('/deleteResume/:resumeID', (req, res) => {
+    // get id from url parameter
+    const id = req.params.resumeID
+
+    // define sql query
+    const sql = `DELETE FROM Resume WHERE ResumeID = ?`
+
+    conn.query(sql, [id], (err, results) => {
+        err ? res.send(err) : res.json(id)
+    })
+})
+
 // @route   RESET api/profile
 // @desc    Reset a profile
 // @access  Private
@@ -144,8 +220,10 @@ router.put('/updateprofile/:profileid', (req, res) => {
     CURRENT_PROFILE_OWNER_ID = id;
     
     // destrucutre all submitted data from body
-    const { Address, BackgroundPic, ProfilePic, About, Email, Availability, Age, Location, FacebookLink, LinkedLink, WhatsappLink } = req.body;            
+    const { Address, BackgroundPic, PDFs, ProfilePic, About, Email, Availability, Age, Location, FacebookLink, LinkedLink, WhatsappLink } = req.body;            
     
+    console.log(PDFs)
+
     // define sql query
     const sql = `UPDATE Profile SET ProfilePic = ?, Address = ?, About = ?, Email = ?, Availability = ?, Age = ?, Location = ?, FacebookLink =?, LinkedLink = ?, WhatsappLink = ? WHERE ProfileID = ?;
                 UPDATE Account SET Email = ? WHERE ProfileID = ?; `                    
@@ -186,25 +264,7 @@ router.post('/addEducation/:id', (req, res) => {
             res.status(400).json('add fail')
         else
         {
-            const CHECK_IF_USER_EXIST = `SELECT EmployeeID FROM Resume WHERE EmployeeID = ?`;
-            conn.query(CHECK_IF_USER_EXIST, [req.params.id], (err, results) => {
-                if(results.length > 0)
-                {
-                    const ADD_RESUME_BY_ID = `INSERT INTO Resume(EducationID, EmployeeID) VALUES(?) WHERE EmployeeID = ?`;
-                    conn.query(ADD_RESUME_BY_ID, [[EducationID, req.params.id],[req.params.id]], (err, results) => {
-                        if(err) res.status(400).json({msg:'Add fail'});
-                        else res.status(200).json(Degree, School, StartYear, EndYear);
-                    })
-                }
-                else
-                {
-                    const ADD_RESUME = `INSERT INTO Resume(EducationID, EmployeeID) VALUES (?)`;
-                    conn.query(ADD_RESUME, [[EducationID, req.params.id]], (err,results) => {
-                        if(err) throw err;
-                        res.status(200).json('Insert successfully.')
-                    })
-                }
-            })
+            res.status(200).json(Degree, School, StartYear, EndYear);
         }
     })
 })

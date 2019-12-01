@@ -118,7 +118,7 @@ const CreatePost = (props) => {
                         <h5 className="mt-0 header">{props.auth.name}</h5>
                         <form encType="multipart/form-data" style={{ maxWidth: "100%" }} className="d-flex flex-column">
                             <textarea onChange={e => handleChange(e)} placeholder="Enter something ..." name="content" id="newPostField" value={content}></textarea>
-                            <img src={img} style={{ maxWidth: "300px", maxHeight: "300px", width: "100%", height: "100%", objectFit: "cover" }} />
+                            {img ? <img className="my-2" src={img} style={{ maxWidth: "300px", maxHeight: "300px", width: "100%", height: "100%", objectFit: "cover" }} /> : null}
                             <div className="d-flex flex-row flex-wrap mt-3 align-items-center">
                                 <input accept='image/*' style={{ maxWidth: "100px" }} type="file" name="imgPath" onChange={(e) => handleChange(e)} />
                                 <button onClick={e => onSubmit(e)} className="primary-bg-button ml-0 mt-2 ml-md-auto mr-0">Post</button>

@@ -1,10 +1,11 @@
-import { SHOW_PROFILE, EDIT_PROFILE, DEACTIVE_PROFILE, PROFILE_LOADED, PROFILE_LOADING, ADD_EDUCATION, GET_EDUCATION, DELETE_EDUCATION, ADD_EXPERIENCE, GET_EXPERIENCE, DELETE_EXPERIENCE } from '../actions/types'
+import { SHOW_PROFILE, EDIT_PROFILE, DEACTIVE_PROFILE, PROFILE_LOADED, PROFILE_LOADING, ADD_EDUCATION, GET_EDUCATION, DELETE_EDUCATION, ADD_EXPERIENCE, GET_EXPERIENCE, DELETE_EXPERIENCE, SHOW_RESUMES, DELETE_RESUME } from '../actions/types'
 
 const initialState = {
     user: null,
     loading: false,
     educationInfo: null,
-    experienceInfo: null
+    experienceInfo: null,
+    resumes: null
 }
 
 export default function (state = initialState, action) {
@@ -14,6 +15,16 @@ export default function (state = initialState, action) {
                 ...state,
                 user: action.payload,
                 loading: false
+            }
+        case SHOW_RESUMES:
+            return{
+                ...state,
+                resumes: action.payload
+            }
+        case DELETE_RESUME:
+            return{
+                ...state,
+                resumes: state.resumes.filter(resume => resume.ProfileID !== action.payload)
             }
         case DEACTIVE_PROFILE:
             return {

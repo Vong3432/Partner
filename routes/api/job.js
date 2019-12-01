@@ -303,7 +303,12 @@ router.get('/displayapplyjobsrequest/:id', (req, res) => {
     const id = req.params.id
 
     // define sql query
-    const sql = `SELECT * FROM job j JOIN candidaterequest cr ON j.CandidateListID = cr.CandidateListID WHERE j.EmployerID = ?`
+    const sql = `SELECT j.*, cr.* , p.ProfilePic, p.ProfileID FROM job j 
+                JOIN candidaterequest cr 
+                ON j.CandidateListID = cr.CandidateListID 
+                JOIN profile p
+                ON cr.ApplicantID = p.ProfileID
+                WHERE j.CandidateListID = ?`
 
     conn.query(sql, [[id]],(err, results) => {                        
         err ? res.status(400).json('No results') : res.status(200).json(results)

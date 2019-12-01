@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'reactstrap';
 
 import Article from '../../components/user/Article'
-import { showProfile, getExperienceInfo, getEducationInfo } from '../../actions/profileActions'
+import { showProfile, getExperienceInfo, getEducationInfo, getResumes } from '../../actions/profileActions'
 import { getPosts } from '../../actions/postActions'
 import CreatePost from '../../components/user/CreatePost'
 
 import PropTypes from 'prop-types'
 import { getSelfJobs } from '../../actions/jobActions';
+// import { Document, Page } from 'react-pdf';
 // import io from 'socket.io-client'
 // let socket
 
@@ -17,16 +18,21 @@ const Profile = (props) => {
 
     const dispatch = useDispatch()
 
+    // resume
+    // const [pageNumber, setPageNumber] = useState(1)
+    // const [numPages, setNumPages] = useState(null)
+
     const [isLoading, setIsLoading] = useState(true)
     const [isOwner, setIsOwner] = useState(false)
     const [isEmployer, setIsEmployer] = useState(false)
     const [countOpened, setCountOpened] = useState(0)
     const [countPaused, setCountPaused] = useState(0)
-    const [countClosed, setCountClosed] = useState(0)
+    const [countClosed, setCountClosed] = useState(0)    
 
     const auth = useSelector(state => state.auth)
     const profile = useSelector(state => state.profile.user)
     const posts = useSelector(state => state.post.posts)
+    const resumes = useSelector(state => state.profile.resumes)
     const educationInfo = useSelector(state => state.profile.educationInfo)
     const experienceInfo = useSelector(state => state.profile.experienceInfo)
     const user = useSelector(state => state.auth.user)
@@ -45,69 +51,84 @@ const Profile = (props) => {
         console.log(props)
         if (isLoading === true) {
             dispatch(getPosts(props.match.params.id));
-            dispatch(showProfile(props.match.params.id));
-            dispatch(getSelfJobs(props.match.params.id));
-            dispatch(getExperienceInfo(props.match.params.id))
-            dispatch(getEducationInfo(props.match.params.id))
+            dispatch(showProfile(props.match.params.id));                                            
+            // setSrc(profile.ProfilePic)
+            profile && profile.AccountType === "employer" ? setIsEmployer(true) : setIsEmployer(false);
+            user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false);     
+            setIsLoading(false)
+        }        
+
+        return (() => { setIsLoading(true); console.log('profile exit'); setSrc(null); console.log(src + "nu") })
+    }, [])
+
+    const loadEmployerData = () => {
+        dispatch(getSelfJobs(props.match.params.id))
+
+    }
+
+    const loadEmployeeData = () => {
+        dispatch(getResumes(props.match.params.id))
+        dispatch(getExperienceInfo(props.match.params.id))
+        dispatch(getEducationInfo(props.match.params.id))
+    }
+
+    useEffect(() => {
+        dispatch(showProfile(props.match.params.id));
+        dispatch(getPosts(props.match.params.id));  
+        
+        
+
+        profile && profile.AccountType === "employer" ? setIsEmployer(true) : setIsEmployer(false);
+        user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false);     
+
+        setCountClosed(0)
+        setCountPaused(0)
+        setCountOpened(0)
+
+        if(isEmployer)
+        {
+            loadEmployerData()
+            setCountClosed(0)
+            setCountPaused(0)
+            setCountOpened(0)
+
             job.selfJobs.forEach(element => {
                 if (element.Status === "1") setCountOpened(countOpened => countOpened + 1)
                 if (element.Status === "0") setCountPaused(countPaused => countPaused + 1)
                 if (element.Status === "-1") setCountClosed(countClosed => countClosed + 1)
             });
-            // setSrc(profile.ProfilePic)
-            setIsLoading(false)
+        }
+        else
+        {
+            loadEmployeeData()
         }
 
-        return (() => { setIsLoading(true); console.log('profile exit'); setSrc(null); console.log(src + "nu") })
-    }, [])
-
-    useEffect(() => {
-        dispatch(showProfile(props.match.params.id));
-        dispatch(getPosts(props.match.params.id));
-        dispatch(getSelfJobs(props.match.params.id))
     }, [props.location.pathname])
 
     useEffect(() => {
-        setIsLoading(true)
-        profile && profile.AccountType === "employer" ? setIsEmployer(true) : setIsEmployer(false);
-        user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false);
+        setIsLoading(true)        
+        
         dispatch(getSelfJobs(props.match.params.id));
+        profile && profile.AccountType === "employer" ? setIsEmployer(true) : setIsEmployer(false);
+        user && user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false);             
+        
+        if(isEmployer)
+        {
+            loadEmployerData()
+        }
+        else
+        {
+            loadEmployeeData()
+        }
+
         setSrc(profile.ProfilePic)
         setIsLoading(false)
         // dispatch(getPosts(props.match.params.id));
     }, [profile])
 
-    // useEffect(() => {
-    //     if(isOwner === true && isEmployer === true)
-    //     {
-    //         const loadJobs = new Promise((res, rej) => {
-    //             dispatch(getSelfJobs(props.match.params.id))
-    //             res(job)
-
-
-
-
-
-    //             // ************** SQL For counting candidate, status for job.js ******************************
-
-
-
-
-
-    //         })
-
-    //         loadJobs.then(res => console.log(res))
-    //         // const loadJobs = dispatch(getSelfJobs(props.match.params.id));
-    //         // console.log(job.selfJobs+"sad")
-    //         // job.selfJobs.foreach(item => {
-    //         //     console.log(item)
-    //         //     if(item.Status === "1")
-    //         //         setCountOpened(countOpened+1);
-    //         // })
-    //     }            
-    //     else    
-    //         console.log('hoho')
-    // }, [isEmployer, isOwner])
+    // const onDocumentLoadSuccess = ({numPages}) => {
+    //     setNumPages(numPages)
+    // }
 
     return (
         <>
@@ -143,7 +164,7 @@ const Profile = (props) => {
                     <div className="nav employer-navbar mt-auto mb-5" style={{ minHeight: "initial", position: "sticky !important", top: "0", zIndex: "99", }}>
                         <NavLink exact={true} to={{ pathname: `/profile/${props.match.params.id}` }} tag={RRNavLink} activeClassName="employer-navlink-active">Dashboard</NavLink>
                         <NavLink exact={true} to={{ pathname: `/profile/employertable/${props.match.params.id}`, state: { user: user, profile: profile } }} tag={RRNavLink} activeClassName="employer-navlink-active">Job</NavLink>
-                        <NavLink exact={true} to={{ pathname: '/profile/messages' }} tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink>
+                        {/* <NavLink exact={true} to={{ pathname: '/profile/messages' }} tag={RRNavLink} activeClassName="employer-navlink-active">Messages</NavLink> */}
                         <NavLink exact={true} to={{ pathname: '/addJob' }} tag={RRNavLink} activeClassName="employer-navlink-active" className="ml-auto primary-bg-button">Post Job</NavLink>
                     </div>
 
@@ -155,23 +176,30 @@ const Profile = (props) => {
 
                     {/* About */}
                     <div className="profile--about-container">
-                        <h5 className="header">About Me</h5>
+                        <h5 className="header">About Me</h5>                                                                      
                         <p className="paragraph">
                             {profile.About}
                         </p>
+                                         
 
                         {!isEmployer && (
                             <>
                                 {/* <h5 className="mt-5 header">CV/Resume</h5> */}
+                                <div className="d-flex flex-column">
+                                    <h5 className="header">Resume</h5>
+                                    {resumes.map((item, index) => (
+                                        <a download href={`../../../../../uploads/profile/resume/${props.match.params.id}-${item.Name}`}>{item.Name}</a>
+                                    ))}  
+                                </div>       
 
                                 <div className="d-flex flex-row row-wrap align-content-center mt-4">
-                                    <h5 className="header" style={{ textTransform: "uppercase" }}>Working Experience</h5>                                    
+                                    <h5 className="header" style={{ textTransform: "uppercase" }}>Working Experience</h5>
                                 </div>
 
                                 {experienceInfo ? experienceInfo.map((info, index) => (
                                     <div key={index} className="d-flex flex-column mt-1">
                                         <div className="d-flex flex">
-                                            <h6 style={{color:"var(--primary-color)", opacity:".75"}} className="small-header">{info.JobTitle + " (" + info.Company + ")"}</h6>                                            
+                                            <h6 style={{ color: "var(--primary-color)", opacity: ".75" }} className="small-header">{info.JobTitle + " (" + info.Company + ")"}</h6>
                                         </div>
                                         <small>{info.StartYear}-{info.EndYear}</small>
                                     </div>
@@ -185,7 +213,7 @@ const Profile = (props) => {
                                 {educationInfo ? educationInfo.map((info, index) => (
                                     <div key={index} className="d-flex flex-column mt-1">
                                         <div className="d-flex flex">
-                                            <h6 style={{color:"var(--primary-color)", opacity:".75"}} className="small-header">{info.Degree + " (" + info.School + ")"} </h6>
+                                            <h6 style={{ color: "var(--primary-color)", opacity: ".75" }} className="small-header">{info.Degree + " (" + info.School + ")"} </h6>
                                         </div>
                                         <small>{info.StartYear}-{info.EndYear}</small>
                                     </div>
