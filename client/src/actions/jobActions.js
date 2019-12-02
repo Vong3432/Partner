@@ -71,14 +71,23 @@ export const getApplyJobRequest = (id) => dispatch => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 
+export const approveRequest = (id, UserID) => (dispatch, getState) => {
+    axios
+        .put(`/api/job/approveCandidate/${id}/${UserID}`, tokenConfig(getState))        
+        .then(dispatch(getApplyJobRequest(id)))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "APPROVE_FAIL")))
+}
+
+export const disApproveRequest = (id, UserID) => (dispatch, getState) => {
+    axios
+        .put(`/api/job/disapproveCandidate/${id}/${UserID}`, tokenConfig(getState))        
+        .then(dispatch(getApplyJobRequest(id)))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "DISAPPROVE_FAIL")))
+}
+
 export const addJob = item => (dispatch, getState) => {
     axios
-        .post('/api/job', item, tokenConfig(getState))
-        .then(res => 
-                dispatch({
-                    type: ADD_JOB,
-                    payload: res.data
-                }))
+        .post('/api/job', item, tokenConfig(getState))        
         .then(dispatch(getJobs()))
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "ADD_FAIL")))
 }

@@ -84,9 +84,9 @@ export const getJobRequests = id => (dispatch, getState) => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "GET_JOB_REQUESTS_FAIL")))
 }
 
-export const cancelJobRequests = id => (dispatch, getState) => {
+export const cancelJobRequests = (id, jobID) => (dispatch, getState) => {
     axios
-        .delete(`/api/user/canceljobrequest/${id}`)
+        .delete(`/api/user/canceljobrequest/${id}/${jobID}`)
         .then(res => dispatch({
             type: CANCEL_JOB_REQUEST,
             payload: res.data

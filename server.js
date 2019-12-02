@@ -21,8 +21,10 @@ app.use('/api/job', require('./routes/api/job'))
 app.use('/api/user', require('./routes/api/user/user'))
 app.use('/api/profile', require('./routes/api/user/profile'))
 app.use('/api/post', require('./routes/api/posts'))
+// app.use('/api/chat', require('./routes/api/user/chatroom'))
 
 const postRoute = require('./routes/api/posts')
+const { addUser, getUser, removeUser, getUsersInRoom } = require('./routes/api/user/chatroom')
 // var serve = http.createServer(app)
 // var io = socketServer(serve)
 
@@ -31,69 +33,67 @@ server.listen(port, () => console.log(`Listen on port ${port}`))
 io.on("connection", socket => {
     console.log("New client connected")
 
-    socket.emit("FromAPI", 'My message')
-    socket.on('onLike', ({ PostingID, AccountID }) => {
+
+    socket.on('join', ({ name, room }, callback) => {
+        const { error, user } = addUser({ id: socket.id, name, room });
+
+        socket.emit('getDefaultMessages', () => getDefaultMessages(room));
+
+        if (error) return callback(error)
+
+        socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the room ${user.room}` });
+        socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name}, has joined` });
         
         const conn = mysql.createConnection({
             host: "localhost",
             user: "root",
             password: "",
             database: "partner",
-            // allow multiple SQL statement to be included
             multipleStatements: true
         })
-        const LikesID = uuid();        
 
-        const sql = `SELECT PostingID, AccountID FROM Likes WHERE PostingID = ? AND AccountID = ?`;
-
-        // run sql
-        conn.query(sql, [PostingID, AccountID], (err, results) => {
-            if (results.length > 0) {
-                // Dislike the post
-                const sql = `DELETE FROM Likes WHERE PostingID = ? AND AccountID = ?` 
-                conn.query(sql, [PostingID, AccountID], (err, results)=>{
-                    if(err) throw err;
-                    const sql = `UPDATE Posting SET LikesCount = LikesCount - 1 WHERE PostingID = ?`
-                    conn.query(sql, [PostingID], (err, results) => {
-                        if(err) throw err;                                           
-                    })
-                })               
-            }
-            else {
-                // Like the post
-                const sql = `INSERT INTO Likes(LikesID, PostingID, AccountID) VALUES (?)`
-                conn.query(sql, [[LikesID, PostingID, AccountID]], (err, results) => {
-                    if(err) throw err;
-                    const sql = `UPDATE Posting SET LikesCount = LikesCount + 1 WHERE PostingID = ?`
-                    conn.query(sql, [PostingID], (err, results) => {
-                        if(err) throw err;                                           
-                    })
-                })
-            }            
+        const sql = `SELECT * FROM chatroom WHERE ChatRoomID = ?`
+        conn.query(sql, [room], (err, results) => {
+            if(err) throw err
+            results.map(result => socket.emit('message', { user: `${result.name}`, text: `${result.text}` }))                        
         })
-        io.sockets.emit("getLikes", {PostingID})            
-    })
-    socket.on('getLikes', ({ PostingID }) => {
-        console.log('called')
+        socket.join(user.room);
 
+        io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
+
+        callback()
+    })    
+
+    socket.on('sendMessage', (message, callback) => {
+        const user = getUser(socket.id);
+
+        // io.to(user.room).emit('addMessage', {text: message, name: user.name, room:user.room});
         const conn = mysql.createConnection({
             host: "localhost",
             user: "root",
             password: "",
             database: "partner",
-            // allow multiple SQL statement to be included
             multipleStatements: true
         })
 
-        const sql = `SELECT LikesCount FROM Posting WHERE PostingID = ?`
-
-        // run sql
-        conn.query(sql, [PostingID], (err, results) => {
-            io.sockets.emit("displayLikes", results[0].LikesCount);
+        const sql = `INSERT INTO chatroom(ChatRoomID, name, text) VALUES (?)`;
+        conn.query(sql, [[user.room, user.name, message]], (err, results) => {
+            if (err) throw err
         })
-        // socket.emit('displayLikes',)
+
+        io.to(user.room).emit('message', { user: user.name, text: message });
+        io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+
+        callback();
     })
-    socket.on("disconnect", () => console.log("Client disconnected"));
+
+    socket.on("disconnect", () => {
+        const user = removeUser(socket.id)
+
+        if (user)
+            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left` })
+
+    });
 })
 
 // const connections = [];

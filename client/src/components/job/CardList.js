@@ -21,22 +21,30 @@ const CardList = ({ jobCallbackFunction }) => {
         if(isLoading === true)
         {
             dispatch(getJobs())    
-            setFetchJob(job) 
+            setFetchJob(job)             
             setIsLoading(false)               
         }                                    
         return(()=>setIsLoading(true))
     }, [])
 
     useEffect(() => {
-        dispatch(getJobs())                    
+        dispatch(getJobs()) 
+        
+        if(isLoading===true)    
+            setFetchJob(job)      
+
     }, [isLoading])
+
+    useEffect(() => {
+        if(fetchJob !== undefined && fetchJob.length > 0)
+            setIsLoading(false)
+    }, [fetchJob])
     
 
     useEffect(() => {           
         setFilterSearch(jobCallbackFunction)
         console.log(filterSearch)
-    }, [jobCallbackFunction])    
-
+    }, [jobCallbackFunction])        
     
     const filterFunction = (input, i) => { 
         console.log(i, filterSearch)            

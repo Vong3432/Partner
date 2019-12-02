@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import { login } from '../../actions/authActions'
+import { login, logout } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
 import { useAlert } from 'react-alert'
 
@@ -37,7 +37,7 @@ const LoginForm = (props) => {
         setErrMsg('')
 
         if (isAuthenticated)
-            alert('You are logged in!')
+            alert.success('You are logged in!')
 
         else {
             if (userInfo.email && userInfo.password) {
@@ -66,9 +66,20 @@ const LoginForm = (props) => {
 
     useEffect(() => {
         if(isAuthenticated===true)
-        {
-            alert.success('login successfully')
-            setTimeout(() => {window.location.href="/"}, 1500)            
+        {            
+            console.log(user)
+            if(user.status === "-1")
+            {
+                alert.error('You have been suspended')
+                dispatch(logout())
+                console.log(user)
+            }
+                
+            else
+            {
+                alert.success('login successfully')
+                setTimeout(() => {window.location.href="/"}, 1500)            
+            }
         }
     }, [isAuthenticated])
 

@@ -81,7 +81,7 @@ const EditProfile = (props) => {
         dispatch(showProfile(props.match.params.id));        
         dispatch(getResumes(props.match.params.id))        
         user.category === "employer" ? setIsEmployer(true) : setIsEmployer(false)
-            user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false)
+        user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false)
 
             if (isOwner === false) {
                 alert('You dont have the authority to access this page');
@@ -92,18 +92,34 @@ const EditProfile = (props) => {
     // default render
     useEffect(() => {
 
-        if (isLoading === true) {
+        if (isLoading === true && profile) {
             dispatch(showProfile(props.match.params.id))
             setCurrentProfileInfo(profile)
             setSrc(profile.ProfilePic)
             dispatch(getResumes(props.match.params.id));  
             dispatch(getExperienceInfo(props.match.params.id))
-            dispatch(getEducationInfo(props.match.params.id))
-            setIsLoading(false)
+            dispatch(getEducationInfo(props.match.params.id))            
         }
 
         return (() => setIsLoading(true))
     }, [])
+
+    useEffect(() => {
+        if(profile)
+        {
+            setCurrentProfileInfo(profile)
+            setSrc(profile.ProfilePic)
+            dispatch(getResumes(props.match.params.id));  
+            dispatch(getExperienceInfo(props.match.params.id))
+            dispatch(getEducationInfo(props.match.params.id))
+
+            user.category === "employer" ? setIsEmployer(true) : setIsEmployer(false)
+            user.id === props.match.params.id ? setIsOwner(true) : setIsOwner(false)
+
+            setIsLoading(false)
+        }
+        
+    }, [profile])
 
     const onEdit = (e) => {
         e.persist()
@@ -266,7 +282,8 @@ const EditProfile = (props) => {
 
     return (
         <>
-
+         {profile && isLoading === false && (
+             <>
             <Modal isOpen={showEducationModal} toggle={toggleEducationModal}>
                 <ModalHeader toggle={toggleEducationModal}>Education</ModalHeader>
                 <ModalBody>
@@ -441,7 +458,7 @@ const EditProfile = (props) => {
                 </div>
 
                 {/* Resume */}
-                {(!isEmployer && isLoading === false) && (
+                {(!isEmployer && isLoading === false && resumes) && (
                     <div className="p-5 my-3 card-shadow d-flex flex-column" style={part}>
                         {/* Resume title bar */}
                         <h5 className="header mb-4" style={{ textTransform: "uppercase" }}>Resume</h5>
@@ -616,6 +633,9 @@ const EditProfile = (props) => {
                 <input type="submit" onClick={e => onSubmit(e)} name="submit" style={{ borderRadius: "0" }} className="mt-3 mb-5 primary-bg-button" value="Edit" />
 
             </section>
+            </>
+         )}
+            
         </>
     )
 }

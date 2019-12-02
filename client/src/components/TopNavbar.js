@@ -108,9 +108,9 @@ const TopNavbar = (props) => {
                                     <NavItem>
                                         <NavLink exact to="/" tag={RRNavLink} activeClassName="active">Home</NavLink>
                                     </NavItem>
-                                    <NavItem>
+                                    {/* <NavItem>
                                         <NavLink to="/about" tag={RRNavLink} activeClassName="active">About</NavLink>
-                                    </NavItem>
+                                    </NavItem> */}
                                     <NavItem>
                                         <NavLink to="/employee" tag={RRNavLink} activeClassName="active">Find jobs</NavLink>
                                     </NavItem>

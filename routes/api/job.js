@@ -49,6 +49,7 @@ router.post('/', (req, res) => {
     
     // destrucutre all submitted data from body    
     const jobID = uuid(),
+          chatRoomID = uuid(),
           upload_date = new Date(),
           due_date = new Date();              
 
@@ -64,10 +65,10 @@ router.post('/', (req, res) => {
         }
     }    
     const sql = `
-    INSERT INTO job(JobID, EmployerID, ActivityLogID, BillID, CandidateListID, Title, UploadDate, DueDate, Status, CompanyName, Location, Type, Salary, HireCount, Description, Picture, View, Requirement, Category) VALUES(?)`        
+    INSERT INTO job(JobID, EmployerID, ChatRoomID, BillID, CandidateListID, Title, UploadDate, DueDate, Status, CompanyName, Location, Type, Salary, HireCount, Description, Picture, View, Requirement, Category) VALUES(?)`        
     
-    conn.query(sql, [[jobID, employer_id, jobID, jobID, jobID, title, upload_date, due_date, 1, name, location, str, salary, 0, description, image, 0, requirement, category]], (err, results) => {        
-        (err) ? res.status(500).json({msg:'Please make sure you have fill in all field.'}) : res.json([jobID, employer_id, jobID, jobID, jobID, title, upload_date, due_date, "open", name, location, str, salary, 0, description, image, 0, requirement, category])
+    conn.query(sql, [[jobID, employer_id, chatRoomID, jobID, jobID, title, upload_date, due_date, 1, name, location, str, salary, 0, description, image, 0, requirement, category]], (err, results) => {        
+        (err) ? res.status(500).json({msg:'Please make sure you have fill in all field.'}) : res.json([jobID, employer_id, chatRoomID, jobID, jobID, title, upload_date, due_date, "open", name, location, str, salary, 0, description, image, 0, requirement, category])
     })    
 
 })
@@ -294,6 +295,22 @@ router.get('/displayapplyjobs', (req, res) => {
       
 })
 
+router.put('/approveCandidate/:id/:UserID', (req, res) => {
+    
+    const sql = `UPDATE candidatelist SET CandidateStatus = ? WHERE UserID = ? AND JobID = ?`
+    conn.query(sql, ['approve', req.params.UserID, req.params.id], (err, results) => {
+        if(err) throw err;
+    })
+})
+
+router.put('/disapproveCandidate/:id/:UserID', (req, res) => {
+    
+    const sql = `UPDATE candidatelist SET CandidateStatus = ? WHERE UserID = ? AND JobID = ?`
+    conn.query(sql, ['pending', req.params.UserID, req.params.id], (err, results) => {
+        if(err) throw err;
+    })
+})
+
 // @route   GET api/job
 // @desc    Display apply job request
 // @access  Private
@@ -303,11 +320,13 @@ router.get('/displayapplyjobsrequest/:id', (req, res) => {
     const id = req.params.id
 
     // define sql query
-    const sql = `SELECT j.*, cr.* , p.ProfilePic, p.ProfileID FROM job j 
+    const sql = `SELECT j.*, cr.* , p.ProfilePic, p.ProfileID, cl.CandidateStatus, cl.UserID FROM job j 
                 JOIN candidaterequest cr 
                 ON j.CandidateListID = cr.CandidateListID 
                 JOIN profile p
                 ON cr.ApplicantID = p.ProfileID
+                JOIN candidatelist cl
+                ON cr.RequestID = cl.RequestID
                 WHERE j.CandidateListID = ?`
 
     conn.query(sql, [[id]],(err, results) => {                        

@@ -53,25 +53,28 @@ const Forum = () => {
             <section className="forum-section container">
                 <div className="py-5 mr-auto px-2 forum-div">
 
+                {allposts && (
                     <InfiniteScroll
-                        dataLength={allposts.length}
-                        next={fetchMoreData}
-                        hasMore={hasMore}
-                        style={{overflow:"initial"}}
-                        // loader={<Spinner />}
-                        endMessage={
-                            <p style={{ textAlign: "center" }}>
-                                <b>Yay! You have seen it all</b>
-                            </p>
-                        }
-                    >                        
-                        {allposts ? allposts.map((item, index) => (
-                            // <Article key={index} PostingID={item.PostingID} ProfileID={props.match.params.id} avatar={profile.ProfilePic ? profile.ProfilePic : null} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
-                            <>
-                            <Article length={length} index={index} key={index} LikesCount={item.LikesCount} PostingID={item.PostingID} ProfileID={item.ProfileID} image={item.Picture ? item.Picture : null} avatar={item.ProfilePic} author={item.Username} text={item.Description} />
-                            </>
-                        )) : null}
-                    </InfiniteScroll>
+                    dataLength={allposts.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    style={{overflow:"initial"}}
+                    // loader={<Spinner />}
+                    endMessage={
+                        <p style={{ textAlign: "center" }}>
+                            <b>Yay! You have seen it all</b>
+                        </p>
+                    }
+                >                        
+                    {allposts ? allposts.map((item, index) => (
+                        // <Article key={index} PostingID={item.PostingID} ProfileID={props.match.params.id} avatar={profile.ProfilePic ? profile.ProfilePic : null} image={item.Picture ? item.Picture : null} text={item.Description} author={profile.Name} />
+                        <>
+                        <Article length={length} index={index} key={index} LikesCount={item.LikesCount} PostingID={item.PostingID} ProfileID={item.ProfileID} image={item.Picture ? item.Picture : null} avatar={item.ProfilePic} author={item.Username} text={item.Description} />
+                        </>
+                    )) : null}
+                </InfiniteScroll>
+                )}
+                    
 
                 </div>
             </section>

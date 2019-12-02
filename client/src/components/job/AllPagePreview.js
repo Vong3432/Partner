@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PreviewContext } from '../../PreviewContext'
 import Spinner from '../../components/Spinner'
-import { applyJob, displayCurrentJobDetail, getApplyJobRequest } from '../../actions/jobActions'
+import { applyJob, displayCurrentJobDetail, getApplyJobRequest, approveRequest, disApproveRequest } from '../../actions/jobActions'
 // import nl2br from 'react-nl2br'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -35,7 +35,8 @@ const AllPagePreview = (props) => {
     }, [])
 
     useEffect(() => {
-        dispatch(getApplyJobRequest(selectedJob[0].JobID))        
+        if(selectedJob)
+            dispatch(getApplyJobRequest(selectedJob[0].JobID))        
     }, [selectedJob])
 
     AllPagePreview.propTypes = {
@@ -81,6 +82,7 @@ const AllPagePreview = (props) => {
                         <div className="preview-all">
                             <div className="d-flex flex-row align-items-center">
                                 <h3 className="mb-2" style={{ textTransform: "capitalize" }}>{selectedJob[0].Title}</h3>
+                                {selectedJob[0].Status === "-2" ? <p className="mb-0 ml-auto font-weight-bold" style={{ color: "var(--danger)" }}>Banned</p> : null}
                                 {selectedJob[0].Status === "-1" ? <p className="mb-0 ml-auto font-weight-bold" style={{ color: "var(--danger)" }}>Closed</p> : null}
                                 {selectedJob[0].Status === "0" ? <p className="mb-0 ml-auto font-weight-bold">Pending</p> : null}
                                 {selectedJob[0].Status === "1" ? <p className="mb-0 ml-auto font-weight-bold" style={{ color: "var(--green-color)" }}>Opened</p> : null}
@@ -130,15 +132,17 @@ const AllPagePreview = (props) => {
                             <div className="preview-all-candidate mb-5">
                                 {job.applyRequestList.map((item, index) => (
                                     <>
-                                        <div key={item.ApplicantID} className="card align-items-center d-flex flex-row my-3 card-shadow">
+                                        <div style={{maxWidth:"30%"}} key={item.ApplicantID} className="card align-items-start d-flex flex-row my-3 mr-3 card-shadow">
                                             <div className="card-body d-flex flex-column">
                                                 <img id="avatar--small" src={`../../uploads/profile/${item.ProfilePic}`} />
                                                 <p className="mb-0">{item.Name}</p>
                                                 <small>{item.Email}</small>
                                             </div>
                                             
-                                            {selectedJob[0].EmployerID === user.id && (
-                                                <a className="ml-auto success-bg-button" href="">Approve</a>
+                                            {user && selectedJob[0].Status === "1" && selectedJob[0].EmployerID === user.id && (
+                                                <>
+                                                    {item.CandidateStatus === "pending" ? <a onClick={e => dispatch(approveRequest(selectedJob[0].JobID, item.UserID))} style={{marginTop:"-10px"}} className="ml-auto warning-bg-button">Approve it</a>  : <a onClick={e => dispatch(disApproveRequest(selectedJob[0].JobID, item.UserID))} style={{marginTop:"-10px"}} className="ml-auto success-bg-button" href="">Approved</a>}
+                                                </>
                                             )}
                                         </div>
                                     </>

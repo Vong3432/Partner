@@ -286,6 +286,7 @@ const EmployerTable = (props) => {
                                     {/* <th scope="col">Views</th> */}
                                     <th scope="col">Life Span</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Chatroom ID</th>
                                     <th scope="col">Edit</th>
                                 </tr>
                             </thead>
@@ -302,7 +303,9 @@ const EmployerTable = (props) => {
                                         {item.Status === "1" && (<td>Open</td>)}
                                         {item.Status === "0" && (<td>Pending</td>)}
                                         {item.Status === "-1" && (<td>Closed</td>)}
-                                        <td><i onClick={e => { toggle(); displayModal(index) }} style={{ fontSize: ".7rem", cursor: "pointer" }} class='fas'>&#xf044;</i></td>
+                                        {item.Status === "-2" && (<td>Banned</td>)}
+                                        <td style={{cursor:"pointer", textDecoration:"underline", color:"var(--primary-color)"}} onClick={e => window.location.href=`/join/${item.ChatRoomID}`}>{item.ChatRoomID}</td>
+                                        {item.Status === "-2" ? (<td style={{color:"var(--danger)"}}>Banned</td>) : <td><i onClick={e => { toggle(); displayModal(index) }} style={{ fontSize: ".7rem", cursor: "pointer" }} class='fas'>&#xf044;</i></td>}
                                     </tr>
                                 )) : dispatch(getSelfJobs(props.match.params.id))}
                             </tbody>

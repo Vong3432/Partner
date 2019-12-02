@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getJobs, deleteJob } from '../../actions/jobActions';
+import { deactiveJob, reactiveJob } from '../../actions/adminActions';
 
 const Jobs = ({ show }) => {
 
@@ -22,11 +23,22 @@ const Jobs = ({ show }) => {
         return (() => setIsLoading(true))
     }, [])
 
+    useEffect(()=>{
+        
+    }, [job.jobs])
+    
+
     // handlers
-    const onDelete = (e, id) => {
+    const deactive = (e, id) => {
         e.preventDefault()
-        console.log(id)
-        dispatch(deleteJob(id))
+        console.log(id)        
+        dispatch(deactiveJob(id))
+    }
+
+    const reactive = (e, id) => {
+        e.preventDefault()
+        console.log(id)        
+        dispatch(reactiveJob(id))
     }
 
     return (
@@ -46,13 +58,15 @@ const Jobs = ({ show }) => {
                             <th scope="col">Views</th>
                             <th scope="col">Life Span</th>
                             <th scope="col">Status</th>
-                            <th scope="col">Edit</th>
+                            {/* <th scope="col">Edit</th> */}
                         </tr>
                     </thead>
                     <tbody>
                         {job.jobs ? job.jobs.map((item, index) => (
                             <tr>                                
-                                <th scope="row"><button onClick={(e) => { onDelete(e, item.JobID); dispatch(getJobs()) }} className="danger-bg-button" style={{ width: "initial", fontSize: ".7rem" }}>X</button></th>
+                                {item.Status === "-2" ? (
+                                    <th scope="row"><button type="submit" onClick={(e) => { reactive(e, item.JobID); dispatch(getJobs()) }} className="success-bg-button" style={{ width: "initial", fontSize: ".7rem" }}>Reactive</button></th>
+                                ) : <th scope="row"><button type="submit" onClick={(e) => { deactive(e, item.JobID); dispatch(getJobs()) }} className="danger-bg-button" style={{ width: "initial", fontSize: ".7rem" }}>Deactive</button></th> }  
                                 <td>{item.Title}</td>
                                 <td>RM{item.Salary}</td>
                                 <td>{item.Location}</td>
@@ -62,6 +76,7 @@ const Jobs = ({ show }) => {
                                 {item.Status === "1" && (<td>Open</td>)}
                                 {item.Status === "0" && (<td>Pending</td>)}
                                 {item.Status === "-1" && (<td>Closed</td>)}
+                                {item.Status === "-2" && (<td>Banned</td>)}
                                 {/* <td><i onClick={e => { toggle(); displayModal(index) }} style={{ fontSize: ".7rem", cursor: "pointer" }} class='fas'>&#xf044;</i></td> */}                                
                             </tr>                            
                         )) : dispatch(getJobs())}

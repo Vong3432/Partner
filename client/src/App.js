@@ -38,6 +38,8 @@ import AlertTemplate from 'react-alert-template-basic'
 import AllPagePreview from './components/job/AllPagePreview';
 import { PreviewProvider } from './PreviewContext';
 import Request from './pages/user/Request'
+import Join from './pages/user/Join';
+import Chat from './pages/user/Chat';
 
 function App() {
 
@@ -100,6 +102,8 @@ function App() {
                   <Route path="/resume" exact component={Resume} />
                   <Route path="/admin" component={AdminRouter} />
                   <Route path="/jobrequests" exact component={Request}/>
+                  <Route path="/join/:id" component={Join} />
+                  <Route path="/chat" component={Chat} />
                   <PreviewProvider>
                     <Route path="/employee" exact component={Job} />
                     <Route path="/job/previewall/:jobid" exact component={AllPagePreview} />

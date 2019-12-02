@@ -76,7 +76,7 @@ const SearchField = ({ handleChange }) => {
                     </select>
                 </div>
 
-                <div className="w-30 text-left mx-2">
+                {/* <div className="w-30 text-left mx-2">
 
                     <label htmlFor="bb">Description</label>
                     <select name="bb" className="custom-select">
@@ -85,7 +85,7 @@ const SearchField = ({ handleChange }) => {
                         <option value="2">Two</option>
                         <option value="3">Three</option>
                     </select>
-                </div>
+                </div> */}
 
             </div>
         </>

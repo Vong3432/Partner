@@ -23,9 +23,9 @@ const Sidebar = ({toggle, show}) => {
                     <NavLink activeClassName="sidebar-active" className="dashboard-sidebar-tab text-white" to="/admin/users">
                         Users                        
                     </NavLink>          
-                    <NavLink activeClassName="sidebar-active" className="dashboard-sidebar-tab text-white" to="/admin/feedbacks">
+                    {/* <NavLink activeClassName="sidebar-active" className="dashboard-sidebar-tab text-white" to="/admin/feedbacks">
                         Feedbacks                        
-                    </NavLink>          
+                    </NavLink>           */}
                     <span activeClassName="sidebar-active" className="dashboard-sidebar-tab" style={{ background: "none" }}>
                         <a onClick={e => dispatch(logout())}>Logout</a>
                     </span>

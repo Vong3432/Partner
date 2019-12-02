@@ -8,19 +8,40 @@ const Card = ({ job: { EmployerID, JobID, Title, ProfilePic, CandidateListID, Co
     var duedate = new Date(DueDate)
 
     const [selectedJob, setSelectedJob] = useContext(PreviewContext)
+    const [isMobile, setIsMobile] = useState(false)
     const [typeArr, setTypeArr] = useState([])
 
     useEffect(() => {
+
+        window.addEventListener('resize', checkDevice)
         if (Type)
             setTypeArr(Type.split(','))
+
+        return(() => window.removeEventListener('resize', checkDevice))
     }, [])
+
+    const checkDevice = () => {
+        console.log(window.outerWidth)
+        if(window.outerWidth <= 780 )
+            setIsMobile(true)
+        else
+            setIsMobile(false)
+    }
 
     // {console.log("index" + index)}
     return (
         <>
             {Status === "1" && todayDate < duedate && (
                 <div className="card mt-4 mb-0 card-shadow"
-                    onClick={() => { setSelectedJob((prevState) => ({ EmployerID, ProfilePic, JobID, Title, Location, CandidateListID, CompanyName, UploadDate, DueDate, Picture, Description, Requirement, Status, Type, Category, Salary })) }}
+                    onClick={() => { 
+                        if(isMobile)
+                        {
+                            window.location.href= `/job/previewall/${JobID}`
+                        }
+                        else
+                            setSelectedJob((prevState) => ({ EmployerID, ProfilePic, JobID, Title, Location, CandidateListID, CompanyName, UploadDate, DueDate, Picture, Description, Requirement, Status, Type, Category, Salary })) 
+                    }}
+                    
                 >
                     {/* <img src="..." className="card-img-top" alt="..." /> */}
                     <div className="card-body">

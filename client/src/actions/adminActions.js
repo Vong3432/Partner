@@ -13,6 +13,18 @@ export const getAllUsers = () => dispatch => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "GET_ALL_USER_FAIL")))
 }
 
+export const deactiveJob = id => dispatch => {
+    axios
+        .put(`/api/user/suspendJob/${id}`)        
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "SUSPEND_JOB_FAIL")))
+}
+
+export const reactiveJob = id => dispatch => {
+    axios
+        .put(`/api/user/reactiveJob/${id}`)        
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "REACTIVE_JOB_FAIL")))
+}
+
 export const deactiveUser = id => dispatch => {
     axios
         .put(`/api/user/suspend/${id}`)        

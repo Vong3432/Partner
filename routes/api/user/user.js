@@ -39,7 +39,8 @@ router.post('/login', (req, res) => {
                                 id: results[0].UserID,
                                 name: results[0].Name,
                                 email: results[0].Email,
-                                category: results[0].AccountType
+                                category: results[0].AccountType,
+                                status: results[0].Status
                             }
                         });
                     }
@@ -168,7 +169,7 @@ router.get('/user', auth, (req, res) => {
 
 router.get('/jobrequests/:id', (req, res) => {
     const id = req.params.id;
-    const sql = `SELECT j.Title, j.JobID, j.CompanyName, cl.CandidateStatus, cl.JobID, cl.RequestID FROM Job j
+    const sql = `SELECT j.Status, j.ChatRoomID,j.Title, j.JobID, j.CompanyName, cl.CandidateStatus, cl.JobID, cl.RequestID FROM Job j
                  LEFT JOIN candidatelist cl ON j.JobID = cl.JobID
                  WHERE cl.UserID = (?)`;    
     conn.query(sql, [[id]], (err, results) => {        
@@ -176,11 +177,14 @@ router.get('/jobrequests/:id', (req, res) => {
     })
 })
 
-router.delete('/canceljobrequest/:id', (req, res) => {
+router.delete('/canceljobrequest/:id/:jobID', (req, res) => {
     const id = req.params.id;
+    const jobID = req.params.jobID;
+
     const sql = `DELETE FROM candidatelist WHERE RequestID = ?;
-                 DELETE FROM candidaterequest WHERE RequestID = ?`;    
-    conn.query(sql, [id, id], (err, results) => {        
+                 DELETE FROM candidaterequest WHERE RequestID = ?;
+                 UPDATE job SET TotalCandidates = TotalCandidates - 1 WHERE JobID = ?`;    
+    conn.query(sql, [id, id, jobID], (err, results) => {        
         (err) ? res.status(400).json('error') : res.status(200).json(id)
     })
 })
@@ -230,6 +234,48 @@ router.put('/reactive/:id', (req, res) => {
     //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
 
     const sql = `UPDATE Account SET Status = 1 WHERE AccountID = ?`;
+    
+    // run sql
+    conn.query(sql, [id],(err, results) => {           
+        // if err, send err 
+        // else send results to front-end                        
+        err ? res.status(400).json({msg:'Suspend fail'}) : res.status(200).json(id)
+    }) 
+})
+
+router.put('/suspendJob/:id', (req, res) => {
+
+    // get id from url parameter
+    const id = req.params.id
+    
+    // define sql query
+    // const sql = `DELETE FROM Account WHERE AccountID = ?;
+    //              DELETE FROM Profile WHERE ProfileID = ?;
+    //              DELETE FROM candidaterequest WHERE CandidateListID = ?;
+    //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
+
+    const sql = `UPDATE Job SET Status = -2 WHERE JobID = ?`;
+    
+    // run sql
+    conn.query(sql, [id],(err, results) => {           
+        // if err, send err 
+        // else send results to front-end                        
+        err ? res.status(400).json({msg:'Suspend fail'}) : res.status(200).json(id)
+    }) 
+})
+
+router.put('/reactiveJob/:id', (req, res) => {
+
+    // get id from url parameter
+    const id = req.params.id
+    
+    // define sql query
+    // const sql = `DELETE FROM Account WHERE AccountID = ?;
+    //              DELETE FROM Profile WHERE ProfileID = ?;
+    //              DELETE FROM candidaterequest WHERE CandidateListID = ?;
+    //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
+
+    const sql = `UPDATE Job SET Status = 1 WHERE JobID = ?`;
     
     // run sql
     conn.query(sql, [id],(err, results) => {           

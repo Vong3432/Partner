@@ -64,6 +64,7 @@
   --lighter-green:rgb(31, 199, 185);
   --blue-color: #3D4A5F;
   --danger:#FE3C3C;
+  --yellow: rgb(173, 192, 4);
 }
 
 ::placeholder
@@ -523,6 +524,24 @@ h1,h2,h3,h4,h5,h6{
   border-radius: 3px;
 }
 
+.warning-bg-button
+{
+  max-width: 120px !important;
+  /* width: 100%; */
+
+  margin: 0 .5em;
+  padding: .5em 1.25em !important;
+
+  font-family: helveticaMedium;  
+  text-align: center;
+
+  background: var(--yellow);
+  color: var(--white-color);
+  
+  border: none;
+  border-radius: 3px;
+}
+
 .primary-bg-button,.primary-button,.no-styling-button,.danger-bg-button
 {
   animation: whenLeaveFocus 200ms ease-in forwards;
@@ -557,6 +576,15 @@ h1,h2,h3,h4,h5,h6{
   transform: translateY(-2px);
   color: var(--green-color) !important;
   background: rgba(88, 197, 124, 0.13) !important;
+  border: none !important;  
+}
+
+.warning-bg-button:hover
+{
+  transition: all 200ms ease-in 50ms;
+  transform: translateY(-2px);
+  color: var(--yellow) !important;
+  background: rgba(168, 197, 88, 0.13) !important;
   border: none !important;  
 }
 
@@ -842,7 +870,21 @@ input[type="text"], input[type="email"], input[type="password"], select
 
 .preview-all-candidate
 {
-  
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.preview-all-candidate .card
+{
+  max-width: 30%;
+  width: 100%;
+}
+
+.preview-all-candidate .success-bg-button:hover
+{
+  background: var(--green-color) !important;
+  color: var(--white-color) !important;
+  opacity: .8;
 }
 
 #scrollTopBtn
@@ -897,6 +939,18 @@ input[type="text"], input[type="email"], input[type="password"], select
 {
   opacity: 1;
   border-bottom: 2px solid var(--primary-color);
+}
+
+/* chatroom */
+.messageContainer
+{
+  max-width: 40%;
+}
+
+.messageBox
+{
+  
+  border-radius: 15px;
 }
 
 .profile-section
@@ -1229,6 +1283,23 @@ input[type="text"], input[type="email"], input[type="password"], select
   #searchField
   {
     max-width: 100%;
+  }
+
+  .preview-all
+  {
+    max-width: 100%;
+  }
+
+  .preview-all-candidate
+  {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .preview-all-candidate .card
+  {
+    max-width: 100% !important;
+    width: 100%;
   }
 
   /* #jobTitle
