@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "engines": {
+    "node": "10.16.0",
+    "npm": "6.9.0"
+  },
   "scripts": {
     "client-install": "npm install --prefix client",
     "start": "node server.js",
