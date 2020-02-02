@@ -36,7 +36,7 @@ const Main = ({ show }) => {
                 </div>
             </div>
 
-            <h5 className="dashboard-content-header">Employee and Employer Information</h5>
+            {/* <h5 className="dashboard-content-header">Employee and Employer Information</h5>
             <div className="d-flex flex-row flex-wrap justify-content-between">
                 <div className="dashboard-card">
                     <p>Total Employee</p>
@@ -45,8 +45,8 @@ const Main = ({ show }) => {
                 <div className="dashboard-card">
                     <p>Total Employer</p>
                     <h3>1 Employer</h3>
-                </div>
-            </div>
+                </div> */}
+            {/* </div> */}
 
             {/* <h5 className="dashboard-content-header">Feedbacks</h5>
             <div className="d-flex flex-row flex-wrap justify-content-between">

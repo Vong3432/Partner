@@ -48,7 +48,7 @@ const AllPagePreview = (props) => {
         e.preventDefault()
 
         if (!isAuthenticated || user.category === "employer")
-            alert("You dont have the authority to apply job.")
+            alert.error("You dont have the authority to apply job.")
         else {
 
             const newRequest = {
@@ -158,3 +158,28 @@ const AllPagePreview = (props) => {
 }
 
 export default AllPagePreview;
+
+
+const albums = [
+    {
+        id: '1',
+        artwork: 'avatar.jpg',
+        title: 'Title',
+        artist: 'asd',
+        year: 2000
+    },
+    {
+        id: '1',
+        artwork: 'avatar.jpg',
+        title: 'Title',
+        artist: 'asd',
+        year: 2000
+    },
+    {
+        id: '1',
+        artwork: 'avatar.jpg',
+        title: 'Title',
+        artist: 'asd',
+        year: 2000
+    },
+]
