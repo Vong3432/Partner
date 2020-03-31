@@ -31,6 +31,7 @@ export default function (state = initialState, action) {
                 loading: false
             }
         case GET_JOB_CATEGORY:
+            console.log(action.payload)
             return {
                 ...state,
                 category: action.payload

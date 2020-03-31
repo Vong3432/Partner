@@ -26,11 +26,7 @@ const LoginForm = (props) => {
         password: '',
     })
 
-    const [errMsg, setErrMsg] = useState("")
-
-    useEffect(() => {
-        dispatch(clearErrors())
-    }, [userInfo])
+    const [errMsg, setErrMsg] = useState("")    
 
     const onSubmit = e => {
         e.preventDefault();
@@ -48,8 +44,6 @@ const LoginForm = (props) => {
 
                 // Attempt to login
                 dispatch(login(User))
-
-
                 // window.location.href = '/'                
             }
             else
@@ -68,7 +62,7 @@ const LoginForm = (props) => {
         if(isAuthenticated===true)
         {            
             console.log(user)
-            if(user.status === "-1")
+            if(user.status !== "normal")
             {
                 alert.error('You have been suspended')
                 dispatch(logout())
@@ -85,7 +79,7 @@ const LoginForm = (props) => {
 
     useEffect(() => {
         if (error.id === "LOGIN_FAIL") {
-            alert.error('Login fail')
+            setErrMsg(error.msg)
         }        
         
         return (() => dispatch(clearErrors()))

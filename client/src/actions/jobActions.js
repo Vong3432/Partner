@@ -87,8 +87,7 @@ export const disApproveRequest = (id, UserID) => (dispatch, getState) => {
 
 export const addJob = item => (dispatch, getState) => {
     axios
-        .post('/api/job', item, tokenConfig(getState))        
-        .then(dispatch(getJobs()))
+        .post('/api/job', item, tokenConfig(getState))                
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "ADD_FAIL")))
 }
 

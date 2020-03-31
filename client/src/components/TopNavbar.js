@@ -51,7 +51,7 @@ const TopNavbar = (props) => {
                 <>
                     <NavItem>
                         {user && (
-                            <NavLink className="mr-0 pr-0" style={{ color: "var(--primary-color)", opacity: "1" }} to={`/profile/${user.id}`} href={`/profile/${user.id}`} tag={RRNavLink} >{user ? `Welcome ${user.name}` : console.log(user)}</NavLink>
+                            <NavLink className="mr-0 pr-0" style={{ color: "var(--primary-color)", opacity: "1" }} to={`/profile/${user.profile_id}`} tag={RRNavLink} >{user ? `Welcome ${user.name}` : console.log(user)}</NavLink>
                         )}
                     </NavItem>
                     <NavItem>
@@ -61,7 +61,7 @@ const TopNavbar = (props) => {
                                 {/* <DropdownItem header>Header</DropdownItem> */}
                                 <DropdownItem>
                                     {user && (
-                                        <NavLink tag={RRNavLink} className="px-0 text-black-50" style={{ opacity: "1" }} to={`/editProfile/${user.id}`} >
+                                        <NavLink tag={RRNavLink} className="px-0 text-black-50" style={{ opacity: "1" }} to={`/editProfile/${user.profile_id}`} >
                                             Edit profile
                                 </NavLink>
                                     )}

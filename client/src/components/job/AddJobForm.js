@@ -7,6 +7,7 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { PayPalButton } from "react-paypal-button-v2";
 import { useAlert } from 'react-alert'
+import JobTypeTag from './JobTypeTag'
 
 const AddJob = (props) => {
     const alert = useAlert()
@@ -23,14 +24,15 @@ const AddJob = (props) => {
     const user = useSelector(state => state.auth.user)
     const jobs = useSelector(state => state.job.jobs)
     const categories = useSelector(state => state.job.category)
+
+    const [defaultJobTypes, setDefaultJobTypes] = useState(["Full time", "Part time", "Contract", "Comission", "Internship"]);
     const [isLoading, setIsLoading] = useState(true)
     const [isPayed, setIsPayed] = useState(false)
+
     const PRICE_PER_DAY = 1;
 
     useEffect(() => {
-
-        if (isLoading === true)
-            dispatch(getCategory())
+        dispatch(getCategory())
         setIsLoading(false)
         console.log(categories)
     }, [])
@@ -40,15 +42,13 @@ const AddJob = (props) => {
         title: "",
         description: "",
         category: 0,
-        type: {
-
-        },
+        type: [],
         location: "",
         requirement: "",
         duration: 0,
         salary: 0
     })
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(3)
     const [errMsg, setErrMsg] = useState("")
     const [file, setFile] = useState("")
     const [name, setImgName] = useState("")
@@ -56,12 +56,16 @@ const AddJob = (props) => {
 
     // side-effect
     useEffect(() => {
-        console.log(user)
-        if (user.category !== "employer") {
+
+        if (user.account_type !== "employer") {
             alert("You can't access to this page.")
             window.location.href = "/"
         }
     }, [job])
+
+    useEffect(() => {
+        console.log(job)
+    }, [job.type])
 
     // event handler
     const handleChange = e => {
@@ -69,10 +73,10 @@ const AddJob = (props) => {
         dispatch(clearErrors())
 
         if (name === "image") {
+
             setImg(URL.createObjectURL(e.target.files[0]))
             setFile(e.target.files[0])
             setImgName(user.id + "-" + e.target.files[0].name)
-            console.log("is image")
         }
         else {
             setJob({
@@ -83,43 +87,84 @@ const AddJob = (props) => {
 
     }
 
-    const onSubmit = () => {
-        // e.preventDefault()
-        setErrMsg('')        
+    const onChangeType = (e, job_type) => {
+        job.type.push(job_type);
+    }
 
-        if (file) {
-            const data = new FormData()
-            data.append('file', file)
-            axios.post("/api/job/upload", data, {
-                // receive two    parameter endpoint url ,form data
-            })
-                .then(res => { // then print response status
-                    console.log(res.statusText)
-                    setFile("")
-                    setImg(null)
-                    setImgName("")
-                })
-        }        
+    const onSubmit = async () => {
+        setErrMsg('')
+
+        // Send file to Cloudinary (Front-end)
+        // ===================================
+        // if (file) {       
+        //     const fd = new FormData();        
+        //     fd.append('file', file);            
+        //     fd.append('folder', 'uploads');     
+        //     fd.append('public_id', file.name);
+        //     fd.append('upload_preset', process.env.REACT_APP_PRESET);
+        //     console.log( process.env.REACT_APP_PRESET, process.env.REACT_APP_URL)
+        //     axios
+        //         .post('https://api.cloudinary.com/v1_1/dpjso4bmh/image/upload', fd, {headers: { 'Content-Type': 'application/json' }})
+        //         .then(res => res.json())
+        //         .then(data => {
+        //             if(data.secure_url !== '') {
+        //                 const uploadedFileUrl = data.secure_url;
+        //                 console.log(uploadedFileUrl)
+        //             }
+        //         })
+        //         .catch(err => console.error(err))
+
+        // }      
+
 
         if (job.title && job.description && job.location && job.duration >= 0 && job.requirement && job.type && job.category && job.salary >= 0) {
-            const newJob = {
-                employer_id: user.id,
-                name: user.name,
-                title: job.title,
-                description: job.description,
-                requirement: job.requirement,
-                type: job.type,
-                category: job.category,
-                location: job.location,
-                salary: job.salary,
-                duration: job.duration,
-                image: name || ""
+            
+
+            if (file) {
+
+                let fd = new FormData();
+                fd.append('image', file, fd.name)
+
+                // Send file to cloudinary via backend 
+                const res = await axios.post('/api/job/upload', fd)                                 
+
+                const newJob = {
+                    employer_id: user.profile_id,
+                    company_name: user.name,
+                    title: job.title,
+                    description: job.description,
+                    requirement: job.requirement,
+                    type: job.type,
+                    category: job.category,
+                    location: job.location,
+                    salary: job.salary,
+                    duration: job.duration,
+                    imageUrl: res.data.imageUrl,
+                    public_id: res.data.public_id
+                }
+
+                console.log(newJob)
+
+                dispatch(addJob(newJob))
             }
 
-
-            dispatch(addJob(newJob))
-
-
+            else {
+                const newJob = {
+                    employer_id: user.profile_id,
+                    company_name: user.name,
+                    title: job.title,
+                    description: job.description,
+                    requirement: job.requirement,
+                    type: job.type,
+                    category: job.category,
+                    location: job.location,
+                    salary: job.salary,
+                    duration: job.duration,                    
+                }
+                    
+                dispatch(addJob(newJob))
+            }
+           
             if (error.id === "ADD_FAIL") {
                 alert.error('Please make sure you have fill in all information.')
             }
@@ -127,12 +172,12 @@ const AddJob = (props) => {
             else
             {
                 alert.success('Added successfully.')
-                setTimeout(() => window.location.href = "/", 1500)                
+                // setTimeout(() => window.location.href = "/", 1500)                
             }                
         }
-        else {            
+        else {
             alert.error('Please fill in valid information.')
-        }            
+        }
     }
 
     useEffect(() => {
@@ -144,17 +189,6 @@ const AddJob = (props) => {
             })
         }
     }, [step])
-
-    // css
-    const activeTab = {
-        backgroundColor: "var(--primary-color)",
-        color: "#fff"
-    }
-
-    const normalTab = {
-        backgroundColor: "transparent",
-        color: "var(--dark-color)"
-    }
 
     // components
     const step1 = (
@@ -214,7 +248,7 @@ const AddJob = (props) => {
                         <label htmlFor="description">Job Category</label>
                         <select required onChange={(e) => handleChange(e)} name="category" id="category">
                             <option value="">Select category:</option>
-                            {categories ? categories.map((i) => <option key={i.ID} value={i.ID}>{i.Value}</option>) : dispatch(getCategory())}
+                            {categories ? categories.map((i, index) => <option key={index} value={index}>{i.name}</option>) : dispatch(getCategory())}
                         </select>
                     </div>
                 </div>
@@ -247,26 +281,12 @@ const AddJob = (props) => {
                     <div id="divider"></div>
                 </label>
 
-                <div className="decision--box" style={job.type.fullTime === "Full Time" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, fullTime: "Full Time" } }))}>
-                    <h5>Full-Time</h5>
-                </div>
-                <div className="decision--box" style={job.type.partTime === "Part Time" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, partTime: "Part Time" } }))}>
-                    <h5>Part-Time</h5>
-                </div>
-                <div className="decision--box" style={job.type.contract === "Contract" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, contract: "Contract" } }))}>
-                    <h5>Contract</h5>
-                </div>
-                <div className="decision--box" style={job.type.commission === "Commission" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, commission: "Commission" } }))}>
-                    <h5>Commission</h5>
-                </div>
-                <div className="decision--box" style={job.type.internship === "Internship" ? activeTab : normalTab} onClick={(e) => setJob((prevJob) => ({ ...prevJob, type: { ...prevJob.type, internship: "Internship" } }))}>
-                    <h5>Internship</h5>
-                </div>
+                {defaultJobTypes.map((job_type, index) => <JobTypeTag job_type={job_type} onChangeType={onChangeType} />)}
 
             </div>
             {(job.type) && (
                 <div className="d-flex flex-row">
-                    <button onClick={(e) => { e.preventDefault(); setJob((prevJob) => ({ ...prevJob, type: {} })) }} className="ml-auto mr-0 mt-3 no-styling-button" style={{ borderRadius: "0" }}>Reset</button>
+                    <button onClick={(e) => { e.preventDefault(); setJob((prevJob) => ({ ...prevJob, type: [] })) }} className="ml-auto mr-0 mt-3 no-styling-button" style={{ borderRadius: "0" }}>Reset</button>
                     <button onClick={(e) => { e.preventDefault(); setStep(step + 1) }} className="ml-3 mr-0 mt-3 primary-bg-button" style={{ borderRadius: "0" }}>Next</button>
                 </div>
             )}
@@ -283,54 +303,54 @@ const AddJob = (props) => {
                 </div>
             </div>
 
-                {(job.duration) ? (
-                    <>
-                        <small style={{color:"var(--danger)"}}>USD {PRICE_PER_DAY} Per Day</small>
-                        <p>Checkout: USD {job.duration * PRICE_PER_DAY}</p>
-                        <PayPalButton
-                            createOrder={(data, actions) => {
-                                return actions.order.create({
-                                    purchase_units: [{
-                                        amount: {
-                                            currency_code: "USD",
-                                            value: job.duration * PRICE_PER_DAY
-                                        }
-                                    }],
-                                    // application_context: {
-                                    //   shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
-                                    // }
+            {(job.duration) ? (
+                <>
+                    <small style={{ color: "var(--danger)" }}>USD {PRICE_PER_DAY} Per Day</small>
+                    <p>Checkout: USD {job.duration * PRICE_PER_DAY}</p>
+                    <PayPalButton
+                        createOrder={(data, actions) => {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        currency_code: "USD",
+                                        value: job.duration * PRICE_PER_DAY
+                                    }
+                                }],
+                                // application_context: {
+                                //   shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
+                                // }
+                            });
+                        }}
+                        options={{
+                            clientId: "AX8ba9UcodHNg-W76ybWHYam3ocKe4J8ZcMaSq1xYzHF9t5XHn57CqTLnx-L2pq_IvIT_uvF6XiDilUf"
+                        }}
+                        onApprove={(data, actions) => {
+                            // Capture the funds from the transaction
+                            return actions.order.capture().then(function (details) {
+                                // Show a success message to your buyer
+                                alert.success("Transaction completed by " + details.payer.name.given_name);
+                                onSubmit()
+                                // OPTIONAL: Call your server to save the transaction
+                                return fetch("/paypal-transaction-complete", {
+                                    method: "post",
+                                    body: JSON.stringify({
+                                        orderID: data.orderID
+                                    })
                                 });
-                            }}
-                            options={{
-                                clientId: "AX8ba9UcodHNg-W76ybWHYam3ocKe4J8ZcMaSq1xYzHF9t5XHn57CqTLnx-L2pq_IvIT_uvF6XiDilUf"
-                            }}
-                            onApprove={(data, actions) => {
-                                // Capture the funds from the transaction
-                                return actions.order.capture().then(function (details) {
-                                    // Show a success message to your buyer
-                                    alert.success("Transaction completed by " + details.payer.name.given_name);
-                                    onSubmit()
-                                    // OPTIONAL: Call your server to save the transaction
-                                    return fetch("/paypal-transaction-complete", {
-                                        method: "post",
-                                        body: JSON.stringify({
-                                            orderID: data.orderID
-                                        })
-                                    });
-                                });
-                            }}
-                        />
-                        {/* {isPayed ? <button onClick={(e) => onSubmit(e)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Post</button> : null} */}
-                    </>
+                            });
+                        }}
+                    />
+                    {/* {isPayed ? <button onClick={(e) => onSubmit(e)} className="ml-auto mr-0 primary-bg-button" style={{ borderRadius: "0" }}>Post</button> : null} */}
+                </>
 
-                ) : ""}
-            
+            ) : ""}
+
         </div>
     )
 
     return (
         <>
-            <form className="form mx-auto" onSubmit={onSubmit} style={{ marginTop: "6em", maxWidth: "80%", marginBottom: "3em" }}>
+            <form encType="multipart/form-data" className="form mx-auto" onSubmit={onSubmit} style={{ marginTop: "6em", maxWidth: "80%", marginBottom: "3em" }}>
                 {(step >= 1) && step1}
                 {(step >= 2) && step2}
                 {(step >= 3) && step3}

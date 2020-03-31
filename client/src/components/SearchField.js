@@ -22,14 +22,11 @@ const SearchField = ({ handleChange }) => {
         color:"var(--light-grey)"
     }
 
-    useEffect(() => {
-        if(isLoading === true)
-        {
-            dispatch(getCategory())
-        }
-        setIsLoading(false)
+    useEffect(() => {                
+        
+        dispatch(getCategory())        
+        setIsLoading(false)        
 
-        return(() => setIsLoading(true))
     }, [])
 
     function handleBlockquote() {
@@ -72,7 +69,7 @@ const SearchField = ({ handleChange }) => {
                     <label htmlFor="category">Category</label>
                     <select name="category" onChange={handleChange} className="custom-select">
                         <option value="">Open this select menu</option>
-                        {category.map(i => <option value={i.ID}>{i.Value}</option>)}                                                
+                        {category.map((i, index) => <option value={index}>{i.name}</option>)}                                                
                     </select>
                 </div>
 
