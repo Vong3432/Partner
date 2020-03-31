@@ -9,20 +9,16 @@ import { returnErrors } from './errorActions'
 */
 
 export const showProfile = id => (dispatch, getState) => {
-    dispatch(setProfileLoading());   
-    console.log(id) 
-    axios
-        /*
-            Tasks:
-            1. Use the ${id} to select * data based on the profile user interface
-            2. inside the api, make sure to res.json(results)            
-        */
+    dispatch(setProfileLoading());       
+    return axios        
         .get(`/api/profile/displayprofile/${id}`, tokenConfig(getState))        
         .then( res => 
             dispatch({
                 type: SHOW_PROFILE,
                 payload: res.data
-            }))                
+            })            
+        )         
+        .then(res => res.payload)       
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 

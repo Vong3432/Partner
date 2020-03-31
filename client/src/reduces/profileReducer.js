@@ -3,8 +3,8 @@ import { SHOW_PROFILE, EDIT_PROFILE, DEACTIVE_PROFILE, PROFILE_LOADED, PROFILE_L
 const initialState = {
     user: null,
     loading: false,
-    educationInfo: null,
-    experienceInfo: null,
+    // educationInfo: null,
+    // experienceInfo: null,
     resumes: null
 }
 
@@ -36,36 +36,36 @@ export default function (state = initialState, action) {
                 ...state,
                 loading: true
             }
-        case ADD_EDUCATION:
-            return {
-                ...state,
-                educationInfo: [...state.educationInfo, action.payload]
-            }
-        case GET_EDUCATION:
-            return {
-                ...state,
-                educationInfo: action.payload
-            }
-        case DELETE_EDUCATION:
-            return {
-                ...state,
-                educationInfo: state.educationInfo.filter(info => info.EducationID !== action.payload)
-            }
-        case ADD_EXPERIENCE:
-            return {
-                ...state,
-                experienceInfo: [...state.experienceInfo, action.payload]
-            }
-        case GET_EXPERIENCE:
-            return {
-                ...state,
-                experienceInfo: action.payload
-            }
-        case DELETE_EXPERIENCE:
-            return {
-                ...state,
-                experienceInfo: state.experienceInfo.filter(info => info.WorkExperienceID !== action.payload)
-            }
+        // case ADD_EDUCATION:
+        //     return {
+        //         ...state,
+        //         educationInfo: [...state.educationInfo, action.payload]
+        //     }
+        // case GET_EDUCATION:
+        //     return {
+        //         ...state,
+        //         educationInfo: action.payload
+        //     }
+        // case DELETE_EDUCATION:
+        //     return {
+        //         ...state,
+        //         educationInfo: state.educationInfo.filter(info => info.EducationID !== action.payload)
+        //     }
+        // case ADD_EXPERIENCE:
+        //     return {
+        //         ...state,
+        //         experienceInfo: [...state.experienceInfo, action.payload]
+        //     }
+        // case GET_EXPERIENCE:
+        //     return {
+        //         ...state,
+        //         experienceInfo: action.payload
+        //     }
+        // case DELETE_EXPERIENCE:
+        //     return {
+        //         ...state,
+        //         experienceInfo: state.experienceInfo.filter(info => info.WorkExperienceID !== action.payload)
+        //     }
         default:
             return state;
     }

@@ -1,168 +1,95 @@
 const express = require('express')
 const mysql = require('mysql')
 const router = express.Router()
-const uuid = require('uuid');
+
 const auth = require('../../middleware/auth')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
-// Create table
-const conn = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "partner",
-    multipleStatements: true
-})
+const dotenv = require('dotenv')
+dotenv.config();
+
+// Models
+const Profile = require('../../../models/user/Profile');
+const Employee = require('../../../models/user/Employee');
+const Employer = require('../../../models/user/Employer');
 
 // @route   POST api/user
 // @desc    auth an account
 // @access  public
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
 
     // destrucutre all submitted data from body
     const { email, password } = req.body;
 
-    if (email && password) {
-        conn.query('SELECT * FROM account WHERE email = ? AND password = ?', [email, password], (error, results) => {
+    const hasMatchedAccount = await Profile.exists({ email });
 
-            if (results.length > 0) {
-                //console.log(results)
-                jwt.sign(
-                    { id: results[0].UserID },
-                    "myJwtSecret",
-                    { expiresIn: 3600 },
-                    (err, token) => {
-                        if (err) throw err
-                        return res.status(200).json({
-                            token,
-                            user: {
-                                id: results[0].UserID,
-                                name: results[0].Name,
-                                email: results[0].Email,
-                                category: results[0].AccountType,
-                                status: results[0].Status
-                            }
-                        });
-                    }
-                )
-            }
+    if(hasMatchedAccount === false)
+        return res.status(400).json({ msg: "No account found." })    
+    
+    const User = await Profile.findOne({ email });
 
-            else {
-                conn.query('SELECT * FROM admin WHERE AdminID = ? AND Password = ?', [email, password], (err, results) => {
-                    // console.log(email,password+"sadasd")
-                    if (results.length > 0) {
-                        //console.log(results)
-                        jwt.sign(
-                            { id: results[0].AdminID },
-                            "myJwtSecret",
-                            { expiresIn: 3600 },
-                            (err, token) => {
-                                if (err) throw err
-                                return res.status(200).json({
-                                    token,
-                                    user: {
-                                        id: results[0].AdminID,
-                                        name: results[0].Name,                                        
-                                        category: "ADMIN"
-                                    }
-                                });
-                            }
-                        )
-                    }
-                    else
-                        return res.status(400).json({ msg: 'User not found.' })
-                })                
-            }
-        })
-    }
-    else {
-        return res.status(400).json({ msg: 'Please enter email and password' })
-    }
+    // Compare password with has password
+    bcrypt.compare(password, User.password, (err, result) => {
+                
+        // Password is incorrect
+        if(result == false) return res.status(400).json({ msg: "Password is incorrect."})                
+        
+        // Sign jwt
+        const token = jwt.sign({ _currentID: User.profile_id }, process.env.TOKEN_SECRET);
+
+        return res.status(200).json({User, token});
+    })    
 })
 
 // @route   POST api/user
 // @desc    auth an account
 // @access  public
-router.post('/register', (req, res) => {
-
+router.post('/register', async (req, res) => {
+    
     // destrucutre all submitted data from body
     const { name, email, password, userType } = req.body;
 
-    // console.log(req.body)
+    // Check if email is already registered
+    const duplicatedEmail = await Profile.exists({ email });
 
-    const AccountUUID = uuid()
+    if (duplicatedEmail === true)
+        return res.status(400).json({ msg: "Email has been registered" })
 
-    if (email && password && name && userType) {
-        conn.query(`SELECT * FROM account WHERE Email = ? AND Password = ?`, [email, password], (error, results) => {
+    // Salt password
+    bcrypt.genSalt(saltRounds, (err, salt) => {
+        bcrypt.hash(password, salt, (err, hash) => {
+            const newUser = new Profile({ name, email, password: hash, account_type: userType });
 
-            if (results.length > 0) {
-                return res.status(400).json({ msg: 'User is already registered.' })
-            } else {
+            newUser.save((err, user) => {
+                if (err) return res.status(400).json({ msg: "Something went wrong, please try again." })
 
-                if (userType === 'employer') {
-                    const date = new Date();
-                    conn.query(`INSERT INTO company(CompanyID, UserID, PublishedYear, Name) VALUES (?)`, [[AccountUUID, AccountUUID, date, name]], (err, results) => {
-                        if (err) throw err;
+                if (userType === "employee") {
+                    const newEmployee = new Employee({
+                        employee_id: user.profile_id,
+                        profile_id: user.profile_id,
                     })
+
+                    newEmployee.save()
                 }
 
-                conn.query(`INSERT INTO account(AccountID, UserID, ProfileID, Name, Email, Password, AccountType, Status) VALUES (?)`, [[AccountUUID, AccountUUID, AccountUUID, name, email, password, userType, 1]], (err, results) => {
-                    if (err) {
-                        // console.log('has err')
-                        return res.send(err)
-                    }
-
-                    conn.query(`INSERT INTO Profile(ProfileID, AccountID, Username) VALUES (?);`, [[AccountUUID, AccountUUID, name]], (errors, profile) => {
-                        if (err) return res.send(err)
-
-                        else {
-                            conn.query(`SELECT * FROM account WHERE email = ? AND password = ?`, [email, password], (error, results) => {
-                                if (results.length > 0) {
-                                    // console.log(results[0])
-                                    jwt.sign(
-                                        { id: results[0].UserID },
-                                        "myJwtSecret",
-                                        { expiresIn: 3600 },
-                                        (err, token) => {
-                                            if (err) throw err
-                                            return res.status(200).json({
-                                                token,
-                                                user: {
-                                                    id: results[0].UserID,
-                                                    name: results[0].Name,
-                                                    email: results[0].Email,
-                                                    category: results[0].AccountType
-                                                }
-                                            });
-                                        }
-                                    )
-
-                                } else {
-                                    return res.status(400).json({ msg: 'User not found.' })
-                                }
-                            })
-                        }
+                else if (userType === "employer") {
+                    const newEmployer = new Employer({
+                        employer_id: user.profile_id,
+                        profile_id: user.profile_id,
                     })
 
+                    newEmployer.save()
+                }
+                
+
+                return res.status(200).json({
+                    user,                    
                 })
-            }
+
+            })
         })
-    }
-    else {
-        return res.status(400).json({ msg: 'Please enter email and password' })
-    }
-
-
-})
-
-router.get('/user', auth, (req, res) => {
-    conn.query('SELECT * FROM account WHERE email = ? AND password = ?', [req.user.email, req.user.password], function (error, results, fields) {
-        if (results.length > 0) {
-            res.json(results)
-        }
-        else {
-            res.send('Incorrect Username and/or Password!')
-        }
     })
 
 })
@@ -171,8 +98,8 @@ router.get('/jobrequests/:id', (req, res) => {
     const id = req.params.id;
     const sql = `SELECT j.Status, j.ChatRoomID,j.Title, j.JobID, j.CompanyName, cl.CandidateStatus, cl.JobID, cl.RequestID FROM Job j
                  LEFT JOIN candidatelist cl ON j.JobID = cl.JobID
-                 WHERE cl.UserID = (?)`;    
-    conn.query(sql, [[id]], (err, results) => {        
+                 WHERE cl.UserID = (?)`;
+    conn.query(sql, [[id]], (err, results) => {
         (err) ? res.status(400).json('error') : res.status(200).json(results)
     })
 })
@@ -183,15 +110,15 @@ router.delete('/canceljobrequest/:id/:jobID', (req, res) => {
 
     const sql = `DELETE FROM candidatelist WHERE RequestID = ?;
                  DELETE FROM candidaterequest WHERE RequestID = ?;
-                 UPDATE job SET TotalCandidates = TotalCandidates - 1 WHERE JobID = ?`;    
-    conn.query(sql, [id, id, jobID], (err, results) => {        
+                 UPDATE job SET TotalCandidates = TotalCandidates - 1 WHERE JobID = ?`;
+    conn.query(sql, [id, id, jobID], (err, results) => {
         (err) ? res.status(400).json('error') : res.status(200).json(id)
     })
 })
 
 router.get('/alluser', (req, res) => {
     conn.query(`SELECT * FROM account`, (err, results) => {
-        err ? res.status(400).json({msg:'error'}) : res.status(200).json(results)
+        err ? res.status(400).json({ msg: 'error' }) : res.status(200).json(results)
     })
 })
 
@@ -202,7 +129,7 @@ router.put('/suspend/:id', (req, res) => {
 
     // get id from url parameter
     const id = req.params.id
-    
+
     // define sql query
     // const sql = `DELETE FROM Account WHERE AccountID = ?;
     //              DELETE FROM Profile WHERE ProfileID = ?;
@@ -210,13 +137,13 @@ router.put('/suspend/:id', (req, res) => {
     //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
 
     const sql = `UPDATE Account SET Status = -1 WHERE AccountID = ?`;
-    
+
     // run sql
-    conn.query(sql, [id],(err, results) => {           
+    conn.query(sql, [id], (err, results) => {
         // if err, send err 
         // else send results to front-end                        
-        err ? res.status(400).json({msg:'Suspend fail'}) : res.status(200).json(id)
-    }) 
+        err ? res.status(400).json({ msg: 'Suspend fail' }) : res.status(200).json(id)
+    })
 })
 
 // @route   UPDATE api/user
@@ -226,7 +153,7 @@ router.put('/reactive/:id', (req, res) => {
 
     // get id from url parameter
     const id = req.params.id
-    
+
     // define sql query
     // const sql = `DELETE FROM Account WHERE AccountID = ?;
     //              DELETE FROM Profile WHERE ProfileID = ?;
@@ -234,20 +161,20 @@ router.put('/reactive/:id', (req, res) => {
     //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
 
     const sql = `UPDATE Account SET Status = 1 WHERE AccountID = ?`;
-    
+
     // run sql
-    conn.query(sql, [id],(err, results) => {           
+    conn.query(sql, [id], (err, results) => {
         // if err, send err 
         // else send results to front-end                        
-        err ? res.status(400).json({msg:'Suspend fail'}) : res.status(200).json(id)
-    }) 
+        err ? res.status(400).json({ msg: 'Suspend fail' }) : res.status(200).json(id)
+    })
 })
 
 router.put('/suspendJob/:id', (req, res) => {
 
     // get id from url parameter
     const id = req.params.id
-    
+
     // define sql query
     // const sql = `DELETE FROM Account WHERE AccountID = ?;
     //              DELETE FROM Profile WHERE ProfileID = ?;
@@ -255,20 +182,20 @@ router.put('/suspendJob/:id', (req, res) => {
     //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
 
     const sql = `UPDATE Job SET Status = -2 WHERE JobID = ?`;
-    
+
     // run sql
-    conn.query(sql, [id],(err, results) => {           
+    conn.query(sql, [id], (err, results) => {
         // if err, send err 
         // else send results to front-end                        
-        err ? res.status(400).json({msg:'Suspend fail'}) : res.status(200).json(id)
-    }) 
+        err ? res.status(400).json({ msg: 'Suspend fail' }) : res.status(200).json(id)
+    })
 })
 
 router.put('/reactiveJob/:id', (req, res) => {
 
     // get id from url parameter
     const id = req.params.id
-    
+
     // define sql query
     // const sql = `DELETE FROM Account WHERE AccountID = ?;
     //              DELETE FROM Profile WHERE ProfileID = ?;
@@ -276,13 +203,13 @@ router.put('/reactiveJob/:id', (req, res) => {
     //              DELETE FROM candidatelist WHERE CandidateListID = ?`; 
 
     const sql = `UPDATE Job SET Status = 1 WHERE JobID = ?`;
-    
+
     // run sql
-    conn.query(sql, [id],(err, results) => {           
+    conn.query(sql, [id], (err, results) => {
         // if err, send err 
         // else send results to front-end                        
-        err ? res.status(400).json({msg:'Suspend fail'}) : res.status(200).json(id)
-    }) 
+        err ? res.status(400).json({ msg: 'Suspend fail' }) : res.status(200).json(id)
+    })
 })
 
 
