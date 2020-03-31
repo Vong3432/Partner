@@ -141,8 +141,9 @@ export const logout = () => {
 
 // Setup config/headers and token
 export const tokenConfig = getState => {
+    
     // Get token from localStorage
-    const token = getState().auth.token
+    const token = localStorage.getItem('token')
 
     // Headers
     const config = {
@@ -154,7 +155,7 @@ export const tokenConfig = getState => {
 
     // If token, add to headers
     if (token) {
-        config.headers['x-auth-token'] = token;
+        config.headers['authorization'] = token;
     }
 
     return config

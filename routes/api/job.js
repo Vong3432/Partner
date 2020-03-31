@@ -17,6 +17,9 @@ const multer = require('multer')
 const cloudinary = require('cloudinary');
 const cloudinaryStorage = require('multer-storage-cloudinary')
 
+// Custom middleware
+const auth = require('../middleware/auth')
+
 // router.use(multipartMiddleware);
 
 cloudinary.config({
@@ -34,11 +37,10 @@ let storage = cloudinaryStorage({
 
 let upload = multer({storage})
 
-router.post('/upload', upload.single("image"), async (req, res) => {
+router.post('/upload', [auth, upload.single("image")], async (req, res) => {
 
     
-    const file = await req.file;
-    console.log(file)
+    const file = await req.file;    
 
     if(!file)
         return res.status(400).json({msg:"File not uploaded"})
@@ -64,7 +66,7 @@ router.post('/upload', upload.single("image"), async (req, res) => {
 // @route   POST api/job
 // @desc    Post a new job
 // @access  Private
-router.post('/', (req, res) => {
+router.post('/', auth ,(req, res) => {
 
     const upload_date = new Date(),
         due_date = new Date();
@@ -99,7 +101,11 @@ router.post('/', (req, res) => {
 // @desc    Display all postjobs
 // @access  Public
 router.get('/displayjobs', (req, res) => {
+    Job.find({}, (err, jobs) => {
+        if(err) return res.status(400).json({ msg: "No result found."})
 
+        return res.status(200).json(jobs);
+    })
 })
 
 // @route   POST api/postjob

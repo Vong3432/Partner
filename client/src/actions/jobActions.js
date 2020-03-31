@@ -14,16 +14,14 @@ export const getCategory = () => dispatch => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 
-export const getJobs = () => dispatch => {
-    dispatch(setJobsLoading());
-    axios
-        .get('/api/job/displayjobs')
-        .then( res => 
-            dispatch({
-                type: GET_JOBS,
-                payload: res.data
-            }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+export const getJobs = () => dispatch => {    
+    return axios
+            .get('/api/job/displayjobs')
+            .then( res => {
+                dispatch({type: GET_JOBS, payload: res.data})
+                return res.data
+            })
+            .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 
 export const getSelfJobs = (id) => dispatch => {
@@ -85,7 +83,7 @@ export const disApproveRequest = (id, UserID) => (dispatch, getState) => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "DISAPPROVE_FAIL")))
 }
 
-export const addJob = item => (dispatch, getState) => {
+export const addJob = (item, token) => (dispatch, getState) => {
     axios
         .post('/api/job', item, tokenConfig(getState))                
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status, "ADD_FAIL")))

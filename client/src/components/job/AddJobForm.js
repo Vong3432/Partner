@@ -20,7 +20,8 @@ const AddJob = (props) => {
 
     const dispatch = useDispatch()
     const error = useSelector(state => state.error)
-
+    
+    const token = localStorage.getItem('token')
     const user = useSelector(state => state.auth.user)
     const jobs = useSelector(state => state.job.jobs)
     const categories = useSelector(state => state.job.category)
@@ -126,7 +127,7 @@ const AddJob = (props) => {
                 fd.append('image', file, fd.name)
 
                 // Send file to cloudinary via backend 
-                const res = await axios.post('/api/job/upload', fd)                                 
+                const res = await axios.post('/api/job/upload', fd, {headers: {"authorization": token}})                                 
 
                 const newJob = {
                     employer_id: user.profile_id,
@@ -145,7 +146,7 @@ const AddJob = (props) => {
 
                 console.log(newJob)
 
-                dispatch(addJob(newJob))
+                dispatch(addJob(newJob, token))
             }
 
             else {
@@ -248,7 +249,7 @@ const AddJob = (props) => {
                         <label htmlFor="description">Job Category</label>
                         <select required onChange={(e) => handleChange(e)} name="category" id="category">
                             <option value="">Select category:</option>
-                            {categories ? categories.map((i, index) => <option key={index} value={index}>{i.name}</option>) : dispatch(getCategory())}
+                            {categories ? categories.map((i, index) => <option key={index} value={i.name}>{i.name}</option>) : dispatch(getCategory())}
                         </select>
                     </div>
                 </div>
