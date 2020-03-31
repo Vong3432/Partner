@@ -17,39 +17,34 @@ const CardList = ({ jobCallbackFunction }) => {
         description: 0
     })    
 
+    useEffect(() => {       
+
+        async function fetchData() {
+            const response = await dispatch(getJobs())        
+            setFetchJob(response)
+        }        
+
+        fetchData()        
+
+        return () => setIsLoading(true)
+    }, [])    
+
     useEffect(() => {        
-        if(isLoading === true)
-        {
-            dispatch(getJobs())    
-            setFetchJob(job)             
-            setIsLoading(false)               
-        }                                    
-        return(()=>setIsLoading(true))
-    }, [])
-
-    useEffect(() => {
-        dispatch(getJobs()) 
-        
-        if(isLoading===true)    
-            setFetchJob(job)      
-
-    }, [isLoading])
-
-    useEffect(() => {
         if(fetchJob !== undefined && fetchJob.length > 0)
             setIsLoading(false)
+        return () => setIsLoading(true)
     }, [fetchJob])
     
 
     useEffect(() => {           
         setFilterSearch(jobCallbackFunction)
-        console.log(filterSearch)
+        console.log(filterSearch)        
     }, [jobCallbackFunction])        
     
     const filterFunction = (input, i) => { 
         console.log(i, filterSearch)            
         if(i)           
-            return ((i.Title||'').toLocaleLowerCase().search(input.jobTitle.toLocaleLowerCase()) !== -1 ) && ((i.Category || "").search(filterSearch.category) !== -1 || "")
+            return ((i.title||'').toLocaleLowerCase().search(input.jobTitle.toLocaleLowerCase()) !== -1 ) && ((i.category || "").search(filterSearch.category) !== -1 || "")
         else 
             return null
     }
@@ -60,7 +55,7 @@ const CardList = ({ jobCallbackFunction }) => {
                 (fetchJob && isLoading === false) ? (
                     fetchJob
                         .filter(item => filterSearch ? filterFunction(filterSearch, item) : item)                    
-                        .map((item, index) => <Card index={index} job={item} />)
+                        .map((item, index) => <Card key={index} index={index} job={item} />)
                 ) : null
                     
             }

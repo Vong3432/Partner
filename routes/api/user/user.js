@@ -38,8 +38,7 @@ router.post('/login', async (req, res) => {
         
         // Sign jwt
         const token = jwt.sign({ _currentID: User.profile_id }, process.env.TOKEN_SECRET);
-
-        return res.status(200).json({User, token});
+        return res.status(200).json({User, token});        
     })    
 })
 

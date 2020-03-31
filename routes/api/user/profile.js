@@ -136,7 +136,7 @@ router.get('/displayprofile/:id', (req, res) => {
     Profile.findOne({profile_id: id}, (err, profile) => {
         
         if(err) return res.status(400).json({ msg: "Something went wrong. Please try again." })
-
+        
         return res.status(200).json(profile)
     })
     

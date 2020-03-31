@@ -29,7 +29,7 @@ const Preview = (props) => {
 
     useEffect(() => {
         console.log('Preview is rerender.')        
-        if(selectedJob.Title)
+        if(selectedJob.title)
             {
                 setIsLoading(false)
                 // setMultimeDescription(selectedJob.description.split("<next>")) 
@@ -78,51 +78,51 @@ const Preview = (props) => {
     return (
         <>
             {/* {isLoading ? <Spinner />} */}
-            {(selectedJob.Title) && (
+            {(selectedJob.title) && (
                 !isLoading ?
                 <>
-                    <h3 className="mb-2" style={{textTransform:"capitalize"}}>{selectedJob.Title}</h3>
-                    <Link to={`/job/previewall/${selectedJob.JobID}`}>View in all page</Link>
+                    <h3 className="mb-2" style={{textTransform:"capitalize"}}>{selectedJob.title}</h3>
+                    <Link to={`/job/previewall/${selectedJob.job_id}`}>View in all page</Link>
                     <div className="media my-4 align-items-start">                        
                         <div className="media-body">
-                            <p className="mt-0 card-companyName mb-1">{selectedJob.CompanyName}</p>
+                            <p className="mt-0 card-companyName mb-1">{selectedJob.company_name}</p>
                             <div className="d-flex flex-row">
                                 <div className="d-flex flex-row">
                                     <img className="small-icon mr-2" src={require('../../images/color-location.svg')} alt="color-location" />
-                                    <small className="card-sub-title">{selectedJob.Location}</small>
+                                    <small className="card-sub-title">{selectedJob.location}</small>
                                 </div>
                                 <div className="d-flex flex-row ml-3">
                                     <img className="small-icon mr-2" src={require('../../images/color-funds.svg')} alt="color-funds" />
-                                    <small className="card-sub-title">RM {selectedJob.Salary}</small>
+                                    <small className="card-sub-title">RM {selectedJob.salary}</small>
                                 </div>
                             </div>
                         </div>
                         <img style={{ maxWidth: "100px", maxHeight: "60px", objectFit: "contain" }} src={selectedJob.ProfilePic ? './uploads/profile/' + selectedJob.ProfilePic :null} className="mr-3" alt="..." />
                     </div>                    
 
-                    <img style={{maxHeight:"500px", maxWidth:"100%",objectFit:"cover"}} src={"./uploads/jobs/" + selectedJob.Picture} alt=""/>
+                    <img style={{maxHeight:"500px", maxWidth:"100%",objectFit:"cover"}} src={selectedJob.imageUrl} alt={selectedJob.title} />
 
                     <h5 className="mt-4 mb-2">Description</h5> 
                     {/* <div id="divider" className="mb-2"></div> */}
                     {/* {multipleDescription.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}                                        */}
-                    <p style={{textAlign:"justify"}} className="paragraph">{nlb2r(selectedJob.Description)}</p>                    
+                    <p style={{textAlign:"justify"}} className="paragraph">{nlb2r(selectedJob.description)}</p>                    
                     
                     <h5 className="mt-4 mb-2">Requirement</h5>
                     {/* <div id="divider" className="mb-2"></div> */}
                     {/* {multipleRequirement.map((p,index) => <p key={index} style={{textAlign:"justify"}} className="paragraph my-2">{p}</p>)}  */}
-                    <p style={{textAlign:"justify"}} className="paragraph">{nlb2r(selectedJob.Requirement)}</p>
+                    <p style={{textAlign:"justify"}} className="paragraph">{nlb2r(selectedJob.requirement)}</p>
 
                     <h5 className="mt-4 mb-2">Job Type</h5>
                     {/* <div id="divider" className="mb-2"></div> */}
                     <div className="d-flex flex-row">
-                        <p className="paragraph">{selectedJob.Type.substring(0, selectedJob.Type.length - 1)}</p>
+                        {selectedJob.type.map((item, index) => <p className="paragraph">{index === selectedJob.type.length - 1 ? item : item + ", "}</p>)}
                     </div>                    
 
                     {/* {applyJobList.filter(i => i.)} */}
                     <button onClick={e => onApply(e)} className="primary-bg-button ml-0 mt-5 mw-100">Apply</button>
                 </> : <Spinner />
             )}
-            {!selectedJob.Title ? <h2>{msg}</h2> : ""}
+            {!selectedJob.title ? <h2>{msg}</h2> : ""}
         </>
     )
 }

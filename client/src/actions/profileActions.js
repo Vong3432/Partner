@@ -9,16 +9,13 @@ import { returnErrors } from './errorActions'
 */
 
 export const showProfile = id => (dispatch, getState) => {
-    dispatch(setProfileLoading());       
+    // dispatch(setProfileLoading());       
     return axios        
         .get(`/api/profile/displayprofile/${id}`, tokenConfig(getState))        
-        .then( res => 
-            dispatch({
-                type: SHOW_PROFILE,
-                payload: res.data
-            })            
-        )         
-        .then(res => res.payload)       
+        .then( res => {
+            dispatch({type: SHOW_PROFILE, payload: res.data });
+            return res.data
+        })                    
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
 }
 

@@ -6,30 +6,31 @@ export const PreviewProvider = (props) => {
 
 
     // initial state
-    const [ selectedJob, setSelectedJob ] = useState([
-        {
-            jobID:"",
-            title:"Select a job",
-            description:"",
-            logo:"",
-            employer_id:"",
-            upload_date:"", 
-            due_date:"", 
-            description:"",
-            requirement:"", 
-            status:"", 
-            type:"", 
-            category:"", 
-            salary:""
-        }
-    ])
+    const [selectedJob, setSelectedJob] = useState({
+        job_id: null,
+        upload_date: null,
+        due_date: null, 
+        status: null, 
+        type: [], 
+        candidatelist_id: [], 
+        employer_id: null, 
+        title: null, 
+        description: null, 
+        requirement: null, 
+        company_name: null, 
+        location: null, 
+        category: null, 
+        salary: null, 
+        image_publicID: null, 
+        imageUrl: null
+    })
 
-    useEffect(()=>{
-        console.log('Preview mounted')                
-        return(()=>{console.log('Preview unmounted')})
-    },[])    
+    useEffect(() => {
+        console.log(selectedJob)
+        return (() => { console.log('Preview unmounted') })
+    }, [selectedJob])
 
-    return(
+    return (
         <PreviewContext.Provider value={[selectedJob, setSelectedJob]}>
             {props.children}
         </PreviewContext.Provider>

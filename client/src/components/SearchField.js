@@ -69,7 +69,7 @@ const SearchField = ({ handleChange }) => {
                     <label htmlFor="category">Category</label>
                     <select name="category" onChange={handleChange} className="custom-select">
                         <option value="">Open this select menu</option>
-                        {category.map((i, index) => <option value={index}>{i.name}</option>)}                                                
+                        {category.map((i, index) => <option value={i.name}>{i.name}</option>)}                                                
                     </select>
                 </div>
 

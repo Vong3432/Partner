@@ -20,7 +20,7 @@ const Profile = (props) => {
 
     const [isLoading, setIsLoading] = useState(true)
     const [isOwner, setIsOwner] = useState(false)
-    const [isEmployer, setIsEmployer] = useState(false)        
+    const [isEmployer, setIsEmployer] = useState(false)
 
     const auth = useSelector(state => state.auth)
     const user = useSelector(state => state.auth.user)
@@ -38,31 +38,30 @@ const Profile = (props) => {
 
         setIsLoading(true);
 
-        const loadProfile = () => {
-            return dispatch(showProfile(props.match.params.id))
+        async function fetchData() {
+            const res = await dispatch(showProfile(props.match.params.id))        
+
+            if (res.account_type === "employer")
+                setIsEmployer(true);
+    
+            if (auth.isAuthenticated === true) {
+                if (user.profile_id === props.match.params.id)
+                    setIsOwner(true);
+            }
+
+            setIsLoading(false);
         }
 
-        Promise
-            .all([loadProfile()])
-            .then(res => {            
-                console.log(res)
-                if(res[0].account_type === "employer")
-                    setIsEmployer(true);
-    
-                if(auth.isAuthenticated === true) {                    
-                    if( user.profile_id === props.match.params.id)
-                        setIsOwner(true); 
-                }
-    
-                setIsLoading(false);
-            })                                                                          
+        fetchData()               
+
+        return () => setIsLoading(true)
 
     }, [props.location.pathname])
 
 
 
     return (
-        <section style={{marginTop:"5em"}}>
+        <section style={{ marginTop: "5em" }}>
             {isLoading === false ? (isEmployer ? <EmployerProfile history={props.history} profile={profile} isOwner={isOwner} /> : <EmployeeProfile history={props.history} profile={profile} isOwner={isOwner} />) : <Spinner />}
         </section>
     )
@@ -90,8 +89,8 @@ const EmployerProfile = (props) => {
 
     const [countOpened, setCountOpened] = useState(0)
     const [countPaused, setCountPaused] = useState(0)
-    const [countClosed, setCountClosed] = useState(0)    
-    
+    const [countClosed, setCountClosed] = useState(0)
+
     // const auth = useSelector(state => state.auth)
     // const profile = useSelector(state => state.profile.user)
     // const posts = useSelector(state => state.post.posts)
@@ -100,7 +99,7 @@ const EmployerProfile = (props) => {
     return (
 
         <>
-            <h1>Is Employer, {isOwner ? "Is Owner" : "Not Owner" }</h1>
+            <h1>Is Employer, {isOwner ? "Is Owner" : "Not Owner"}</h1>
             {profile.name}
             {profile.about && profile.about}
             <button onClick={e => history.push('/addjob')}>Add job</button>
