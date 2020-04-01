@@ -1,19 +1,311 @@
-1) Create database `partner` on phpmyadmin
-2) unzip file
-3) import `partner.sql` from the file on phpmyadmin
-4) Open Visual Studio Code
+# Api documentation
 
-** Nodejs envinronment is required before opening this project **
+## 1. Job
 
-5) In Visual Studio Code, Go to "File" -> "Add Folder to Workspace" 
-6) Select the folder where you unzip just now
-7) Right click testfyp-testfyp(if you didnt rename the root folder), Click "Open in Terminal"
-8) In the cmd line (Visual studio code), type `npm install`
-9) After that, type "cd client" and then type `npm install` again.
-   Then, type `npm install react-paypal-button-v2 --save`
-10) After installation, type "cd ../"
-11) Then, the installation is finished and you may type `npm run dev` to start the project.
-if 'react-scripts' is not recognized ... occurs, please type "cd client" and then`npm i -g react-scripts` and repeat step 9
-12) Network is also needed in order to run the project.
+#### Add Job
+Adding a new job.
 
-Kindly call 014-9250544 if facing any errors during the installation, thank you.
+* URL
+  /api/job/
+
+* Method
+  POST
+
+* URL Params
+  None
+
+* Data 
+  Required
+  ```
+  employer_id: String, 
+  title: String, 
+  description: String, 
+  requirement: String, 
+  location: String, 
+  type: String, 
+  category: String, 
+  salary: String, 
+  duration: String  
+  ```
+
+  Optional
+  ```
+  imageUrl: String, 
+  public_id: String
+  ```
+
+* Middleware
+  auth
+
+* Success Response
+  * Code: 200  
+    Content: ``` {employer_id, title, description, requirement, location, type, category, salary, duration, imageUrl, public_id} ```
+   
+* Error Response 
+  * Code: 401 Unauthorized
+    Content: ``` {msg: 'Token is not valid'} ```
+
+* Sample Call
+  ```javascript
+   axios
+        .post('/api/job', item, {headers: {"Authorization": YOUR_JWT_TOKEN}})                
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err))
+  ```
+
+#### Upload Image 
+Upload image if there is any image in new job.
+
+* URL
+  /api/job/upload
+
+* Method
+  POST
+
+* URL Params
+  None
+
+* Data 
+  Required
+  ```
+  image: File
+  ```
+
+* Middleware
+  auth, upload.single("image")
+
+* Success Response
+  * Code: 200  
+    Content: ``` {_id, imageUrl, public_id} ```
+   
+* Error Response 
+  * Code: 400 Bad request
+    Content: ``` {msg: "File not uploaded"} ```
+    
+  * Code: 401 Unauthorized
+    Content: ``` {msg: 'Token is not valid'} ```  
+
+* Sample Call
+  ```javascript
+   axios
+        .post('/api/job/upload', formData, {headers: {"Authorization": YOUR_JWT_TOKEN}})                
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err))
+  ```
+
+#### Display Jobs 
+Display all jobs.
+
+* URL
+  /api/job/displayjobs
+
+* Method
+  GET
+
+* URL Params
+  None
+
+* Middleware
+  None
+
+* Success Response
+  * Code: 200  
+    Content: ``` {employer_id, title, description, requirement, location, type, category, salary, duration, imageUrl, public_id} ```
+   
+* Error Response 
+  * Code: 400 Bad Request
+    Content: ``` {msg: "No result found"} ```
+
+* Sample Call
+  ```javascript
+   axios
+        .get('/api/job/displayjobs')    
+        .then(res => console.log(res.data))            
+        .catch(err => console.log(err))
+  ```
+
+#### Add category
+Adding a new job category
+
+* URL
+  /api/job/addCategory
+
+* Method
+  POST
+
+* URL Params
+  None
+
+* Data 
+  Required:
+  ```
+  name: String
+  ```
+
+* Middleware
+  None, but will be added with auth middleware
+
+* Success Response
+  * Code: 200  
+    Content: ``` {name} ```
+   
+* Error Response 
+  None, but will be added after adding auth middleware
+
+* Sample Call
+  ```javascript
+   axios
+        .post('/api/job/addCategory', {name: "Science and Tech"}, {headers: {"Authorization": YOUR_JWT_TOKEN}})
+        .then(res => console.log(res.data))            
+        .catch(err => console.log(err))
+  ```
+
+#### Display Category
+Display all categories
+
+* URL
+  /api/job/getCategory
+
+* Method
+  GET
+
+* URL Params
+  None
+
+* Data 
+  None
+
+* Middleware
+  None
+
+* Success Response
+  * Code: 200  
+    Content: ``` {categories} ```
+   
+* Error Response 
+  * Code: 400 Bad Request
+    Content: ``` {msg: "Ops, something went wrong"} ```
+
+* Sample Call
+  ```javascript
+   axios
+        .get('/api/job/getCategory')
+        .then(res => console.log(res.data))            
+        .catch(err => console.log(err))
+  ```
+
+## 2. User/Authentication
+
+#### Login
+
+* URL
+  /api/user/login
+
+* Method
+  POST
+
+* URL Params
+  None
+
+* Data 
+  Required:
+  ```
+  email: String,
+  password: String
+  ```
+
+* Middleware
+  None
+
+* Success Response
+  * Code: 200  
+    Content: ``` {User, JWT_TOKEN} ```
+   
+* Error Response 
+  * Code: 400 Bad Request
+    Content: ``` {msg: "No account found"} || {msg: "Password is incorrect"} ```
+
+* Sample Call
+  ```javascript
+   axios
+        .post('/api/user/login')
+        .then(res => console.log(res.data))            
+        .catch(err => console.log(err))
+  ```
+
+#### Register
+
+* URL
+  /api/user/register
+
+* Method
+  POST
+
+* URL Params
+  None
+
+* Data 
+  Required:
+  ```
+  name: String,
+  email: String,
+  password: String,
+  userType: String
+  ```
+
+* Middleware
+  None
+
+* Success Response
+  * Code: 200  
+    Content: ``` {user} ```
+   
+* Error Response 
+  * Code: 400 Bad Request
+    Content: ``` {msg: "Email has been registered"} || {msg: "Something went wrong, please try again."} ```
+
+* Sample Call
+  ```javascript
+   axios
+        .post('/api/user/register')
+        .then(res => console.log(res.data))            
+        .catch(err => console.log(err))
+  ```
+
+## 3. Profile
+
+#### Display Profile
+
+* URL
+  /api/profile/displayprofile/:_id
+
+* Method
+  GET
+
+* URL Params
+  Required:
+  ```
+  id: String
+  ```
+
+* Data 
+  None
+
+* Middleware
+  None
+
+* Success Response
+  * Code: 200  
+    Content: ``` {profile} ```
+   
+* Error Response 
+  * Code: 400 Bad Request
+    Content: ``` {msg: "Something went wrong. Please try again"} ```
+
+* Sample Call
+  ```javascript
+   axios
+        .get('/api/job/displayprofile/"THIS_IS_ID"')
+        .then(res => console.log(res.data))            
+        .catch(err => console.log(err))
+  ```
