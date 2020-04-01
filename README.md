@@ -1,21 +1,28 @@
 # Api documentation
+1. Job
+2. User/Authentication 
+3. Profile
 
 ## 1. Job
 
 #### Add Job
 Adding a new job.
 
-* URL
+* ##### URL
+
   /api/job/
 
-* Method
+* ##### Method
+
   POST
 
-* URL Params
+* ##### URL Params
+
   None
 
-* Data 
-  Required
+* ##### Data 
+
+  ##### Required
   ```
   employer_id: String, 
   title: String, 
@@ -28,24 +35,24 @@ Adding a new job.
   duration: String  
   ```
 
-  Optional
+  ##### Optional
   ```
   imageUrl: String, 
   public_id: String
   ```
 
-* Middleware
+* ##### Middleware
   auth
 
-* Success Response
+* ##### Success Response
   * Code: 200  
     Content: ``` {employer_id, title, description, requirement, location, type, category, salary, duration, imageUrl, public_id} ```
    
-* Error Response 
+* ##### Error Response 
   * Code: 401 Unauthorized
     Content: ``` {msg: 'Token is not valid'} ```
 
-* Sample Call
+* ##### Sample Call
   ```javascript
    axios
         .post('/api/job', item, {headers: {"Authorization": YOUR_JWT_TOKEN}})                
@@ -56,36 +63,41 @@ Adding a new job.
 #### Upload Image 
 Upload image if there is any image in new job.
 
-* URL
+* ##### URL
+
   /api/job/upload
 
-* Method
+* ##### Method
+
   POST
 
-* URL Params
+* ##### URL Params
+
   None
 
-* Data 
-  Required
+* ##### Data 
+
+  ##### Required
   ```
   image: File
   ```
 
-* Middleware
+* ##### Middleware
+
   auth, upload.single("image")
 
-* Success Response
+* ##### Success Response
   * Code: 200  
     Content: ``` {_id, imageUrl, public_id} ```
    
-* Error Response 
+* ##### Error Response 
   * Code: 400 Bad request
     Content: ``` {msg: "File not uploaded"} ```
     
   * Code: 401 Unauthorized
     Content: ``` {msg: 'Token is not valid'} ```  
 
-* Sample Call
+* ##### Sample Call
   ```javascript
    axios
         .post('/api/job/upload', formData, {headers: {"Authorization": YOUR_JWT_TOKEN}})                
@@ -96,27 +108,31 @@ Upload image if there is any image in new job.
 #### Display Jobs 
 Display all jobs.
 
-* URL
+* ##### URL
+
   /api/job/displayjobs
 
-* Method
+* ##### Method
+
   GET
 
-* URL Params
+* ##### URL Params
+
   None
 
-* Middleware
+* ##### Middleware
+
   None
 
-* Success Response
+* ##### Success Response
   * Code: 200  
     Content: ``` {employer_id, title, description, requirement, location, type, category, salary, duration, imageUrl, public_id} ```
    
-* Error Response 
+* ##### Error Response 
   * Code: 400 Bad Request
     Content: ``` {msg: "No result found"} ```
 
-* Sample Call
+* ##### Sample Call
   ```javascript
    axios
         .get('/api/job/displayjobs')    
@@ -127,32 +143,36 @@ Display all jobs.
 #### Add category
 Adding a new job category
 
-* URL
+* ##### URL
+
   /api/job/addCategory
 
-* Method
+* ##### Method
+
   POST
 
-* URL Params
+* ##### URL Params
+
   None
 
-* Data 
-  Required:
+* ##### Data 
+
+  ##### Required:
   ```
   name: String
   ```
 
-* Middleware
+* ##### Middleware
   None, but will be added with auth middleware
 
-* Success Response
+* ##### Success Response
   * Code: 200  
     Content: ``` {name} ```
    
-* Error Response 
+* ##### Error Response 
   None, but will be added after adding auth middleware
 
-* Sample Call
+* ##### Sample Call
   ```javascript
    axios
         .post('/api/job/addCategory', {name: "Science and Tech"}, {headers: {"Authorization": YOUR_JWT_TOKEN}})
@@ -163,30 +183,35 @@ Adding a new job category
 #### Display Category
 Display all categories
 
-* URL
+* ##### URL
+
   /api/job/getCategory
 
-* Method
+* ##### Method
+
   GET
 
-* URL Params
+* ##### URL Params
+
   None
 
-* Data 
+* ##### Data 
+
   None
 
-* Middleware
+* ##### Middleware
+
   None
 
-* Success Response
+* ##### Success Response
   * Code: 200  
     Content: ``` {categories} ```
    
-* Error Response 
+* ##### Error Response 
   * Code: 400 Bad Request
     Content: ``` {msg: "Ops, something went wrong"} ```
 
-* Sample Call
+* ##### Sample Call
   ```javascript
    axios
         .get('/api/job/getCategory')
@@ -198,34 +223,39 @@ Display all categories
 
 #### Login
 
-* URL
+* ##### URL
+
   /api/user/login
 
-* Method
+* ##### Method
+
   POST
 
-* URL Params
+* ##### URL Params
+
   None
 
-* Data 
-  Required:
+* ##### Data 
+
+  ##### Required:
   ```
   email: String,
   password: String
   ```
 
-* Middleware
+* ##### Middleware
+
   None
 
-* Success Response
+* ##### Success Response
   * Code: 200  
     Content: ``` {User, JWT_TOKEN} ```
    
-* Error Response 
+* ##### Error Response 
   * Code: 400 Bad Request
     Content: ``` {msg: "No account found"} || {msg: "Password is incorrect"} ```
 
-* Sample Call
+* ##### Sample Call
   ```javascript
    axios
         .post('/api/user/login')
@@ -235,17 +265,21 @@ Display all categories
 
 #### Register
 
-* URL
+* ##### URL
+
   /api/user/register
 
-* Method
+* ##### Method
+
   POST
 
-* URL Params
+* ##### URL Params
+
   None
 
-* Data 
-  Required:
+* ##### Data 
+
+  ##### Required:
   ```
   name: String,
   email: String,
@@ -253,18 +287,19 @@ Display all categories
   userType: String
   ```
 
-* Middleware
+* ##### Middleware
+
   None
 
-* Success Response
+* ##### Success Response
   * Code: 200  
     Content: ``` {user} ```
    
-* Error Response 
+* ##### Error Response 
   * Code: 400 Bad Request
     Content: ``` {msg: "Email has been registered"} || {msg: "Something went wrong, please try again."} ```
 
-* Sample Call
+* ##### Sample Call
   ```javascript
    axios
         .post('/api/user/register')
@@ -276,33 +311,38 @@ Display all categories
 
 #### Display Profile
 
-* URL
+* ##### URL
+
   /api/profile/displayprofile/:_id
 
-* Method
+* ##### Method
+
   GET
 
-* URL Params
-  Required:
+* ##### URL Params
+
+  ##### Required:
   ```
   id: String
   ```
 
-* Data 
+* ##### Data 
+
   None
 
-* Middleware
+* ##### Middleware
+
   None
 
-* Success Response
+* ##### Success Response
   * Code: 200  
     Content: ``` {profile} ```
    
-* Error Response 
+* ##### Error Response 
   * Code: 400 Bad Request
     Content: ``` {msg: "Something went wrong. Please try again"} ```
 
-* Sample Call
+* ##### Sample Call
   ```javascript
    axios
         .get('/api/job/displayprofile/"THIS_IS_ID"')
