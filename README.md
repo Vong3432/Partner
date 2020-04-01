@@ -6,15 +6,19 @@
 Adding a new job.
 
 * URL
+
   /api/job/
 
 * Method
+
   POST
 
 * URL Params
+
   None
 
 * Data 
+
   Required
   ```
   employer_id: String, 
@@ -57,21 +61,26 @@ Adding a new job.
 Upload image if there is any image in new job.
 
 * URL
+
   /api/job/upload
 
 * Method
+
   POST
 
 * URL Params
+
   None
 
 * Data 
+
   Required
   ```
   image: File
   ```
 
 * Middleware
+
   auth, upload.single("image")
 
 * Success Response
@@ -97,15 +106,19 @@ Upload image if there is any image in new job.
 Display all jobs.
 
 * URL
+
   /api/job/displayjobs
 
 * Method
+
   GET
 
 * URL Params
+
   None
 
 * Middleware
+
   None
 
 * Success Response
@@ -128,15 +141,19 @@ Display all jobs.
 Adding a new job category
 
 * URL
+
   /api/job/addCategory
 
 * Method
+
   POST
 
 * URL Params
+
   None
 
 * Data 
+
   Required:
   ```
   name: String
@@ -164,18 +181,23 @@ Adding a new job category
 Display all categories
 
 * URL
+
   /api/job/getCategory
 
 * Method
+
   GET
 
 * URL Params
+
   None
 
 * Data 
+
   None
 
 * Middleware
+
   None
 
 * Success Response
@@ -199,15 +221,19 @@ Display all categories
 #### Login
 
 * URL
+
   /api/user/login
 
 * Method
+
   POST
 
 * URL Params
+
   None
 
 * Data 
+
   Required:
   ```
   email: String,
@@ -215,6 +241,7 @@ Display all categories
   ```
 
 * Middleware
+
   None
 
 * Success Response
@@ -236,15 +263,19 @@ Display all categories
 #### Register
 
 * URL
+
   /api/user/register
 
 * Method
+
   POST
 
 * URL Params
+
   None
 
 * Data 
+
   Required:
   ```
   name: String,
@@ -254,6 +285,7 @@ Display all categories
   ```
 
 * Middleware
+
   None
 
 * Success Response
@@ -277,21 +309,26 @@ Display all categories
 #### Display Profile
 
 * URL
+
   /api/profile/displayprofile/:_id
 
 * Method
+
   GET
 
 * URL Params
+
   Required:
   ```
   id: String
   ```
 
 * Data 
+
   None
 
 * Middleware
+
   None
 
 * Success Response
